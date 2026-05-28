@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filsation - City Design & Photography</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <p class="brand">Filsation</p>
+            <p class="subtitle">City Design & Photograph</p>
+        </div>
+        <nav class="tabs-menu">
+            <button class="tab-btn active" onclick="cambiarPestaña('home')">HOME</button>
+            <button class="tab-btn" onclick="cambiarPestaña('maps')">MAPS</button>
+            <button class="tab-btn" onclick="cambiarPestaña('photos')">PHOTOS</button>
+            <button class="tab-btn" onclick="cambiarPestaña('blog')">BLOG</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="tab-home" class="tab-content active">
+            <div class="dashboard-container">
+                <div id="mapa-contenedor">
+                    <div id="map"></div>
+                </div>
+                <div class="info-contenedor">
+                    <h1 id="panel-titulo">PROVINCIA HABANA</h1>
+                    <div id="panel-cuerpo">
+                        <p class="loading">Cargando datos de la provincia...</p>
+                    </div>
+                    <div class="footer-link">WORK WITH ME</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-maps" class="tab-content">
+            <h2>Galería de Mapas para Vender</h2>
+            <p>Próximamente interactuando con el CMS...</p>
+        </section>
+        <section id="tab-photos" class="tab-content">
+            <h2>Galería de Fotos</h2>
+            <p>Muro visual de fotografía arquitectónica...</p>
+        </section>
+        <section id="tab-blog" class="tab-content">
+            <h2>Artículos y Blog</h2>
+            <p>Notas de diseño urbano...</p>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

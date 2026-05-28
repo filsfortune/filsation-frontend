@@ -1,0 +1,127 @@
+/* Estilos Generales e Identidad Visual */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Playfair Display', 'Didot', 'Georgia', serif; /* Tipografía editorial */
+}
+
+body {
+    background-color: #f2f2f2; /* Fondo gris muy claro/hueso de tu boceto */
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Encabezado y Menú Tab a la Derecha */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 40px 60px 20px 60px;
+}
+
+.brand {
+    font-size: 24px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.tabs-menu {
+    display: flex;
+    gap: 30px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-bottom: 5px;
+    color: #777;
+    transition: color 0.3s;
+}
+
+.tab-btn:hover, .tab-btn.active {
+    color: #000;
+    border-bottom: 2px solid #000; /* Línea indicadora debajo del menú */
+}
+
+/* Control de visualización de pestañas */
+.tab-content {
+    display: none;
+    height: calc(100vh - 120px);
+    padding: 0 60px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Estructura Dashboard 50/50 para el HOME */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Mitad y mitad */
+    gap: 40px;
+    height: 100%;
+    padding-bottom: 40px;
+}
+
+#mapa-contenedor {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #000; /* Borde negro fino como los recuadros de tus fotos */
+    background-color: #ddd;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Panel de Información derecho */
+.info-contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+
+#panel-titulo {
+    font-size: 65px; /* Gran título de tu boceto */
+    font-weight: 400;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    margin-top: 20px;
+}
+
+#panel-cuerpo {
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    max-width: 450px;
+    margin-bottom: auto;
+    margin-top: 30px;
+}
+
+.footer-link {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
