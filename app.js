@@ -41,25 +41,25 @@ async function obtenerFotosDeSanity() {
 function renderizarGaleriaEstiloPinterest(fotos) {
     const contenedor = document.getElementById('contenedor-galeria');
     
-    // Control de seguridad: Si el usuario está en el HOME, esta pestaña no tiene la galería y frena la ejecución sin lanzar errores.
+    // Control de seguridad: Si el usuario está en otra pestaña, frena la ejecución sin lanzar errores.
     if (!contenedor) {
         console.log("Contenedor '#contenedor-galeria' no detectado en esta pantalla. Saltando renderizado.");
         return;
     }
     
-    contenedor.innerHTML = ''; // Limpiamos cualquier residuo visual o de pruebas previas
+    contenedor.innerHTML = ''; // Limpiamos cualquier residuo visual anterior
 
     fotos.forEach((foto, indice) => {
         // Doble validación de seguridad para garantizar que exista una URL de imagen utilizable
         if (!foto.urlImagen) {
-            console.warn(`La fotografía en el índice [${indice}] no contiene un asset de imagen válido de Sanity:`, foto);
-            return; // Omite esta tarjeta para evitar romper el diseño del grid
+            console.warn(`La fotografía en el índice [${indice}] no contiene un asset de imagen válido:`, foto);
+            return; // Omite esta tarjeta para evitar romper el diseño
         }
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
 
-        // Estructura semántica de la tarjeta inyectada
+        // Estructura de la tarjeta
         tarjeta.innerHTML = `
             <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía Arquitectónica'}">
             <div class="capa-hover">
@@ -99,39 +99,7 @@ function abrirLightboxZoom(foto) {
 }
 
 // ==========================================
-// 5. INICIALIZACIÓN DE EVENTOS Y CONTROLES
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Inicializamos la llamada a la base de datos de Sanity de inmediato al cargar el DOM
-    obtenerFotosDeSanity();
-
-    const lightbox = document.getElementById('lightbox-zoom');
-    const botonCerrar = document.getElementById('lightbox-cerrar');
-
-    if (lightbox && botonCerrar) {
-        // Opción 1: Cerrar presionando directamente la 'X' superior
-        botonCerrar.addEventListener('click', () => {
-            lightbox.classList.remove('activo');
-        });
-        
-        // Opción 2: Cerrar haciendo clic sobre el fondo translúcido (fuera del recuadro blanco de información)
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('activo');
-            }
-        });
-        
-        // Opción 3: Accesibilidad avanzada mediante teclado presionando la tecla Escape ('ESC')
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
-                lightbox.classList.remove('activo');
-            }
-        });
-    }
-});
-
-// ==========================================
-// 6. CONTROL DE NAVEGACIÓN (TABS)
+// 5. CONTROL DE NAVEGACIÓN (TABS)
 // ==========================================
 function cambiarPestaña(idPestaña) {
     // 1. Ocultar todos los contenidos de las pestañas
@@ -153,7 +121,6 @@ function cambiarPestaña(idPestaña) {
     }
 
     // 4. Activar el botón correspondiente que recibió el clic
-    // Buscamos el botón que tenga el atributo onclick apuntando a esta pestaña
     const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
     if (botonActivo) {
         botonActivo.classList.add('active');
@@ -162,5 +129,37 @@ function cambiarPestaña(idPestaña) {
     console.log(`Navegando a la pestaña: ${idPestaña}`);
 }
 
-// Hacemos la función global explícitamente para que el HTML (onclick) pueda leerla siempre
+// Hacer la función global explícitamente para que el HTML (onclick) pueda leerla siempre
 window.cambiarPestaña = cambiarPestaña;
+
+// ==========================================
+// 6. INICIALIZACIÓN DE EVENTOS Y CONTROLES
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializamos la llamada a Sanity al cargar el documento
+    obtenerFotosDeSanity();
+
+    const lightbox = document.getElementById('lightbox-zoom');
+    const botonCerrar = document.getElementById('lightbox-cerrar');
+
+    if (lightbox && botonCerrar) {
+        // Opción 1: Cerrar presionando directamente la 'X' superior
+        botonCerrar.addEventListener('click', () => {
+            lightbox.classList.remove('activo');
+        });
+        
+        // Opción 2: Cerrar haciendo clic sobre el fondo translúcido fuera del cuadro
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('activo');
+            }
+        });
+        
+        // Opción 3: Accesibilidad mediante teclado presionando la tecla Escape ('ESC')
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
+                lightbox.classList.remove('activo');
+            }
+        });
+    }
+});
