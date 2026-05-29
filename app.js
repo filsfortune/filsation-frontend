@@ -207,3 +207,111 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// 6. LÓGICA DE LA PESTAÑA DE BLOG (SPLIT)
+// ==========================================
+
+// Datos simulados (Reemplazables en el futuro por fetch de Sanity)
+const baseDatosBlog = [
+    {
+        id: 1,
+        titulo: "UNStudio Reveals River-Orientated Master Plan for Former Industrial Site in Cluj-Napoca, Romania",
+        fecha: "about 11 hours ago",
+        imagen: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800", // Aquí irá tu imagen de arquitectura
+        contenido: "UNStudio has unveiled a transformative master plan designed to revitalize a former industrial landscape into a vibrant, green, urban ecosystem. Spanning multiple hectares along the river corridor, the project introduces state-of-the-art sustainable frameworks, integrating residential, commercial, and public green spaces. The design seamlessly blends pedestrian-first mobility with smart infrastructure networks, setting a brand-new architectural benchmark for urban renewals in eastern Europe. Residents will enjoy extensive boardwalks, integrated water treatment wetlands, and architectural typologies that prioritize natural ventilation and solar alignment."
+    },
+    {
+        id: 2,
+        titulo: "Elizabeth Mews House / Trewhela Williams",
+        fecha: "Yesterday",
+        imagen: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+        contenido: "Located in the heart of London, this contemporary mews house intervention balances heritage preservation with radical modern spatial layouts. Trewhela Williams architects approached the facade with a delicate touch, introducing pale brick accents and rhythmic structural openings that optimize natural light penetration without compromising private indoor environments."
+    },
+    {
+        id: 3,
+        titulo: "Bogotá Architecture Guide: 30 Places to Discover in Colombia's Capital City",
+        fecha: "3 days ago",
+        imagen: "https://images.unsplash.com/photo-1584967918940-a7d51b06427b?w=800",
+        contenido: "Exploring the hybrid architectural identity of Bogotá requires diving deep into its brick modernism, colonial foundations, and avant-garde skyscrapers. From Rogelio Salmona's masterful spatial fluidities in the Torres del Parque to the latest high-density vertical projects in the international center, this curated guide offers a thorough geometric analysis of Colombia's evolving skyline."
+    }
+];
+
+// Función para inicializar el blog
+function cargarModuloBlog() {
+    const zonaLista = document.getElementById('lista-articulos-zona');
+    if (!zonaLista) return;
+
+    zonaLista.innerHTML = '';
+
+    // 1. Renderizar la lista lateral derecha
+    baseDatosBlog.forEach((articulo, index) => {
+        const tarjeta = document.createElement('div');
+        tarjeta.className = `tarjeta-miniatura ${index === 0 ? 'activa' : ''}`;
+        tarjeta.setAttribute('data-id', articulo.id);
+
+        tarjeta.innerHTML = `
+            <img src="${articulo.imagen}" alt="Miniatura">
+            <div class="info-miniatura">
+                <h4>${articulo.titulo}</h4>
+                <span>${articulo.fecha}</span>
+            </div>
+        `;
+
+        // Evento clic para cambiar el artículo de la izquierda
+        tarjeta.addEventListener('click', () => {
+            seleccionarArticuloBlog(articulo.id);
+        });
+
+        zonaLista.appendChild(tarjeta);
+    });
+
+    // 2. Cargar por defecto el primero (el más reciente) a la izquierda
+    if (baseDatosBlog.length > 0) {
+        mostrarArticuloIzquierda(baseDatosBlog[0]);
+    }
+}
+
+// Cambia visualmente el foco del artículo seleccionado
+function seleccionarArticuloBlog(id) {
+    // Quitar clase activa a todas las miniaturas
+    document.querySelectorAll('.tarjeta-miniatura').forEach(t => t.classList.remove('activa'));
+    
+    // Añadir clase activa a la seleccionada
+    const tarjetaSeleccionada = document.querySelector(`.tarjeta-miniatura[data-id="${id}"]`);
+    if (tarjetaSeleccionada) tarjetaSeleccionada.classList.add('activa');
+
+    // Buscar el artículo de la base de datos e inyectarlo
+    const articulo = baseDatosBlog.find(a => a.id === id);
+    if (articulo) {
+        mostrarArticuloIzquierda(articulo);
+    }
+}
+
+// Inyecta el contenido completo a la izquierda y resetea el scroll hacia arriba
+function mostrarArticuloIzquierda(articulo) {
+    const zonaArticulo = document.getElementById('articulo-completo-zona');
+    if (!zonaArticulo) return;
+
+    zonaArticulo.innerHTML = `
+        <h2>${articulo.titulo}</h2>
+        <div class="meta-fecha">${articulo.fecha}</div>
+        <img src="${articulo.imagen}" alt="${articulo.titulo}">
+        <div class="cuerpo-texto">${articulo.contenido}</div>
+    `;
+
+    // 🌟 EFECTO REQUERIDO: Reinicia el scroll del panel izquierdo arriba al cambiar de texto
+    zonaArticulo.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Asegurarnos de activarlo cuando cambies a la pestaña BLOG en la navegación
+// Modifica tu función original 'cambiarPestaña' y agrega esto al final:
+const originalCambiarPestaña = window.cambiarPestaña;
+window.cambiarPestaña = function(idPestaña) {
+    if (typeof originalCambiarPestaña === 'function') {
+        originalCambiarPestaña(idPestaña);
+    }
+    if (idPestaña === 'blog' || idParrafo === 'BLOG') {
+        cargarModuloBlog();
+    }
+};
