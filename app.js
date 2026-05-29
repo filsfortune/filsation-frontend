@@ -114,86 +114,86 @@ function configurarInteraccionMunicipio(feature, layer) {
     });
 }
 
-// 1. Configuración de tus credenciales de Sanity
-const PROJECT_ID = 'hhdji3nw'; // <-- Reemplaza esto con tu ID de Sanity
+const PROJECT_ID = 'hhdji3nw'; 
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
-// 2. Construcción de la consulta (Trae todos los documentos de tipo 'fotografia')
-const query = encodeURIComponent('*[_type == "fotografia"]{ title, municipioAsociado, "urlImagen": imagen.asset->url, descripcion }');
+// Traemos todas las fotos con sus datos completos
+const query = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
 
-// 3. Función para obtener las fotos y pintarlas en la galería
 async function obtenerFotosDeSanity() {
   try {
     const respuesta = await fetch(url);
     const datos = await respuesta.json();
-    
-    console.log("Fotos recibidas de Sanity:", datos.result);
-    
-    // 💡 ¡AQUÍ ESTÁ EL CAMBIO! Llamamos a la función sin las barras "//" para que sí se ejecute
     renderizarGaleria(datos.result);
-    
   } catch (error) {
     console.error("Error al conectar con Sanity:", error);
   }
 }
 
-// 4. Función encargada de crear las tarjetas HTML para cada foto
 function renderizarGaleria(fotos) {
-  // Diagnóstico 1: Ver si la función realmente se está ejecutando
-  console.log("¡La función renderizarGaleria se ha activado!");
-  
   const contenedor = document.getElementById('contenedor-galeria');
-  
-  // Diagnóstico 2: Ver si JavaScript encuentra el contenedor HTML
-  if (!contenedor) {
-    console.error("ERROR CRÍTICO: No se encontró el elemento '#contenedor-galeria' en el HTML.");
-    alert("Error: No se encontró el contenedor-galeria en tu HTML. Revisa el ID.");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = '';
+
+  if (!fotos || fotos.length === 0) {
+    contenedor.innerHTML = '<p class="sin-fotos">No se encontraron fotografías publicadas.</p>';
     return;
   }
 
-  // Diagnóstico 3: Ver qué datos exactos tiene la primera foto
-  if (fotos && fotos.length > 0) {
-    console.log("Datos de la primera foto recibida:", fotos[0]);
-    alert("¡Se encontró la foto de " + (fotos[0].title || fotos[0].titulo || "Torry") + " en los datos!");
-  } else {
-    console.warn("El arreglo de fotos está vacío [ ]. Sanity no devolvió documentos.");
-    contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Sanity devolvió 0 fotos. Revisa que esté publicada (Published) y no en borrador (Draft).</p>';
-    return;
-  }
-
-  contenedor.innerHTML = ''; // Limpiar
-
-  fotos.forEach((foto, indice) => {
-    // Detectar la URL real de la imagen venga como venga
-    const urlReal = foto.urlImagen || (foto.imagen && foto.imagen.asset ? foto.imagen.asset.url : null);
-    const tituloReal = foto.titulo || foto.title || 'Sin título';
-    const municipioReal = foto.municipioAsociado || 'No especificado';
-    const descripcionReal = foto.descripcion || '';
-
-    console.log(`Renderizando foto index ${indice}: URL=${urlReal}`);
-
+  fotos.forEach(foto => {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'tarjeta-foto';
-    tarjeta.style.border = "2px solid red"; // Borde rojo temporal para ver si se dibuja la caja
-    tarjeta.style.padding = "15px";
-    tarjeta.style.margin = "100px 0"; 
 
     tarjeta.innerHTML = `
-      <div class="wrapper-imagen">
-        ${urlReal ? `<img src="${urlReal}" alt="${tituloReal}" style="max-width:100%; height:auto; display:block;">` : '<p style="color:orange;">(Imagen sin URL válida)</p>'}
-      </div>
-      <div class="info-foto">
-        <h3 style="font-family: serif; font-size: 1.5rem; color: black;">${tituloReal}</h3>
-        <span style="font-weight: bold; color: gray;">${municipioReal}</span>
-        <p style="color: #333;">${descripcionReal}</p>
+      <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía urbana'}">
+      <div class="capa-oscura">
+        <span>${foto.titulo || 'Ver detalles'}</span>
       </div>
     `;
+
+    // 🌟 EVENTO: Al hacer clic en la tarjeta, abre el Zoom-In (Lightbox)
+    tarjeta.addEventListener('click', () => {
+      abrirLightbox(foto);
+    });
 
     contenedor.appendChild(tarjeta);
   });
 }
+
+// 🌟 Función para controlar la ventana flotante (Zoom-In)
+function abrirLightbox(foto) {
+  const lightbox = document.getElementById('lightbox-zoom');
+  const imgZoom = document.getElementById('lightbox-img');
+  const tituloZoom = document.getElementById('lightbox-titulo');
+  const municipioZoom = document.getElementById('lightbox-municipio');
+  const descZoom = document.getElementById('lightbox-descripcion');
+
+  imgZoom.src = foto.urlImagen;
+  tituloZoom.textContent = foto.titulo || 'Sin título';
+  municipioZoom.textContent = foto.municipioAsociado || 'Municipio no especificado';
+  descZoom.textContent = foto.descripcion || '';
+
+  // Mostramos el elemento quitando la clase que lo mantiene oculto
+  lightbox.classList.add('activo');
+}
+
+// Cerrar la ventana flotante al hacer clic en la 'X' o fuera de la foto
+document.addEventListener('DOMContentLoaded', () => {
+  obtenerFotosDeSanity();
+
+  const lightbox = document.getElementById('lightbox-zoom');
+  const botonCerrar = document.getElementById('lightbox-cerrar');
+
+  if (botonCerrar && lightbox) {
+    botonCerrar.addEventListener('click', () => lightbox.classList.remove('activo'));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('activo');
+    });
+  }
+});
 
 // Aseguramos que la función corra en cuanto cargue la página
 document.addEventListener('DOMContentLoaded', obtenerFotosDeSanity);
