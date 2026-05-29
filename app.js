@@ -9,7 +9,7 @@ const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, munici
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
 // 🗺️ Tu Backend en Render para los datos GIS de La Habana
-const API_URL_BACKEND = 'https://filsation-cms.onrender.com/api'; // O la URL real de tu backend de Render
+const API_URL_BACKEND = 'https://filsation-cms.onrender.com/api'; 
 
 // Variable global para controlar el mapa de Leaflet
 let mapaLaHabana;
@@ -73,7 +73,6 @@ async function inicializarMapaProvincia() {
         if (panelCuerpo) panelCuerpo.innerHTML = "Selecciona un municipio en el mapa interactivo para analizar sus datos urbanos.";
 
         // 5. HACER FETCH A TU BACKEND PARA TRAER LOS MUNICIPIOS (POSTGIS)
-        // Reemplaza '/municipios' por la ruta exacta de tu API de Express
         const respuesta = await fetch(`${API_URL_BACKEND}/municipios`);
         const datosGeoJSON = await respuesta.json();
 
@@ -82,7 +81,7 @@ async function inicializarMapaProvincia() {
         // Dibujamos los polígonos de los municipios en el mapa
         L.geoJSON(datosGeoJSON, {
             style: {
-                color: "#000000",   // Borde negro fino icónico de tu diseño
+                color: "#000000",   
                 weight: 1,
                 fillColor: "#333333",
                 fillOpacity: 0.1
@@ -143,7 +142,7 @@ function renderizarGaleriaEstiloPinterest(fotos, contenedor) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
         
-        // 🌟 Nueva estructura: Solo inyectamos el título H4 centrado para el estado Hover
+        // Estructura optimizada: Solo el título h4 para la capa hover centrado
         tarjeta.innerHTML = `
             <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía'}">
             <div class="capa-hover">
@@ -178,18 +177,22 @@ function abrirLightboxZoom(foto) {
 // 5. INICIALIZADOR AL CARGAR EL DOM
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargamos el mapa base
+    // 1. Cargamos el mapa base de La Habana
     inicializarMapaProvincia();
-    
-// 2. Configuración de cierres del Lightbox de fotos (Corregido a 'activo')
+
+    // 2. Configuración de cierres del Lightbox de fotos (Sincronizado con clase 'activo')
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
     if (lightbox && botonCerrar) {
-        botonCerrar.addEventListener('click', () => lightbox.classList.remove('activo'));
+        botonCerrar.addEventListener('click', () => {
+            lightbox.classList.remove('activo');
+        });
         
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) lightbox.classList.remove('activo');
+            if (e.target === lightbox) {
+                lightbox.classList.remove('activo');
+            }
         });
         
         document.addEventListener('keydown', (e) => {
@@ -198,3 +201,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+});
