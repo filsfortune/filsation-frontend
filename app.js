@@ -1,221 +1,118 @@
-// ==========================================
-// 1. VARIABLE GLOBAL DEL MAPA (LEAFLET)
-// ==========================================
-let mapaLaHabana;
+// 1. FUNCIONAMIENTO DE LOS TABS (MENÚ SUPERIOR)
+function cambiarPestaña(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-// ==========================================
-// 2. CONTROL DE NAVEGACIÓN (TABS) - El original que no fallaba
-// ==========================================
-function cambiarPestaña(idPestaña) {
-    // Ocular todas las pantallas
-    const contenidos = document.querySelectorAll('.tab-content');
-    contenidos.forEach(contenido => contenido.classList.remove('active'));
-
-    // Desactivar todos los botones
-    const botones = document.querySelectorAll('.tab-btn');
-    botones.forEach(boton => boton.classList.remove('active'));
-
-    // Activar la pantalla elegida
-    const pestañaActiva = document.getElementById(idPestaña);
-    if (pestañaActiva) pestañaActiva.classList.add('active');
-
-    // Activar el botón presionado
-    const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
-    if (botonActivo) botonActivo.classList.add('active');
-
-    console.log(`Pestaña activa actual: ${idPestaña}`);
-
-    // 💡 TRUCO GEOGRÁFICO: Leaflet necesita recalcular el tamaño del mapa si cambias de pestaña
-    if (idPestaña === 'home' && mapaLaHabana) {
-        setTimeout(() => {
-            mapaLaHabana.invalidateSize();
-        }, 200);
-    }
+    event.currentTarget.classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
 }
 
-// Lo exponemos a la ventana global obligatoriamente
-window.cambiarPestaña = cambiarPestaña;
+// 2. INICIALIZAR EL MAPA DE LEAFLET
+const map = L.map('map').setView([23.1136, -82.3666], 10.5); // Ajustamos el zoom para ver toda la provincia
 
-// ==========================================
-// 3. CONFIGURACIÓN E INICIALIZACIÓN DEL MAPA
-// ==========================================
-function inicializarMapaProvincia() {
-    const mapaElemento = document.getElementById('map');
-    
-    // Filtro de seguridad: Si no encuentra el div del mapa en el DOM, se detiene
-    if (!mapaElemento) {
-        console.log("El contenedor del mapa no está disponible.");
-        return;
-    }
+// Fondo de mapa minimalista claro (CartoDB Light)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+}).addTo(map);
 
-    console.log("Cargando mapa base y capas de la Provincia de La Habana...");
+// URL de tu API real en Render
+const API_URL = 'https://filsation-api.onrender.com/api';
 
-    // 🗺️ Configuración inicial de coordenadas centradas en La Habana, Cuba
-    mapaLaHabana = L.map('map').setView([23.1136, -82.3666], 11);
+// Variable global para guardar la capa de municipios y poder interactuar con ella
+let capaMunicipios;
 
-    // Añadir capa base de OpenStreetMap u Mapbox
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(mapaLaHabana);
-
-    // ==========================================
-    // AQUÍ CORRE TU CARGA DE DATOS DE MUNICIPIOS
-    // ==========================================
-    // Ejemplo: fetch('tu_servidor_render_o_geojson/municipios')
-    // .then(res => res.json())
-    // .then(geojson => { L.geoJSON(geojson).addTo(mapaLaHabana); });
-}
-
-// ==========================================
-// 4. DISPARADOR AL CARGAR LA PÁGINA
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Al abrir la web, lo primero que se ejecutaba era el mapa de la provincia
-    inicializarMapaProvincia();
-});
-
-
-// ==========================================
-// 1. CONFIGURACIÓN DE SANITY
-// ==========================================
-const PROJECT_ID = 'hhdji3nw'; 
-const DATASET = 'production';
-const API_VERSION = 'v2021-10-21';
-
-const query = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
-const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
-
-// ==========================================
-// 2. OBTENCIÓN DE DATOS (CON FILTRO DE SEGURIDAD)
-// ==========================================
-async function obtenerFotosDeSanity() {
-    const contenedor = document.getElementById('contenedor-galeria');
-    // Si no existe el contenedor de fotos, no hacemos la petición al API para no congelar el sitio
-    if (!contenedor) return;
-
+// 3. CARGAR TODOS LOS MUNICIPIOS EN EL MAPA
+async function cargarMapaMosaico() {
     try {
-        const respuesta = await fetch(url);
-        const datos = await respuesta.json();
-        
-        if (datos.result && datos.result.length > 0) {
-            renderizarGaleriaEstiloPinterest(datos.result, contenedor);
-        } else {
-            contenedor.innerHTML = '<p class="sin-fotos">No hay fotografías disponibles.</p>';
-        }
-    } catch (error) {
-        console.error("Error al conectar con Sanity:", error);
-    }
-}
+        const respuesta = await fetch(`${API_URL}/municipios`);
+        const municipios = await respuesta.json();
 
-// ==========================================
-// 3. RENDERIZADO ESTILO PINTEREST
-// ==========================================
-function renderizarGaleriaEstiloPinterest(fotos, contenedor) {
-    contenedor.innerHTML = ''; 
-
-    fotos.forEach((foto, indice) => {
-        if (!foto.urlImagen) return;
-
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'tarjeta-foto-pinterest';
-
-        tarjeta.innerHTML = `
-            <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía'}">
-            <div class="capa-hover">
-                <span>Ver detalles</span>
-            </div>
-        `;
-
-        tarjeta.addEventListener('click', () => {
-            abrirLightboxZoom(foto);
+        // Convertimos el array de municipios en un formato que Leaflet entienda (GeoJSON)
+        const funcionesGeoJSON = municipios.map(m => {
+            const geom = JSON.parse(m.geometria);
+            return {
+                type: "Feature",
+                properties: {
+                    id: m.id,
+                    nombre: m.nombre
+                },
+                geometry: geom
+            };
         });
 
-        contenedor.appendChild(tarjeta);
+        const coleccionGeoJSON = {
+            type: "FeatureCollection",
+            features: funcionesGeoJSON
+        };
+
+        // Pintamos el mosaico en el mapa con diseño elegante
+        capaMunicipios = L.geoJSON(coleccionGeoJSON, {
+            style: {
+                color: '#000000',      // Líneas divisorias negras y finas
+                weight: 1,
+                fillColor: '#888888',  // Gris neutro para el diseño base
+                fillOpacity: 0.15      // Sutil transparencia hueso/gris
+            },
+            onEachFeature: configurarInteraccionMunicipio
+        }).addTo(map);
+
+        // Quitamos el mensaje de carga del panel derecho
+        document.getElementById('panel-cuerpo').innerHTML = "<p>Haz clic sobre cualquier municipio en el mapa para explorar sus datos urbanos.</p>";
+
+    } catch (error) {
+        console.error("Error al cargar los municipios:", error);
+        document.getElementById('panel-cuerpo').innerText = "Error al conectar con la base de datos de municipios.";
+    }
+}
+
+// 4. INTERACCIÓN: QUÉ PASA CUANDO EL USUARIO INTERACTÚA CON UN MUNICIPIO
+function configurarInteraccionMunicipio(feature, layer) {
+    
+    // Efecto visual al pasar el mouse por encima (Hover)
+    layer.on('mouseover', function () {
+        layer.setStyle({
+            fillColor: '#000000', // Se oscurece al pasar el cursor
+            fillOpacity: 0.3
+        });
+    });
+
+    layer.on('mouseout', function () {
+        capaMunicipios.resetStyle(layer); // Recupera el diseño original al quitar el mouse
+    });
+
+    // Acción principal: Clic en el municipio
+    layer.on('click', async function () {
+        const id = feature.properties.id;
+        const nombre = feature.properties.nombre;
+
+        // Actualizar el título principal de la pantalla
+        document.getElementById('panel-titulo').innerText = nombre;
+        document.getElementById('panel-cuerpo').innerHTML = `<p class="loading">Analizando entorno de ${nombre}...</p>`;
+
+        try {
+            const respuesta = await fetch(`${API_URL}/municipios/${id}`);
+            const detalle = await respuesta.json();
+
+            // Formatear los números para que se vean profesionales
+            const poblacionFormateada = detalle.poblacion > 0 ? `${Number(detalle.poblacion).toLocaleString()} hab.` : 'Dato en actualización';
+            const extensionFormateada = detalle.extension > 0 ? `${detalle.extension} km²` : 'Dato en actualización';
+
+            // Insertar el contenido en el panel derecho con diseño limpio (Sin IDs)
+            document.getElementById('panel-cuerpo').innerHTML = `
+                <div style="margin-bottom: 25px; font-family: sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #555;">
+                    <span><strong>Extensión:</strong> ${extensionFormateada}</span>
+                    <span style="margin-left: 20px;"><strong>Población:</strong> ${poblacionFormateada}</span>
+                </div>
+                <p style="text-align: justify; font-size: 16px; font-family: 'Playfair Display', Georgia, serif; line-height: 1.7; color: #111;">
+                    ${detalle.reseña}
+                </p>
+            `;
+        } catch (error) {
+            console.error("Error al obtener detalles del municipio:", error);
+            document.getElementById('panel-cuerpo').innerHTML = "<p>No se pudieron recuperar los indicadores de este entorno urbano.</p>";
+        }
     });
 }
 
-// ==========================================
-// 4. LÓGICA DEL LIGHTBOX (ZOOM)
-// ==========================================
-function abrirLightboxZoom(foto) {
-    const lightbox = document.getElementById('lightbox-zoom');
-    const imgZoom = document.getElementById('lightbox-img');
-    const tituloZoom = document.getElementById('lightbox-titulo');
-    const municipioZoom = document.getElementById('lightbox-municipio');
-    const descZoom = document.getElementById('lightbox-descripcion');
-
-    if (imgZoom) imgZoom.src = foto.urlImagen;
-    if (tituloZoom) tituloZoom.textContent = foto.titulo || 'Sin título';
-    if (municipioZoom) municipioZoom.textContent = foto.municipioAsociado || 'Municipio';
-    if (descZoom) descZoom.textContent = foto.descripcion || '';
-
-    if (lightbox) lightbox.classList.add('activo');
-}
-
-// ==========================================
-// 5. CONTROL DE NAVEGACIÓN (TABS) - ¡SIEMPRE ACTIVO!
-// ==========================================
-function cambiarPestaña(idPestaña) {
-    const contenidos = document.querySelectorAll('.tab-content');
-    contenidos.forEach(contenido => contenido.classList.remove('active'));
-
-    const botones = document.querySelectorAll('.tab-btn');
-    botones.forEach(boton => boton.classList.remove('active'));
-
-    const pestañaActiva = document.getElementById(idPestaña);
-    if (pestañaActiva) pestañaActiva.classList.add('active');
-
-    const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
-    if (botonActivo) botonActivo.classList.add('active');
-
-    // 💡 TRUCO CLAVE: Si cambias a la pestaña de fotos, cárgalas en ese instante
-    if (idPestaña === 'photos' || idPestaña === 'PHOTOS') {
-        obtenerFotosDeSanity();
-    }
-}
-
-// Hacemos la función global para que los botones onclick del HTML la vean pase lo que pase
-window.cambiarPestaña = cambiarPestaña;
-
-// ==========================================
-// 6. LÓGICA DEL MAPA (PROTEGIDA)
-// ==========================================
-function inicializarMapaProvincia() {
-    const mapaElemento = document.getElementById('map');
-    // Si el mapa no está en la pantalla actual, detenemos la función amigablemente
-    if (!mapaElemento) return;
-
-    console.log("Inicializando mapa de la Provincia de La Habana...");
-    
-    // AQUÍ CORRE TU CÓDIGO ACTUAL DEL MAPA
-    // (Asegúrate de que tus variables de Leaflet como L.map('map') estén aquí adentro
-    // o declaradas correctamente para que carguen los datos de la provincia)
-}
-
-// ==========================================
-// 7. INICIALIZACIÓN GLOBAL
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Intentamos cargar el mapa si corresponde
-    inicializarMapaProvincia();
-    
-    // Intentamos cargar las fotos si el contenedor está disponible desde el inicio
-    obtenerFotosDeSanity();
-
-    // Configuración de los cierres del Lightbox
-    const lightbox = document.getElementById('lightbox-zoom');
-    const botonCerrar = document.getElementById('lightbox-cerrar');
-
-    if (lightbox && botonCerrar) {
-        botonCerrar.addEventListener('click', () => lightbox.classList.remove('active'));
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) lightbox.classList.remove('active');
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-                lightbox.classList.remove('active');
-            }
-        });
-    }
-});
+// Ejecutar la carga del mapa al abrir la web
+cargarMapaMosaico();
