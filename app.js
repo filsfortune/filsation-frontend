@@ -80,7 +80,7 @@ function configurarInteraccionMunicipio(feature, layer) {
         capaMunicipios.resetStyle(layer); // Recupera el diseño original al quitar el mouse
     });
 
-    // Acción principal: Clic en el municipio
+  // Acción principal: Clic en el municipio
     layer.on('click', async function () {
         const id = feature.properties.id;
         const nombre = feature.properties.nombre;
@@ -93,11 +93,11 @@ function configurarInteraccionMunicipio(feature, layer) {
             const respuesta = await fetch(`${API_URL}/municipios/${id}`);
             const detalle = await respuesta.json();
 
-            // Formatear los números para que se vean profesionales (ej. 147,000)
+            // Formatear los números para que se vean profesionales
             const poblacionFormateada = detalle.poblacion > 0 ? `${Number(detalle.poblacion).toLocaleString()} hab.` : 'Dato en actualización';
             const extensionFormateada = detalle.extension > 0 ? `${detalle.extension} km²` : 'Dato en actualización';
 
-            // Insertar el contenido en el panel derecho con diseño limpio
+            // Insertar el contenido en el panel derecho con diseño limpio (Sin IDs)
             document.getElementById('panel-cuerpo').innerHTML = `
                 <div style="margin-bottom: 25px; font-family: sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #555;">
                     <span><strong>Extensión:</strong> ${extensionFormateada}</span>
