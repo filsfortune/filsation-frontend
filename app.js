@@ -129,3 +129,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// 6. CONTROL DE NAVEGACIÓN (TABS)
+// ==========================================
+function cambiarPestaña(idPestaña) {
+    // 1. Ocultar todos los contenidos de las pestañas
+    const contenidos = document.querySelectorAll('.tab-content');
+    contenidos.forEach(contenido => {
+        contenido.classList.remove('active');
+    });
+
+    // 2. Desactivar todos los botones del menú
+    const botones = document.querySelectorAll('.tab-btn');
+    botones.forEach(boton => {
+        boton.classList.remove('active');
+    });
+
+    // 3. Mostrar la pestaña actual seleccionada
+    const pestañaActiva = document.getElementById(idPestaña);
+    if (pestañaActiva) {
+        pestañaActiva.classList.add('active');
+    }
+
+    // 4. Activar el botón correspondiente que recibió el clic
+    // Buscamos el botón que tenga el atributo onclick apuntando a esta pestaña
+    const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
+    if (botonActivo) {
+        botonActivo.classList.add('active');
+    }
+    
+    console.log(`Navegando a la pestaña: ${idPestaña}`);
+}
+
+// Hacemos la función global explícitamente para que el HTML (onclick) pueda leerla siempre
+window.cambiarPestaña = cambiarPestaña;
