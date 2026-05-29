@@ -146,11 +146,13 @@ header {
     column-count: 6;       /* Forzamos la cuadrícula horizontal a 6 bloques */
     column-gap: 0;         /* Cero separación hacia los lados */
     width: 100%;
-    margin: 0;
-
-    /* 🌟 EL TRUCO DE SEGURIDAD: */
-    display: inline-block; /* Evita que el contenedor fuerce un estiramiento masivo si hay pocas fotos */
-    text-align: left;      /* Alinea todo el contenido hacia la izquierda de la pantalla */
+    
+    /* 🌟 CAMBIO: Alineación perfecta con el Header */
+    padding: 0 60px;       /* 60px a los lados para alinearse con la 'F' de Filsation */
+    margin-top: 20px;      /* Un pequeño respiro abajo de la línea del menú */
+    
+    display: inline-block; 
+    text-align: left;
 }
 
 .tarjeta-foto-pinterest {
@@ -162,7 +164,7 @@ header {
     background-color: #000;
 
     /* 🌟 Límitador de seguridad para cuando hay una o pocas fotos */
-    max-width: calc(100vw / 6);
+    max-width: calc((100vw - 120px) / 6);
 }
 
 .tarjeta-foto-pinterest img {
