@@ -115,7 +115,7 @@ function configurarInteraccionMunicipio(feature, layer) {
 }
 
 // 1. Configuración de tus credenciales de Sanity
-const PROJECT_ID = 'pemupq7jbwxxm5nuvl7ahqw0'; // <-- Reemplaza esto con tu ID de Sanity
+const PROJECT_ID = 'hhdji3nw'; // <-- Reemplaza esto con tu ID de Sanity
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
