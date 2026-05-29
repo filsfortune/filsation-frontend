@@ -85,24 +85,31 @@ function configurarInteraccionMunicipio(feature, layer) {
         const id = feature.properties.id;
         const nombre = feature.properties.nombre;
 
-        // Cambiamos inmediatamente el título grande de la derecha
+        // Actualizar el título principal de la pantalla
         document.getElementById('panel-titulo').innerText = nombre;
-        document.getElementById('panel-cuerpo').innerHTML = `<p class="loading">Consultando detalles de ${nombre} en Neon...</p>`;
+        document.getElementById('panel-cuerpo').innerHTML = `<p class="loading">Analizando entorno de ${nombre}...</p>`;
 
-        // Hacemos la consulta a la ruta detallada del backend (/api/municipios/:id)
         try {
             const respuesta = await fetch(`${API_URL}/municipios/${id}`);
             const detalle = await respuesta.json();
 
-            // Rellenamos el cuerpo del panel con la información devuelta por el servidor
+            // Formatear los números para que se vean profesionales (ej. 147,000)
+            const poblacionFormateada = detalle.poblacion > 0 ? `${Number(detalle.poblacion).toLocaleString()} hab.` : 'Dato en actualización';
+            const extensionFormateada = detalle.extension > 0 ? `${detalle.extension} km²` : 'Dato en actualización';
+
+            // Insertar el contenido en el panel derecho con diseño limpio
             document.getElementById('panel-cuerpo').innerHTML = `
-                <p style="margin-bottom: 15px;"><strong>ID Urbano:</strong> ${detalle.id}</p>
-                <p style="margin-bottom: 15px;"><strong>Código Técnico (FID):</strong> ${detalle.fid}</p>
-                <p>${detalle.informacion_urbana}</p>
+                <div style="margin-bottom: 25px; font-family: sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #555;">
+                    <span><strong>Extensión:</strong> ${extensionFormateada}</span>
+                    <span style="margin-left: 20px;"><strong>Población:</strong> ${poblacionFormateada}</span>
+                </div>
+                <p style="text-align: justify; font-size: 16px; font-family: 'Playfair Display', Georgia, serif; line-height: 1.7; color: #111;">
+                    ${detalle.reseña}
+                </p>
             `;
         } catch (error) {
             console.error("Error al obtener detalles del municipio:", error);
-            document.getElementById('panel-cuerpo').innerHTML = "<p>No se pudieron recuperar los detalles de este entorno urbano.</p>";
+            document.getElementById('panel-cuerpo').innerHTML = "<p>No se pudieron recuperar los indicadores de este entorno urbano.</p>";
         }
     });
 }
