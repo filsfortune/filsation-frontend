@@ -74,6 +74,11 @@ async function inicializarMapaProvincia() {
 
         // 5. HACER FETCH A TU BACKEND PARA TRAER LOS MUNICIPIOS (POSTGIS)
         const respuesta = await fetch(`${API_URL_BACKEND}/municipios`);
+
+        // 🌟 AGREGA ESTA COMPROBACIÓN AQUÍ ABAJO:
+if (!respuesta.ok) {
+    throw new Error(`Error en el servidor: ${respuesta.status}`);
+}
         const datosGeoJSON = await respuesta.json();
 
         console.log("Datos geográficos recibidos:", datosGeoJSON);
