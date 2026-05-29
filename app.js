@@ -9,7 +9,7 @@ const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, munici
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
 // 🗺️ Tu Backend en Render para los datos GIS de La Habana
-const API_URL_BACKEND = 'https://filsation-cms.onrender.com/api'; 
+const API_URL_BACKEND = 'https://filsation-api.onrender.com/api'; 
 
 // Variable global para controlar el mapa de Leaflet
 let mapaLaHabana;
