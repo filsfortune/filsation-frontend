@@ -123,23 +123,62 @@ const API_VERSION = 'v2021-10-21';
 const query = encodeURIComponent('*[_type == "fotografia"]{ title, municipioAsociado, "urlImagen": imagen.asset->url, descripcion }');
 const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
 
-// 3. Función para obtener las fotos
+// 3. Función para obtener las fotos y pintarlas en la galería
 async function obtenerFotosDeSanity() {
   try {
     const respuesta = await fetch(url);
     const datos = await respuesta.json();
-    const contenedor = document.getElementById('contenedor-galeria');
     
-    // Aquí tienes el array con todas tus fotos listas para usar
     console.log("Fotos recibidas de Sanity:", datos.result);
     
-    // Aquí puedes llamar a una función para pintar las fotos en tu mapa o galería
-    // ejemplo: inicializarGaleria(datos.result);
+    // 💡 ¡AQUÍ ESTÁ EL CAMBIO! Llamamos a la función sin las barras "//" para que sí se ejecute
+    renderizarGaleria(datos.result);
     
   } catch (error) {
     console.error("Error al conectar con Sanity:", error);
   }
 }
+
+// 4. Función encargada de crear las tarjetas HTML para cada foto
+function renderizarGaleria(fotos) {
+  const contenedor = document.getElementById('contenedor-galeria');
+  
+  if (!contenedor) {
+    console.error("No se encontró el contenedor '#contenedor-galeria' en tu HTML.");
+    return;
+  }
+
+  // Limpiamos el contenedor por si acaso
+  contenedor.innerHTML = '';
+
+  if (!fotos || fotos.length === 0) {
+    contenedor.innerHTML = '<p class="sin-fotos">No se encontraron fotografías.</p>';
+    return;
+  }
+
+  // Recorremos las fotos e inyectamos el HTML dinámico
+  fotos.forEach(foto => {
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'tarjeta-foto';
+
+    // Usamos || por seguridad en caso de que algún campo venga vacío en Sanity
+    tarjeta.innerHTML = `
+      <div class="wrapper-imagen" style="margin-bottom: 15px;">
+        <img src="${foto.urlImagen}" alt="${foto.title || foto.titulo || 'Fotografía Urbana'}" style="max-width: 100%; height: auto; display: block; border-radius: 4px;">
+      </div>
+      <div class="info-foto">
+        <h3 style="margin: 0 0 5px 0; font-family: serif; font-size: 1.4rem;">${foto.title || foto.titulo || 'Sin título'}</h3>
+        <span class="etiqueta-municipio" style="color: #666; font-size: 0.9em; font-weight: bold;">${foto.municipioAsociado || 'Playa'}</span>
+        <p class="descripcion-foto" style="margin: 8px 0 0 0; color: #333;">${foto.descripcion || ''}</p>
+      </div>
+    `;
+
+    contenedor.appendChild(tarjeta);
+  });
+}
+
+// Aseguramos que la función corra en cuanto cargue la página
+document.addEventListener('DOMContentLoaded', obtenerFotosDeSanity);
 
 // Ejecutar la función al cargar la página
 obtenerFotosDeSanity();
