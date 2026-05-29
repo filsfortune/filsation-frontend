@@ -114,5 +114,34 @@ function configurarInteraccionMunicipio(feature, layer) {
     });
 }
 
+// 1. Configuración de tus credenciales de Sanity
+const PROJECT_ID = 'pemupq7jbwxxm5nuvl7ahqw0'; // <-- Reemplaza esto con tu ID de Sanity
+const DATASET = 'production';
+const API_VERSION = 'v2021-10-21';
+
+// 2. Construcción de la consulta (Trae todos los documentos de tipo 'fotografia')
+const query = encodeURIComponent('*[_type == "fotografia"]{ title, municipioAsociado, "urlImagen": imagen.asset->url, descripcion }');
+const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
+
+// 3. Función para obtener las fotos
+async function obtenerFotosDeSanity() {
+  try {
+    const respuesta = await fetch(url);
+    const datos = await respuesta.json();
+    
+    // Aquí tienes el array con todas tus fotos listas para usar
+    console.log("Fotos recibidas de Sanity:", datos.result);
+    
+    // Aquí puedes llamar a una función para pintar las fotos en tu mapa o galería
+    // ejemplo: inicializarGaleria(datos.result);
+    
+  } catch (error) {
+    console.error("Error al conectar con Sanity:", error);
+  }
+}
+
+// Ejecutar la función al cargar la página
+obtenerFotosDeSanity();
+
 // Ejecutar la carga del mapa al abrir la web
 cargarMapaMosaico();
