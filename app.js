@@ -1,58 +1,73 @@
-// 1. Configuración de Sanity (Verificado)
+// ==========================================
+// 1. CONFIGURACIÓN DE SANITY
+// ==========================================
 const PROJECT_ID = 'hhdji3nw'; 
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
-// 💡 CONSULTA CORREGIDA: Pedimos la URL explícita del "asset" de la imagen
+// Consulta GROQ optimizada: Extrae de forma explícita el asset de la imagen para evitar recuadros vacíos.
 const query = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
 
-// 2. Función principal para obtener datos
+// ==========================================
+// 2. OBTENCIÓN DE DATOS DESDE LA API
+// ==========================================
 async function obtenerFotosDeSanity() {
     try {
         const respuesta = await fetch(url);
         const datos = await respuesta.json();
         
-        console.log("Datos crudos de Sanity:", datos);
+        console.log("Datos crudos recibidos de Sanity:", datos);
 
-        // Validamos que haya resultados
+        // Validamos pacíficamente que existan fotos dentro del resultado
         if (datos.result && datos.result.length > 0) {
             renderizarGaleriaEstiloPinterest(datos.result);
         } else {
-            console.warn("No se encontraron fotos publicadas en Sanity.");
-            document.getElementById('contenedor-galeria').innerHTML = '<p>No hay fotos disponibles.</p>';
+            console.warn("Sanity respondió con éxito, pero no se encontraron documentos tipo 'fotografia'.");
+            const contenedor = document.getElementById('contenedor-galeria');
+            if (contenedor) {
+                contenedor.innerHTML = '<p class="sin-fotos">No hay fotografías disponibles en este momento.</p>';
+            }
         }
 
     } catch (error) {
-        console.error("Error al conectar con Sanity:", error);
+        console.error("Error crítico al intentar conectar con el API de Sanity:", error);
     }
 }
 
-// 3. Renderizado estilo Pinterest y evento de Zoom
+// ==========================================
+// 3. RENDERIZADO DEL MURO ESTILO PINTEREST
+// ==========================================
 function renderizarGaleriaEstiloPinterest(fotos) {
     const contenedor = document.getElementById('contenedor-galeria');
-    if (!contenedor) return;
-    contenedor.innerHTML = ''; // Limpiar recuadros negros anteriores
+    
+    // Control de seguridad: Si el usuario está en el HOME, esta pestaña no tiene la galería y frena la ejecución sin lanzar errores.
+    if (!contenedor) {
+        console.log("Contenedor '#contenedor-galeria' no detectado en esta pantalla. Saltando renderizado.");
+        return;
+    }
+    
+    contenedor.innerHTML = ''; // Limpiamos cualquier residuo visual o de pruebas previas
 
-    fotos.forEach(foto => {
-        // Validación de seguridad para la URL
+    fotos.forEach((foto, indice) => {
+        // Doble validación de seguridad para garantizar que exista una URL de imagen utilizable
         if (!foto.urlImagen) {
-            console.warn("Una foto no tiene URL válida:", foto);
-            return; // Saltamos esta foto si no tiene imagen
+            console.warn(`La fotografía en el índice [${indice}] no contiene un asset de imagen válido de Sanity:`, foto);
+            return; // Omite esta tarjeta para evitar romper el diseño del grid
         }
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
 
-        // Estructura HTML de la tarjeta
+        // Estructura semántica de la tarjeta inyectada
         tarjeta.innerHTML = `
-            <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía de Arquitectura'}">
+            <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía Arquitectónica'}">
             <div class="capa-hover">
                 <span>Ver detalles</span>
             </div>
         `;
 
-        // 🌟 EVENTO: Al hacer clic, abre la foto en grande (Lightbox)
+        // Añadimos el disparador para abrir la ventana flotante (Zoom-In Lightbox) al hacer clic
         tarjeta.addEventListener('click', () => {
             abrirLightboxZoom(foto);
         });
@@ -61,7 +76,9 @@ function renderizarGaleriaEstiloPinterest(fotos) {
     });
 }
 
-// 4. Lógica de la Ventana Flotante (Lightbox Zoom)
+// ==========================================
+// 4. LÓGICA DE LA VENTANA FLOTANTE (LIGHTBOX ZOOM)
+// ==========================================
 function abrirLightboxZoom(foto) {
     const lightbox = document.getElementById('lightbox-zoom');
     const imgZoom = document.getElementById('lightbox-img');
@@ -69,35 +86,42 @@ function abrirLightboxZoom(foto) {
     const municipioZoom = document.getElementById('lightbox-municipio');
     const descZoom = document.getElementById('lightbox-descripcion');
 
-    // Inyectamos los datos en el Lightbox
-    imgZoom.src = foto.urlImagen;
-    tituloZoom.textContent = foto.titulo || 'Sin título';
-    municipioZoom.textContent = foto.municipioAsociado || 'Municipio';
-    descZoom.textContent = foto.descripcion || '';
+    // Mapeamos los datos dinámicos obtenidos del objeto de Sanity
+    if (imgZoom) imgZoom.src = foto.urlImagen;
+    if (tituloZoom) tituloZoom.textContent = foto.titulo || 'Sin título';
+    if (municipioZoom) municipioZoom.textContent = foto.municipioAsociado || 'Municipio no especificado';
+    if (descZoom) descZoom.textContent = foto.descripcion || 'Sin descripción disponible para esta obra.';
 
-    // Mostramos la ventana añadiendo la clase activa
-    lightbox.classList.add('activo');
+    // Mostramos la interfaz de Zoom añadiendo la clase CSS activa
+    if (lightbox) {
+        lightbox.classList.add('activo');
+    }
 }
 
-// 5. Inicialización y controles de cierre
+// ==========================================
+// 5. INICIALIZACIÓN DE EVENTOS Y CONTROLES
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializamos la llamada a la base de datos de Sanity de inmediato al cargar el DOM
     obtenerFotosDeSanity();
 
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
-    if (botonCerrar && lightbox) {
-        // Cerrar con la 'X'
-        botonCerrar.addEventListener('click', () => lightbox.classList.remove('activo'));
+    if (lightbox && botonCerrar) {
+        // Opción 1: Cerrar presionando directamente la 'X' superior
+        botonCerrar.addEventListener('click', () => {
+            lightbox.classList.remove('activo');
+        });
         
-        // Cerrar haciendo clic fuera de la foto
+        // Opción 2: Cerrar haciendo clic sobre el fondo translúcido (fuera del recuadro blanco de información)
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 lightbox.classList.remove('activo');
             }
         });
         
-        // Cerrar con la tecla Escape
+        // Opción 3: Accesibilidad avanzada mediante teclado presionando la tecla Escape ('ESC')
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
                 lightbox.classList.remove('activo');
