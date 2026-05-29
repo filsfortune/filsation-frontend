@@ -128,6 +128,7 @@ async function obtenerFotosDeSanity() {
   try {
     const respuesta = await fetch(url);
     const datos = await respuesta.json();
+    const contenedor = document.getElementById('contenedor-galeria');
     
     // Aquí tienes el array con todas tus fotos listas para usar
     console.log("Fotos recibidas de Sanity:", datos.result);
