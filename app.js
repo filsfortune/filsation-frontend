@@ -142,12 +142,19 @@ function renderizarGaleriaEstiloPinterest(fotos, contenedor) {
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
+        
+        // 🌟 Nueva estructura: Solo inyectamos el título H4 centrado para el estado Hover
         tarjeta.innerHTML = `
             <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía'}">
-            <div class="capa-hover"><span>Ver detalles</span></div>
+            <div class="capa-hover">
+                <h4>${foto.titulo || 'Sin título'}</h4>
+            </div>
         `;
 
-        tarjeta.addEventListener('click', () => { abrirLightboxZoom(foto); });
+        tarjeta.addEventListener('click', () => { 
+            abrirLightboxZoom(foto); 
+        });
+        
         contenedor.appendChild(tarjeta);
     });
 }
@@ -173,20 +180,21 @@ function abrirLightboxZoom(foto) {
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Cargamos el mapa base
     inicializarMapaProvincia();
-
-    // 2. Configuración de cierres del Lightbox de fotos
+    
+// 2. Configuración de cierres del Lightbox de fotos (Corregido a 'activo')
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
     if (lightbox && botonCerrar) {
         botonCerrar.addEventListener('click', () => lightbox.classList.remove('activo'));
+        
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) lightbox.classList.remove('activo');
         });
+        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
                 lightbox.classList.remove('activo');
             }
         });
     }
-});
