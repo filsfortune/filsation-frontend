@@ -5,69 +5,50 @@ const PROJECT_ID = 'hhdji3nw';
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
-// Consulta GROQ optimizada: Extrae de forma explícita el asset de la imagen para evitar recuadros vacíos.
 const query = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const url = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${query}`;
 
 // ==========================================
-// 2. OBTENCIÓN DE DATOS DESDE LA API
+// 2. OBTENCIÓN DE DATOS (CON FILTRO DE SEGURIDAD)
 // ==========================================
 async function obtenerFotosDeSanity() {
+    const contenedor = document.getElementById('contenedor-galeria');
+    // Si no existe el contenedor de fotos, no hacemos la petición al API para no congelar el sitio
+    if (!contenedor) return;
+
     try {
         const respuesta = await fetch(url);
         const datos = await respuesta.json();
         
-        console.log("Datos crudos recibidos de Sanity:", datos);
-
-        // Validamos pacíficamente que existan fotos dentro del resultado
         if (datos.result && datos.result.length > 0) {
-            renderizarGaleriaEstiloPinterest(datos.result);
+            renderizarGaleriaEstiloPinterest(datos.result, contenedor);
         } else {
-            console.warn("Sanity respondió con éxito, pero no se encontraron documentos tipo 'fotografia'.");
-            const contenedor = document.getElementById('contenedor-galeria');
-            if (contenedor) {
-                contenedor.innerHTML = '<p class="sin-fotos">No hay fotografías disponibles en este momento.</p>';
-            }
+            contenedor.innerHTML = '<p class="sin-fotos">No hay fotografías disponibles.</p>';
         }
-
     } catch (error) {
-        console.error("Error crítico al intentar conectar con el API de Sanity:", error);
+        console.error("Error al conectar con Sanity:", error);
     }
 }
 
 // ==========================================
-// 3. RENDERIZADO DEL MURO ESTILO PINTEREST
+// 3. RENDERIZADO ESTILO PINTEREST
 // ==========================================
-function renderizarGaleriaEstiloPinterest(fotos) {
-    const contenedor = document.getElementById('contenedor-galeria');
-    
-    // Control de seguridad: Si el usuario está en otra pestaña, frena la ejecución sin lanzar errores.
-    if (!contenedor) {
-        console.log("Contenedor '#contenedor-galeria' no detectado en esta pantalla. Saltando renderizado.");
-        return;
-    }
-    
-    contenedor.innerHTML = ''; // Limpiamos cualquier residuo visual anterior
+function renderizarGaleriaEstiloPinterest(fotos, contenedor) {
+    contenedor.innerHTML = ''; 
 
     fotos.forEach((foto, indice) => {
-        // Doble validación de seguridad para garantizar que exista una URL de imagen utilizable
-        if (!foto.urlImagen) {
-            console.warn(`La fotografía en el índice [${indice}] no contiene un asset de imagen válido:`, foto);
-            return; // Omite esta tarjeta para evitar romper el diseño
-        }
+        if (!foto.urlImagen) return;
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
 
-        // Estructura de la tarjeta
         tarjeta.innerHTML = `
-            <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía Arquitectónica'}">
+            <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía'}">
             <div class="capa-hover">
                 <span>Ver detalles</span>
             </div>
         `;
 
-        // Añadimos el disparador para abrir la ventana flotante (Zoom-In Lightbox) al hacer clic
         tarjeta.addEventListener('click', () => {
             abrirLightboxZoom(foto);
         });
@@ -77,7 +58,7 @@ function renderizarGaleriaEstiloPinterest(fotos) {
 }
 
 // ==========================================
-// 4. LÓGICA DE LA VENTANA FLOTANTE (LIGHTBOX ZOOM)
+// 4. LÓGICA DEL LIGHTBOX (ZOOM)
 // ==========================================
 function abrirLightboxZoom(foto) {
     const lightbox = document.getElementById('lightbox-zoom');
@@ -86,79 +67,76 @@ function abrirLightboxZoom(foto) {
     const municipioZoom = document.getElementById('lightbox-municipio');
     const descZoom = document.getElementById('lightbox-descripcion');
 
-    // Mapeamos los datos dinámicos obtenidos del objeto de Sanity
     if (imgZoom) imgZoom.src = foto.urlImagen;
     if (tituloZoom) tituloZoom.textContent = foto.titulo || 'Sin título';
-    if (municipioZoom) municipioZoom.textContent = foto.municipioAsociado || 'Municipio no especificado';
-    if (descZoom) descZoom.textContent = foto.descripcion || 'Sin descripción disponible para esta obra.';
+    if (municipioZoom) municipioZoom.textContent = foto.municipioAsociado || 'Municipio';
+    if (descZoom) descZoom.textContent = foto.descripcion || '';
 
-    // Mostramos la interfaz de Zoom añadiendo la clase CSS activa
-    if (lightbox) {
-        lightbox.classList.add('activo');
-    }
+    if (lightbox) lightbox.classList.add('activo');
 }
 
 // ==========================================
-// 5. CONTROL DE NAVEGACIÓN (TABS)
+// 5. CONTROL DE NAVEGACIÓN (TABS) - ¡SIEMPRE ACTIVO!
 // ==========================================
 function cambiarPestaña(idPestaña) {
-    // 1. Ocultar todos los contenidos de las pestañas
     const contenidos = document.querySelectorAll('.tab-content');
-    contenidos.forEach(contenido => {
-        contenido.classList.remove('active');
-    });
+    contenidos.forEach(contenido => contenido.classList.remove('active'));
 
-    // 2. Desactivar todos los botones del menú
     const botones = document.querySelectorAll('.tab-btn');
-    botones.forEach(boton => {
-        boton.classList.remove('active');
-    });
+    botones.forEach(boton => boton.classList.remove('active'));
 
-    // 3. Mostrar la pestaña actual seleccionada
     const pestañaActiva = document.getElementById(idPestaña);
-    if (pestañaActiva) {
-        pestañaActiva.classList.add('active');
-    }
+    if (pestañaActiva) pestañaActiva.classList.add('active');
 
-    // 4. Activar el botón correspondiente que recibió el clic
     const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
-    if (botonActivo) {
-        botonActivo.classList.add('active');
+    if (botonActivo) botonActivo.classList.add('active');
+
+    // 💡 TRUCO CLAVE: Si cambias a la pestaña de fotos, cárgalas en ese instante
+    if (idPestaña === 'photos' || idPestaña === 'PHOTOS') {
+        obtenerFotosDeSanity();
     }
-    
-    console.log(`Navegando a la pestaña: ${idPestaña}`);
 }
 
-// Hacer la función global explícitamente para que el HTML (onclick) pueda leerla siempre
+// Hacemos la función global para que los botones onclick del HTML la vean pase lo que pase
 window.cambiarPestaña = cambiarPestaña;
 
 // ==========================================
-// 6. INICIALIZACIÓN DE EVENTOS Y CONTROLES
+// 6. LÓGICA DEL MAPA (PROTEGIDA)
+// ==========================================
+function inicializarMapaProvincia() {
+    const mapaElemento = document.getElementById('map');
+    // Si el mapa no está en la pantalla actual, detenemos la función amigablemente
+    if (!mapaElemento) return;
+
+    console.log("Inicializando mapa de la Provincia de La Habana...");
+    
+    // AQUÍ CORRE TU CÓDIGO ACTUAL DEL MAPA
+    // (Asegúrate de que tus variables de Leaflet como L.map('map') estén aquí adentro
+    // o declaradas correctamente para que carguen los datos de la provincia)
+}
+
+// ==========================================
+// 7. INICIALIZACIÓN GLOBAL
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializamos la llamada a Sanity al cargar el documento
+    // Intentamos cargar el mapa si corresponde
+    inicializarMapaProvincia();
+    
+    // Intentamos cargar las fotos si el contenedor está disponible desde el inicio
     obtenerFotosDeSanity();
 
+    // Configuración de los cierres del Lightbox
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
     if (lightbox && botonCerrar) {
-        // Opción 1: Cerrar presionando directamente la 'X' superior
-        botonCerrar.addEventListener('click', () => {
-            lightbox.classList.remove('activo');
-        });
-        
-        // Opción 2: Cerrar haciendo clic sobre el fondo translúcido fuera del cuadro
+        botonCerrar.addEventListener('click', () => lightbox.classList.remove('active'));
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('activo');
-            }
+            if (e.target === lightbox) lightbox.classList.remove('active');
         });
-        
-        // Opción 3: Accesibilidad mediante teclado presionando la tecla Escape ('ESC')
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
-                lightbox.classList.remove('activo');
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
             }
         });
     }
