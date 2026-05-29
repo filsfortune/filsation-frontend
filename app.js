@@ -141,35 +141,53 @@ async function obtenerFotosDeSanity() {
 
 // 4. Función encargada de crear las tarjetas HTML para cada foto
 function renderizarGaleria(fotos) {
+  // Diagnóstico 1: Ver si la función realmente se está ejecutando
+  console.log("¡La función renderizarGaleria se ha activado!");
+  
   const contenedor = document.getElementById('contenedor-galeria');
   
+  // Diagnóstico 2: Ver si JavaScript encuentra el contenedor HTML
   if (!contenedor) {
-    console.error("No se encontró el contenedor '#contenedor-galeria' en tu HTML.");
+    console.error("ERROR CRÍTICO: No se encontró el elemento '#contenedor-galeria' en el HTML.");
+    alert("Error: No se encontró el contenedor-galeria en tu HTML. Revisa el ID.");
     return;
   }
 
-  // Limpiamos el contenedor por si acaso
-  contenedor.innerHTML = '';
-
-  if (!fotos || fotos.length === 0) {
-    contenedor.innerHTML = '<p class="sin-fotos">No se encontraron fotografías.</p>';
+  // Diagnóstico 3: Ver qué datos exactos tiene la primera foto
+  if (fotos && fotos.length > 0) {
+    console.log("Datos de la primera foto recibida:", fotos[0]);
+    alert("¡Se encontró la foto de " + (fotos[0].title || fotos[0].titulo || "Torry") + " en los datos!");
+  } else {
+    console.warn("El arreglo de fotos está vacío [ ]. Sanity no devolvió documentos.");
+    contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Sanity devolvió 0 fotos. Revisa que esté publicada (Published) y no en borrador (Draft).</p>';
     return;
   }
 
-  // Recorremos las fotos e inyectamos el HTML dinámico
-  fotos.forEach(foto => {
+  contenedor.innerHTML = ''; // Limpiar
+
+  fotos.forEach((foto, indice) => {
+    // Detectar la URL real de la imagen venga como venga
+    const urlReal = foto.urlImagen || (foto.imagen && foto.imagen.asset ? foto.imagen.asset.url : null);
+    const tituloReal = foto.titulo || foto.title || 'Sin título';
+    const municipioReal = foto.municipioAsociado || 'No especificado';
+    const descripcionReal = foto.descripcion || '';
+
+    console.log(`Renderizando foto index ${indice}: URL=${urlReal}`);
+
     const tarjeta = document.createElement('div');
     tarjeta.className = 'tarjeta-foto';
+    tarjeta.style.border = "2px solid red"; // Borde rojo temporal para ver si se dibuja la caja
+    tarjeta.style.padding = "15px";
+    tarjeta.style.margin = "100px 0"; 
 
-    // Usamos || por seguridad en caso de que algún campo venga vacío en Sanity
     tarjeta.innerHTML = `
-      <div class="wrapper-imagen" style="margin-bottom: 15px;">
-        <img src="${foto.urlImagen}" alt="${foto.title || foto.titulo || 'Fotografía Urbana'}" style="max-width: 100%; height: auto; display: block; border-radius: 4px;">
+      <div class="wrapper-imagen">
+        ${urlReal ? `<img src="${urlReal}" alt="${tituloReal}" style="max-width:100%; height:auto; display:block;">` : '<p style="color:orange;">(Imagen sin URL válida)</p>'}
       </div>
       <div class="info-foto">
-        <h3 style="margin: 0 0 5px 0; font-family: serif; font-size: 1.4rem;">${foto.title || foto.titulo || 'Sin título'}</h3>
-        <span class="etiqueta-municipio" style="color: #666; font-size: 0.9em; font-weight: bold;">${foto.municipioAsociado || 'Playa'}</span>
-        <p class="descripcion-foto" style="margin: 8px 0 0 0; color: #333;">${foto.descripcion || ''}</p>
+        <h3 style="font-family: serif; font-size: 1.5rem; color: black;">${tituloReal}</h3>
+        <span style="font-weight: bold; color: gray;">${municipioReal}</span>
+        <p style="color: #333;">${descripcionReal}</p>
       </div>
     `;
 
