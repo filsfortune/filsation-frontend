@@ -1,4 +1,82 @@
 // ==========================================
+// 1. VARIABLE GLOBAL DEL MAPA (LEAFLET)
+// ==========================================
+let mapaLaHabana;
+
+// ==========================================
+// 2. CONTROL DE NAVEGACIÓN (TABS) - El original que no fallaba
+// ==========================================
+function cambiarPestaña(idPestaña) {
+    // Ocular todas las pantallas
+    const contenidos = document.querySelectorAll('.tab-content');
+    contenidos.forEach(contenido => contenido.classList.remove('active'));
+
+    // Desactivar todos los botones
+    const botones = document.querySelectorAll('.tab-btn');
+    botones.forEach(boton => boton.classList.remove('active'));
+
+    // Activar la pantalla elegida
+    const pestañaActiva = document.getElementById(idPestaña);
+    if (pestañaActiva) pestañaActiva.classList.add('active');
+
+    // Activar el botón presionado
+    const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
+    if (botonActivo) botonActivo.classList.add('active');
+
+    console.log(`Pestaña activa actual: ${idPestaña}`);
+
+    // 💡 TRUCO GEOGRÁFICO: Leaflet necesita recalcular el tamaño del mapa si cambias de pestaña
+    if (idPestaña === 'home' && mapaLaHabana) {
+        setTimeout(() => {
+            mapaLaHabana.invalidateSize();
+        }, 200);
+    }
+}
+
+// Lo exponemos a la ventana global obligatoriamente
+window.cambiarPestaña = cambiarPestaña;
+
+// ==========================================
+// 3. CONFIGURACIÓN E INICIALIZACIÓN DEL MAPA
+// ==========================================
+function inicializarMapaProvincia() {
+    const mapaElemento = document.getElementById('map');
+    
+    // Filtro de seguridad: Si no encuentra el div del mapa en el DOM, se detiene
+    if (!mapaElemento) {
+        console.log("El contenedor del mapa no está disponible.");
+        return;
+    }
+
+    console.log("Cargando mapa base y capas de la Provincia de La Habana...");
+
+    // 🗺️ Configuración inicial de coordenadas centradas en La Habana, Cuba
+    mapaLaHabana = L.map('map').setView([23.1136, -82.3666], 11);
+
+    // Añadir capa base de OpenStreetMap u Mapbox
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mapaLaHabana);
+
+    // ==========================================
+    // AQUÍ CORRE TU CARGA DE DATOS DE MUNICIPIOS
+    // ==========================================
+    // Ejemplo: fetch('tu_servidor_render_o_geojson/municipios')
+    // .then(res => res.json())
+    // .then(geojson => { L.geoJSON(geojson).addTo(mapaLaHabana); });
+}
+
+// ==========================================
+// 4. DISPARADOR AL CARGAR LA PÁGINA
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Al abrir la web, lo primero que se ejecutaba era el mapa de la provincia
+    inicializarMapaProvincia();
+});
+
+
+// ==========================================
 // 1. CONFIGURACIÓN DE SANITY
 // ==========================================
 const PROJECT_ID = 'hhdji3nw'; 
