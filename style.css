@@ -147,6 +147,10 @@ header {
     column-gap: 0;         /* Cero separación hacia los lados */
     width: 100%;
     margin: 0;
+
+    /* 🌟 EL TRUCO DE SEGURIDAD: */
+    display: inline-block; /* Evita que el contenedor fuerce un estiramiento masivo si hay pocas fotos */
+    text-align: left;      /* Alinea todo el contenido hacia la izquierda de la pantalla */
 }
 
 .tarjeta-foto-pinterest {
@@ -156,6 +160,9 @@ header {
     cursor: pointer;
     overflow: hidden;
     background-color: #000;
+
+    /* 🌟 Límitador de seguridad para cuando hay una o pocas fotos */
+    max-width: calc(100vw / 6);
 }
 
 .tarjeta-foto-pinterest img {
