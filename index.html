@@ -39,30 +39,19 @@
         </section>
 
         <section id="maps" class="tab-content">
-            <div id="pantalla-mapas" class="seccion-mapas">
-    
-    <div class="visor-mapa">
-        <img id="foto-mapa-grande" src="img/mapa-transporte.jpg" alt="Visor de Mapa Grande">
-        <h3 id="titulo-mapa-grande">Mapa de Transporte</h3>
-    </div>
+       <div id="pantalla-mapas" class="seccion-mapas">
+        
+        <div class="visor-mapa">
+            <img id="foto-mapa-grande" src="" alt="Visor de Mapa">
+            <h3 id="titulo-mapa-grande">Selecciona un mapa</h3>
+        </div>
 
-    <div class="lista-mapas">
-        <h3>Selecciona un Mapa</h3>
-        
-        <button class="map-item active" onclick="cambiarMapaVisualizado('img/mapa-transporte.jpg', 'Mapa de Transporte')">
-            <span class="icon">🚌</span> Mapa de Transporte
-        </button>
-        
-        <button class="map-item" onclick="cambiarMapaVisualizado('img/mapa-turistico.jpg', 'Mapa Turístico')">
-            <span class="icon">📍</span> Mapa Turístico
-        </button>
-        
-        <button class="map-item" onclick="cambiarMapaVisualizado('img/mapa-calor.jpg', 'Mapa de Calor (Densidad)')">
-            <span class="icon">🔥</span> Mapa de Calor
-        </button>
-    </div>
+        <div class="lista-mapas">
+            <h3>Selecciona un Mapa</h3>
+            <div id="contenedor-botones-mapas"></div>
+        </div>
 
-</div>
+    </div>
         </section>
 
         <section id="photos" class="tab-content">
