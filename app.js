@@ -286,5 +286,31 @@ async function cargarModuloMapas() {
     }
 }
 
+// ============================================================
+// INTERCEPTOR ÚNICO PARA PESTAÑAS (EVITA ERRORES DE SINTAXIS)
+// ============================================================
+
+// Comprobamos si ya existe la función original para no duplicarla
+if (typeof window.originalCambiarPestaña === 'undefined') {
+    window.originalCambiarPestaña = window.cambiarPestaña;
+}
+
+window.cambiarPestaña = function(idPestaña) {
+    // 1. Ejecutar primero la lógica nativa de tu plantilla (mostrar/ocultar secciones)
+    if (typeof window.originalCambiarPestaña === 'function') {
+        window.originalCambiarPestaña(idPestaña);
+    }
+    
+    // 2. Si el usuario hace clic en la pestaña de mapas, cargamos Sanity
+    if (idPestaña === 'maps' || idPestaña === 'MAPS' || idPestaña === 'mapa') {
+        // Ejecutamos una comprobación de seguridad antes de llamar a la función
+        if (typeof cargarModuloMapas === 'function') {
+            cargarModuloMapas();
+        } else {
+            console.error("La función cargarModuloMapas no está definida en app.js");
+        }
+    }
+};
+
 
 
