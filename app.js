@@ -344,3 +344,72 @@ function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
         window.event.currentTarget.classList.add('active');
     }
 }
+
+// ==========================================
+// MÓDULO DE MAPAS DINÁMICOS DESDE SANITY
+// ==========================================
+async function cargarModuloMapas() {
+    const ID_PROYECTO = 'hhdji3nw';
+    const DATASET = 'production';
+    const QUERY = encodeURIComponent(`*[_type == "mapa"] | order(orden asc){
+        titulo,
+        icono,
+        "url": imagen.asset->url
+    }`);
+    
+    const URL = `https://${ID_PROYECTO}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
+    const contenedor = document.getElementById('contenedor-botones-mapas');
+    const imgVisor = document.getElementById('foto-mapa-grande');
+    const txtVisor = document.getElementById('titulo-mapa-grande');
+
+    try {
+        const res = await fetch(URL);
+        const json = await res.json();
+        const mapas = json.result;
+
+        if (mapas && mapas.length > 0) {
+            contenedor.innerHTML = ''; // Limpiar botones viejos
+
+            mapas.forEach((mapa, i) => {
+                const btn = document.createElement('button');
+                btn.className = `map-item ${i === 0 ? 'active' : ''}`;
+                btn.innerHTML = `<span class="icon">${mapa.icono || '🗺️'}</span> ${mapa.titulo}`;
+                
+                btn.onclick = () => {
+                    // Cambiar clases active
+                    document.querySelectorAll('.map-item').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // Cambiar foto visor
+                    imgVisor.src = mapa.url;
+                    txtVisor.textContent = mapa.titulo;
+                };
+                contenedor.appendChild(btn);
+            });
+
+            // Cargar el primer mapa por defecto
+            imgVisor.src = mapas[0].url;
+            txtVisor.textContent = mapas[0].titulo;
+        }
+    } catch (e) {
+        console.error("Error cargando mapas:", e);
+    }
+}
+
+// Solo una vez en todo el archivo:
+const originalCambiarPestaña = window.cambiarPestaña;
+
+window.cambiarPestaña = function(idPestaña) {
+    if (typeof originalCambiarPestaña === 'function') {
+        originalCambiarPestaña(idPestaña);
+    }
+    
+    // Si entra a Maps
+    if (idPestaña === 'maps' || idPestaña === 'MAPS') {
+        cargarModuloMapas();
+    }
+    
+    // Si entra a Blog
+    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
+        cargarModuloBlog();
+    }
+};
