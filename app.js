@@ -304,13 +304,14 @@ function mostrarArticuloIzquierda(articulo) {
     zonaArticulo.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Asegurarnos de activarlo cuando cambies a la pestaña BLOG en la navegación
-// Modifica tu función original 'cambiarPestaña' y agrega esto al final:
+// Corregir el interceptor al final de tu app.js
 const originalCambiarPestaña = window.cambiarPestaña;
 window.cambiarPestaña = function(idPestaña) {
     if (typeof originalCambiarPestaña === 'function') {
         originalCambiarPestaña(idPestaña);
     }
+    
+    // 🌟 COMPROBACIÓN COMPLETAMENTE CORREGIDA:
     if (idPestaña === 'blog' || idPestaña === 'BLOG') {
         cargarModuloBlog();
     }
