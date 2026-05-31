@@ -316,3 +316,25 @@ window.cambiarPestaña = function(idPestaña) {
         cargarModuloBlog();
     }
 };
+
+function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
+    // 1. Cambiar la imagen y el título del visor (Lado izquierdo)
+    const imgGrande = document.getElementById('foto-mapa-grande');
+    const tituloGrande = document.getElementById('titulo-mapa-grande');
+    
+    if (imgGrande && tituloGrande) {
+        imgGrande.src = rutaImagen;
+        tituloGrande.textContent = tituloMapa;
+    }
+
+    // 2. Cambiar el estado visual del botón seleccionado (Lado derecho)
+    // Quitamos la clase 'active' de todos los botones de mapas
+    const botonesMapas = document.querySelectorAll('.map-item');
+    botonesMapas.forEach(btn => btn.classList.remove('active'));
+    
+    // Buscamos cuál botón fue el que recibió el click para ponerlo activo
+    // Usamos el evento de origen para saber qué botón se presionó
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
