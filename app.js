@@ -339,88 +339,24 @@ function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
     }
 }
 
-// ==========================================
-// CONFIGURACIÓN Y CARGA DE MAPAS DESDE SANITY
-// ==========================================
+// ============================================================
+// INTERCEPTOR UNIFICADO PARA PESTAÑAS DINÁMICAS (BLOG Y MAPAS)
+// ============================================================
 
-const SANITY_PROJECT_ID = 'hhdji3nw';
-const SANITY_DATASET = 'production';
-
-// Consulta GROQ para traer título, ícono y la URL real de la imagen en Sanity
-const QUERY_MAPAS = encodeURIComponent(`*[_type == "mapa"] | order(orden asc){
-    titulo,
-    icono,
-    "urlImagen": imagen.asset->url
-}`);
-
-const URL_API_MAPAS = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${QUERY_MAPAS}`;
-
-async function cargarModuloMapas() {
-    const contenedorBotones = document.getElementById('contenedor-botones-mapas');
-    const imgGrande = document.getElementById('foto-mapa-grande');
-    const tituloGrande = document.getElementById('titulo-mapa-grande');
-
-    // Si no estamos en la sección de mapas, salimos de la función
-    if (!contenedorBotones) return;
-
-    try {
-        const respuesta = await fetch(URL_API_MAPAS);
-        const datos = await respuesta.json();
-        const mapas = datos.result;
-
-        if (!mapas || mapas.length === 0) {
-            tituloGrande.textContent = "No se encontraron mapas en Sanity.";
-            return;
-        }
-
-        // 🌟 Limpiamos los botones estáticos de prueba que tenías en el HTML
-        contenedorBotones.innerHTML = '';
-
-        // Generamos los nuevos botones dinámicos con los datos reales
-        mapas.forEach((mapa, index) => {
-            const boton = document.createElement('button');
-            
-            // Si es el primer mapa de la lista, le asignamos la clase 'active' de una vez
-            boton.className = `map-item ${index === 0 ? 'active' : ''}`;
-            boton.innerHTML = `<span class="icon">${mapa.icono || '🗺️'}</span> ${mapa.titulo}`;
-            
-            // Asignamos el evento de clic a cada botón generado
-            boton.onclick = function() {
-                // Desactivar todos los botones de la lista
-                document.querySelectorAll('.map-item').forEach(b => b.classList.remove('active'));
-                
-                // Activar el botón al que se le hizo clic
-                boton.classList.add('active');
-                
-                // Actualizar el visor de la izquierda
-                imgGrande.src = mapa.urlImagen;
-                tituloGrande.textContent = mapa.titulo;
-            };
-
-            // Insertamos el botón en tu contenedor
-            contenedorBotones.appendChild(boton);
-        });
-
-        // Colocar el primer mapa de Sanity en el visor izquierdo de inicio
-        if (mapas[0]) {
-            imgGrande.src = mapas[0].urlImagen;
-            tituloGrande.textContent = mapas[0].titulo;
-        }
-
-    } catch (error) {
-        console.error("Error al cargar mapas de Sanity:", error);
-        tituloGrande.textContent = "Error al conectar con el servidor cartográfico.";
-    }
-}
-
-// Interceptor para detectar cuándo el usuario hace clic en tu pestaña "maps"
 const originalCambiarPestaña = window.cambiarPestaña;
+
 window.cambiarPestaña = function(idPestaña) {
+    // 1. Ejecutar primero la lógica original de tu plantilla (cambiar clases, ocultar/mostrar)
     if (typeof originalCambiarPestaña === 'function') {
         originalCambiarPestaña(idPestaña);
     }
     
-    // Si tu menú de navegación pasa 'maps' o 'MAPS', disparamos la carga de Sanity
+    // 2. Si el usuario entra al BLOG, cargamos sus datos de Sanity
+    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
+        cargarModuloBlog();
+    }
+    
+    // 3. Si el usuario entra a los MAPAS, cargamos sus datos de Sanity
     if (idPestaña === 'maps' || idPestaña === 'MAPS') {
         cargarModuloMapas();
     }
