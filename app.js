@@ -317,47 +317,30 @@ window.cambiarPestaña = function(idPestaña) {
     }
 };
 
+
+// ============================================================
+// INTERACCIÓN EXCLUSIVA PARA LA PESTAÑA DE MAPAS (ESTÁTICO)
+// ============================================================
 function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
-    // 1. Cambiar la imagen y el título del visor (Lado izquierdo)
+    // 1. Capturamos el visor de la izquierda (Imagen y Título)
     const imgGrande = document.getElementById('foto-mapa-grande');
     const tituloGrande = document.getElementById('titulo-mapa-grande');
     
+    // Si los elementos existen, cambiamos su contenido dinámicamente
     if (imgGrande && tituloGrande) {
         imgGrande.src = rutaImagen;
         tituloGrande.textContent = tituloMapa;
     }
 
-    // 2. Cambiar el estado visual del botón seleccionado (Lado derecho)
-    // Quitamos la clase 'active' de todos los botones de mapas
-    const botonesMapas = document.querySelectorAll('.map-item');
+    // 2. Cambiamos el estado visual del botón seleccionado en la derecha
+    // Buscamos todos los botones que tengan la clase 'map-item' dentro de la sección de mapas
+    const botonesMapas = document.querySelectorAll('#pantalla-mapas .map-item');
+    
+    // Le quitamos la clase 'active' a todos para que se apaguen
     botonesMapas.forEach(btn => btn.classList.remove('active'));
     
-    // Buscamos cuál botón fue el que recibió el click para ponerlo activo
-    // Usamos el evento de origen para saber qué botón se presionó
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
+    // Le ponemos la clase 'active' al botón exacto al que le acabamos de dar clic
+    if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
     }
 }
-
-// ============================================================
-// INTERCEPTOR UNIFICADO PARA PESTAÑAS DINÁMICAS (BLOG Y MAPAS)
-// ============================================================
-
-const originalCambiarPestaña = window.cambiarPestaña;
-
-window.cambiarPestaña = function(idPestaña) {
-    // 1. Ejecutar primero la lógica original de tu plantilla (cambiar clases, ocultar/mostrar)
-    if (typeof originalCambiarPestaña === 'function') {
-        originalCambiarPestaña(idPestaña);
-    }
-    
-    // 2. Si el usuario entra al BLOG, cargamos sus datos de Sanity
-    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-        cargarModuloBlog();
-    }
-    
-    // 3. Si el usuario entra a los MAPAS, cargamos sus datos de Sanity
-    if (idPestaña === 'maps' || idPestaña === 'MAPS') {
-        cargarModuloMapas();
-    }
-};
