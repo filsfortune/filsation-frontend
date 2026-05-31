@@ -211,32 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// ============================================================
-// INTERACCIÓN EXCLUSIVA PARA LA PESTAÑA DE MAPAS (ESTÁTICO)
-// ============================================================
-function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
-    // 1. Capturamos el visor de la izquierda (Imagen y Título)
-    const imgGrande = document.getElementById('foto-mapa-grande');
-    const tituloGrande = document.getElementById('titulo-mapa-grande');
-    
-    // Si los elementos existen, cambiamos su contenido dinámicamente
-    if (imgGrande && tituloGrande) {
-        imgGrande.src = rutaImagen;
-        tituloGrande.textContent = tituloMapa;
-    }
-
-    // 2. Cambiamos el estado visual del botón seleccionado en la derecha
-    // Buscamos todos los botones que tengan la clase 'map-item' dentro de la sección de mapas
-    const botonesMapas = document.querySelectorAll('#pantalla-mapas .map-item');
-    
-    // Le quitamos la clase 'active' a todos para que se apaguen
-    botonesMapas.forEach(btn => btn.classList.remove('active'));
-    
-    // Le ponemos la clase 'active' al botón exacto al que le acabamos de dar clic
-    if (window.event && window.event.currentTarget) {
-        window.event.currentTarget.classList.add('active');
-    }
-}
 
 // ==========================================
 // MÓDULO DE MAPAS DINÁMICOS DESDE SANITY
