@@ -439,3 +439,90 @@ header {
     background: #ccc;
     border-radius: 3px;
 }
+
+/* Contenedor Padre en modo Flexbox */
+.seccion-mapas {
+    display: flex;
+    width: 100%;
+    height: 80vh; /* Ajusta la altura a tu diseño */
+    gap: 20px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* LADO IZQUIERDO: Toma el 75% del espacio disponible */
+.visor-mapa {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e1e1e; /* Fondo oscuro elegante */
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+.visor-mapa img {
+    max-width: 100%;
+    max-height: 85%;
+    object-fit: contain; /* Evita que la foto se deforme */
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.visor-mapa h3 {
+    margin-top: 15px;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+/* LADO DERECHO: Barra lateral que toma el 25% */
+.lista-mapas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #181818;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.lista-mapas h3 {
+    color: #888;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+/* Estilo de los botones de la lista */
+.map-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #fff;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Efecto Hover */
+.map-item:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+/* Botón Activo (el que está seleccionado actualmente) */
+.map-item.active {
+    background-color: #007acc; /* Cambia al color de tu marca */
+    border-color: #0098ff;
+    font-weight: bold;
+}
