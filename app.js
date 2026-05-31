@@ -118,7 +118,7 @@ if (!respuesta.ok) {
 }
 
 // ==========================================
-// 4. LÓGICA DE LA GALERÍA DE SANITY
+// 4. LÓGICA DE LA GALERÍA FOTOS DE SANITY
 // ==========================================
 async function obtenerFotosDeSanity() {
     const contenedor = document.getElementById('contenedor-galeria');
@@ -235,6 +235,80 @@ function cambiarMapaVisualizado(rutaImagen, tituloMapa) {
     // Le ponemos la clase 'active' al botón exacto al que le acabamos de dar clic
     if (window.event && window.event.currentTarget) {
         window.event.currentTarget.classList.add('active');
+    }
+}
+
+// ==========================================
+// MÓDULO DE MAPAS DINÁMICOS DESDE SANITY
+// ==========================================
+async function cargarModuloMapas() {
+    const SANITY_PROJECT_ID = 'hhdji3nw';
+    const SANITY_DATASET = 'production';
+    
+    // Traemos el título, el ícono y la URL limpia de la imagen desde Sanity
+    const queryMapas = encodeURIComponent(`*[_type == "mapa"] | order(orden asc){
+        titulo,
+        icono,
+        "urlImagen": imagen.asset->url
+    }`);
+    
+    const rutaApiSanity = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${queryMapas}`;
+
+    // Apuntamos a los elementos de tu diseño actual
+    const contenedorBotones = document.getElementById('contenedor-botones-mapas');
+    const imgGrande = document.getElementById('foto-mapa-grande');
+    const tituloGrande = document.getElementById('titulo-mapa-grande');
+
+    if (!contenedorBotones) return;
+
+    try {
+        const respuesta = await fetch(rutaApiSanity);
+        const datos = await respuesta.json();
+        const mapas = datos.result;
+
+        if (!mapas || mapas.length === 0) {
+            if (tituloGrande) tituloGrande.textContent = "No hay mapas disponibles.";
+            return;
+        }
+
+        // 1. Limpiamos los botones estáticos de prueba para meter los reales de Sanity
+        contenedorBotones.innerHTML = '';
+
+        // 2. Generamos la lista lateral derecha dinámicamente
+        mapas.forEach((mapa, index) => {
+            const boton = document.createElement('button');
+            
+            // Si es el primer mapa, le ponemos la clase 'active' para que combine con tu CSS
+            boton.className = `map-item ${index === 0 ? 'active' : ''}`;
+            boton.innerHTML = `<span class="icon">${mapa.icono || '🗺️'}</span> ${mapa.titulo}`;
+            
+            // Al hacer clic en cualquier botón de la derecha...
+            boton.onclick = function() {
+                // Quitamos la clase 'active' de todos los botones para apagarlos
+                document.querySelectorAll('#contenedor-botones-mapas .map-item').forEach(b => b.classList.remove('active'));
+                
+                // Se la ponemos solo al botón seleccionado
+                boton.classList.add('active');
+                
+                // Cambiamos la foto y el título del visor del lado izquierdo
+                if (imgGrande) imgGrande.src = mapa.urlImagen;
+                if (tituloGrande) tituloGrande.textContent = mapa.titulo;
+            };
+
+            // Lo metemos en la barra lateral derecha
+            contenedorBotones.appendChild(boton);
+        });
+
+        // 3. Inicialización por defecto:
+        // Mostramos el primer mapa de Sanity en el visor izquierdo apenas el usuario abra la pestaña
+        if (mapas[0]) {
+            if (imgGrande) imgGrande.src = mapas[0].urlImagen;
+            if (tituloGrande) tituloGrande.textContent = mapas[0].titulo;
+        }
+
+    } catch (error) {
+        console.error("Error cargando mapas desde Sanity:", error);
+        if (tituloGrande) tituloGrande.textContent = "Error al conectar con Sanity.";
     }
 }
 
