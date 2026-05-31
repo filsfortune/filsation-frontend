@@ -311,7 +311,7 @@ window.cambiarPestaña = function(idPestaña) {
     if (typeof originalCambiarPestaña === 'function') {
         originalCambiarPestaña(idPestaña);
     }
-    if (idPestaña === 'blog' || idParrafo === 'BLOG') {
+    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
         cargarModuloBlog();
     }
 };
