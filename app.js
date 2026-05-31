@@ -395,21 +395,3 @@ async function cargarModuloMapas() {
     }
 }
 
-// Solo una vez en todo el archivo:
-const originalCambiarPestaña = window.cambiarPestaña;
-
-window.cambiarPestaña = function(idPestaña) {
-    if (typeof originalCambiarPestaña === 'function') {
-        originalCambiarPestaña(idPestaña);
-    }
-    
-    // Si entra a Maps
-    if (idPestaña === 'maps' || idPestaña === 'MAPS') {
-        cargarModuloMapas();
-    }
-    
-    // Si entra a Blog
-    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-        cargarModuloBlog();
-    }
-};
