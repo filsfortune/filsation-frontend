@@ -567,31 +567,72 @@ header {
         padding: 10px 5px;
     }
 
+    @media (max-width: 768px) {
+
+    /* [Tus otros estilos de Home siguen igual aquí arriba...] */
+
     /* --------------------------------------------------------
-       2. PESTAÑA: HOME (Inicio y Presentación)
+       3. PESTAÑA: MAPS (Orden perfecto para Móvil)
        -------------------------------------------------------- */
-    .home-container, .seccion-home {
+    
+    /* Contenedor principal de la pestaña */
+    .seccion-mapas {
         display: flex;
-        flex-direction: column;
+        flex-direction: column !important; /* Todo en fila vertical de arriba a abajo */
+        gap: 15px;
+        padding: 10px;
+        height: auto !important;
+    }
+
+    /* El título se queda arriba de todo naturalmente */
+    #titulo-mapa-grande {
+        font-size: 1.4rem;
         text-align: center;
-        align-items: center;
-        gap: 20px;
+        margin-bottom: 5px;
+        order: 1; /* Primero el título */
     }
 
-    .home-avatar, .profile-pic {
-        width: 120px; /* Un poco más pequeña y centrada */
-        height: 120px;
+    /* 2. El visor del mapa se ubica en el MEDIO */
+    .visor-mapa {
+        width: 100% !important;
+        height: 45vh !important; /* 45% del alto de la pantalla para el mapa interactivo */
+        order: 2; /* Segundo el mapa */
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
-    .home-text h1 {
-        font-size: 1.8rem; /* Título imponente pero adaptado */
-        line-height: 1.3;
+    /* Contenedor real donde Leaflet dibuja el mapa */
+    #mapa-interactivo {
+        width: 100% !important;
+        height: 100% !important;
     }
 
-    .home-text p {
-        font-size: 1rem;
-        padding: 0 10px;
+    /* 3. La lista de mapas/descripción del municipio se va ABAJO */
+    .lista-mapas {
+        width: 100% !important;
+        order: 3; /* Tercero los controles y descripción */
+        padding: 10px 0;
     }
+
+    /* Los botones se deslizan de lado a lado abajo del mapa */
+    #contenedor-botones-mapas {
+        display: flex;
+        flex-direction: row !important;
+        overflow-x: auto; /* Scroll horizontal ↔️ */
+        gap: 8px;
+        padding: 5px 5px 15px 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .map-item {
+        flex: 0 0 auto;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        border-radius: 20px;
+    }
+}
 
     /* --------------------------------------------------------
        3. PESTAÑA: MAPS (Visor Cartográfico de Sanity)
