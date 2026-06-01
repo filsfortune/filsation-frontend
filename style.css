@@ -526,3 +526,175 @@ header {
     border-color: #0098ff;
     font-weight: bold;
 }
+
+
+/* ============================================================
+   ESTILOS RESPONSIVOS GLOBALES PARA MÓVILES (MÁXIMO 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+    
+    /* --------------------------------------------------------
+       1. REGLAS GENERALES Y MENÚ DE NAVEGACIÓN
+       -------------------------------------------------------- */
+    body {
+        font-size: 14px; /* Ajuste de lectura general en pantallas chicas */
+    }
+
+    /* Si tu menú es una barra lateral, la pasamos a la parte superior o inferior */
+    nav, .sidebar-menu {
+        width: 100% !important;
+        height: auto !important;
+        position: fixed;
+        bottom: 0; /* Estilo app móvil: menú abajo para el pulgar */
+        left: 0;
+        z-index: 9999;
+        display: flex;
+        justify-content: space-around;
+        background: #000000;
+        border-top: 1px solid #222;
+        padding: 10px 0;
+    }
+
+    /* Ajustamos el contenedor principal para que no lo tape el menú inferior */
+    main, .main-content {
+        margin-left: 0 !important;
+        margin-bottom: 60px; /* Espacio de seguridad para el menú */
+        padding: 15px;
+        width: 100% !important;
+    }
+
+    .tab-content {
+        padding: 10px 5px;
+    }
+
+    /* --------------------------------------------------------
+       2. PESTAÑA: HOME (Inicio y Presentación)
+       -------------------------------------------------------- */
+    .home-container, .seccion-home {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .home-avatar, .profile-pic {
+        width: 120px; /* Un poco más pequeña y centrada */
+        height: 120px;
+    }
+
+    .home-text h1 {
+        font-size: 1.8rem; /* Título imponente pero adaptado */
+        line-height: 1.3;
+    }
+
+    .home-text p {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    /* --------------------------------------------------------
+       3. PESTAÑA: MAPS (Visor Cartográfico de Sanity)
+       -------------------------------------------------------- */
+    .seccion-mapas {
+        display: flex;
+        flex-direction: column !important; /* Coloca visor arriba, botones abajo */
+        height: auto !important;
+        gap: 15px;
+    }
+
+    .visor-mapa {
+        width: 100% !important;
+        height: 50vh !important; /* Limita el alto del mapa en el teléfono */
+        padding: 0;
+    }
+
+    #foto-mapa-grande {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Para que las rutas de transporte no se corten */
+        background: #000;
+    }
+
+    .lista-mapas {
+        width: 100% !important;
+        padding: 5px 0;
+    }
+
+    /* Transformamos los botones de mapas en un carrusel horizontal deslizable con el dedo */
+    #contenedor-botones-mapas {
+        display: flex;
+        flex-direction: row !important; 
+        overflow-x: auto; /* Permite scroll horizontal hacia los lados ↔️ */
+        gap: 10px;
+        padding: 5px 5px 12px 5px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .map-item {
+        flex: 0 0 auto; /* Evita que los botones se deformen o se encojan */
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        white-space: nowrap; /* Mantiene el texto del botón en una sola línea */
+        border-radius: 20px; /* Estilo píldora interactiva */
+    }
+
+    /* --------------------------------------------------------
+       4. PESTAÑA: FOTO (Galería de Fotografías Urbanas)
+       -------------------------------------------------------- */
+    /* Pasamos la rejilla de imágenes a 1 sola columna (o 2 si son fotos verticales) */
+    .galeria-fotos, .grid-fotos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important; /* Se adapta al ancho disponible */
+        gap: 8px; /* Espaciado más compacto y elegante en celulares */
+        padding: 5px;
+    }
+
+    .foto-item img {
+        border-radius: 6px;
+        transition: transform 0.2s ease;
+    }
+
+    /* Ajuste para el visor modal cuando tocas una foto para verla en grande */
+    .modal-foto-contenido {
+        width: 95% !important;
+        max-height: 80vh;
+        object-fit: contain;
+    }
+
+    /* --------------------------------------------------------
+       5. PESTAÑA: BLOG (Publicaciones y Artículos)
+       -------------------------------------------------------- */
+    /* La lista de artículos pasa a ocupar todo el ancho */
+    .contenedor-blog, .seccion-blog {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 5px;
+    }
+
+    /* Cada tarjeta de artículo se adapta de forma vertical */
+    .post-card, .articulo-item {
+        display: flex;
+        flex-direction: column !important; /* Si tenía la foto al lado, ahora va arriba */
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .post-card-imagen, .articulo-img {
+        width: 100% !important;
+        height: 200px; /* Alto fijo de portada en móvil */
+        object-fit: cover;
+    }
+
+    .post-card-contenido, .articulo-texto {
+        padding: 15px;
+    }
+
+    .post-card-contenido h2 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+}
