@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ==========================================
-// MÓDULO DE MAPAS DINÁMICOS DESDE SANITY
+// MÓDULO DE MAPS DINÁMICOS DESDE SANITY
 // ==========================================
 async function cargarModuloMapas() {
     const SANITY_PROJECT_ID = 'hhdji3nw';
