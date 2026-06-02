@@ -703,39 +703,3 @@ header {
         max-height: 80vh;
         object-fit: contain;
     }
-
-    /* --------------------------------------------------------
-       5. PESTAÑA: BLOG (Publicaciones y Artículos)
-       -------------------------------------------------------- */
-    /* La lista de artículos pasa a ocupar todo el ancho */
-    .contenedor-blog, .seccion-blog {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 5px;
-    }
-
-    /* Cada tarjeta de artículo se adapta de forma vertical */
-    .post-card, .articulo-item {
-        display: flex;
-        flex-direction: column !important; /* Si tenía la foto al lado, ahora va arriba */
-        width: 100%;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .post-card-imagen, .articulo-img {
-        width: 100% !important;
-        height: 200px; /* Alto fijo de portada en móvil */
-        object-fit: cover;
-    }
-
-    .post-card-contenido, .articulo-texto {
-        padding: 15px;
-    }
-
-    .post-card-contenido h2 {
-        font-size: 1.3rem;
-        margin-bottom: 8px;
-    }
-}
