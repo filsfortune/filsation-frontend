@@ -325,7 +325,120 @@ header {
 }
 @media (max-width: 480px) {  .grid-pinterest { column-count: 1; } }
 
+/* Contenedor dividido en 2 columnas */
+.blog-split-container {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 140px); /* Resta la altura del header para que no cree scroll general */
+    padding: 0 60px;             /* Alineado milimétricamente con 'Filsation' */
+    gap: 40px;
+    box-sizing: border-box;
+    margin-top: 20px;
+}
 
+/* 🏢 COLUMNA IZQUIERDA: Lectura del artículo completo */
+.blog-articulo-completo {
+    flex: 1;                     /* Ocupa la mayor parte del espacio izquierdo */
+    height: 100%;
+    overflow-y: auto;            /* 🌟 Habilita el scroll independiente solo aquí */
+    padding-right: 20px;
+}
+
+/* Estilos internos del artículo completo */
+.blog-articulo-completo img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.blog-articulo-completo h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-family: inherit;
+}
+
+.blog-articulo-completo .meta-fecha {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.blog-articulo-completo .cuerpo-texto {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
+
+/* 📑 COLUMNA DERECHA: Lista lateral fija */
+.blog-lista-lateral {
+    width: 350px;                /* Ancho fijo para las miniaturas estilo barra lateral */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-lista-lateral h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.blog-lista-contenedor {
+    flex: 1;
+    overflow-y: auto;            /* Por si tienes demasiados artículos en la lista */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 🎴 TARJETAS MINIATURA (Derecha) */
+.tarjeta-miniatura {
+    display: flex;
+    gap: 15px;
+    cursor: pointer;
+    padding: 10px;
+    transition: background 0.2s ease;
+}
+
+.tarjeta-miniatura:hover {
+    background-color: #f5f5f5;
+}
+
+.tarjeta-miniatura.activa {
+    background-color: #ebebeb;   /* Destaca cuál artículo se está leyendo */
+    border-left: 3px solid #000;
+}
+
+.tarjeta-miniatura img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.tarjeta-miniatura .info-miniatura h4 {
+    font-size: 0.95rem;
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+}
+
+.tarjeta-miniatura .info-miniatura span {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Personalizar barra de scroll fina y elegante */
+.blog-articulo-completo::-webkit-scrollbar,
+.blog-lista-contenedor::-webkit-scrollbar {
+    width: 6px;
+}
+.blog-articulo-completo::-webkit-scrollbar-thumb,
+.blog-lista-contenedor::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
 
 /* Contenedor Padre en modo Flexbox */
 .seccion-mapas {
