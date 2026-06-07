@@ -1,5 +1,5 @@
 // ===================================================
-// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES PARA PHOTOS
+// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES
 // ===================================================
 // API de Sanity para las fotos
 const PROJECT_ID = 'hhdji3nw'; 
@@ -10,12 +10,6 @@ const API_VERSION = 'v2021-10-21';
 const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
-// ===================================================
-// 1. CONFIGURACIÓN Y CREDENCIALES DE SANITY PARA MAPS
-// ===================================================
-const PROJECT_ID = 'hhdji3nw'; 
-const DATASET = 'production';
-const API_VERSION = 'v2021-10-21';
 
 // Tu Query para extraer los mapas cartográficos
 const queryMapas = encodeURIComponent('*[_type == "mapaTematico"]{ titulo, descripcion, "urlImagen": imagen.asset->url }');
