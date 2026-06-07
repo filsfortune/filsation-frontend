@@ -13,7 +13,7 @@ const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query
 
 // Tu Query para extraer los mapas cartográficos
 const queryMapas = encodeURIComponent('*[_type == "mapa"]{ titulo, "urlImagen": imagen.asset->url }');
-const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
+const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryMapas}`;
 
 // 🗺️ Tu Backend en Render para los datos GIS de La Habana
 const API_URL_BACKEND = 'https://filsation-api.onrender.com/api'; 
