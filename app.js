@@ -1,12 +1,23 @@
-// ==========================================
-// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES
-// ==========================================
+// ===================================================
+// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES PARA PHOTOS
+// ===================================================
 // API de Sanity para las fotos
 const PROJECT_ID = 'hhdji3nw'; 
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
+
+// ==========================================
+// 1. CONFIGURACIÓN Y CREDENCIALES DE SANITY
+// ==========================================
+const PROJECT_ID = 'hhdji3nw'; 
+const DATASET = 'production';
+const API_VERSION = 'v2021-10-21';
+
+// Tu Query para extraer los mapas cartográficos
+const queryMapas = encodeURIComponent('*[_type == "mapaTematico"]{ titulo, descripcion, "urlImagen": imagen.asset->url }');
+const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryMapas}`;
 
 // 🗺️ Tu Backend en Render para los datos GIS de La Habana
 const API_URL_BACKEND = 'https://filsation-api.onrender.com/api'; 
@@ -41,6 +52,11 @@ function cambiarPestaña(idPestaña) {
     // Si entras a Fotos, las cargamos en ese instante
     if (idPestaña === 'photos' || idPestaña === 'PHOTOS') {
         obtenerFotosDeSanity();
+    }
+
+    // DISPARADOR INTELIGENTE: Si el usuario pulsa 'MAPS', se activa la conexión a Sanity
+    if (idPestaña === 'maps') {
+        cargarMapasDesdeSanity();
     }
 }
 // Lo exponemos al HTML obligatoriamente
@@ -176,6 +192,75 @@ function abrirLightboxZoom(foto) {
     if (descZoom) descZoom.textContent = foto.descripcion || '';
 
     if (lightbox) lightbox.classList.add('activo');
+}
+
+// ==========================================
+// 2. FUNCIÓN DE CARGA DESDE SANITY PARA MAPS
+// ==========================================
+async function cargarMapasDesdeSanity() {
+    const contenedorLista = document.getElementById('ancla-lista-mapas');
+    const visorImagen = document.getElementById('foto-visor-principal');
+    
+    // Si ya hay tarjetas dibujadas, no volvemos a hacer la petición
+    if (contenedorLista && contenedorLista.querySelectorAll('.carta-mapa-item').length > 0) return;
+
+    try {
+        const respuesta = await fetch(urlSanityMapas);
+        if (!respuesta.ok) throw new Error("Fallo en la respuesta del servidor");
+        
+        const datos = await respuesta.json();
+        const listaDeMapas = datos.result;
+
+        if (!contenedorLista) return;
+        contenedorLista.innerHTML = ''; // Limpiamos el texto "Conectando..."
+
+        if (listaDeMapas.length === 0) {
+            contenedorLista.innerHTML = '<div class="cargando-estado">No hay mapas cargados en Sanity.</div>';
+            return;
+        }
+
+        // Proyectamos el primer mapa de Sanity de manera automática al abrir la sección
+        if (visorImagen && !visorImagen.src) {
+            visorImagen.src = listaDeMapas[0].urlImagen;
+            visorImagen.alt = listaDeMapas[0].titulo;
+        }
+
+        // Creamos los botones laterales para cada mapa
+        listaDeMapas.forEach((mapa, index) => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'carta-mapa-item';
+            
+            if (index === 0) tarjeta.classList.add('seleccionada');
+
+            tarjeta.innerHTML = `
+                <h4>${mapa.titulo || 'Mapa Temático'}</h4>
+                <p>${mapa.descripcion || 'Sin descripción.'}</p>
+            `;
+
+            // Al hacer clic, cambiamos la foto reflejada en la parte izquierda
+            tarjeta.addEventListener('click', () => {
+                document.querySelectorAll('.carta-mapa-item').forEach(c => c.classList.remove('seleccionada'));
+                tarjeta.classList.add('seleccionada');
+
+                if (visorImagen) {
+                    visorImagen.style.opacity = '0.3';
+                    setTimeout(() => {
+                        visorImagen.src = mapa.urlImagen;
+                        visorImagen.alt = mapa.titulo;
+                        visorImagen.style.opacity = '1';
+                    }, 150);
+                }
+            });
+
+            contenedorLista.appendChild(tarjeta);
+        });
+
+    } catch (error) {
+        console.error("Error conectando a la API de Sanity:", error);
+        if (contenedorLista) {
+            contenedorLista.innerHTML = '<div class="cargando-estado" style="color: red;">Error al sincronizar datos de mapas.</div>';
+        }
+    }
 }
 
 // ==========================================
