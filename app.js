@@ -5,6 +5,8 @@
 const PROJECT_ID = 'hhdji3nw'; 
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
+
+// Tu Query para extraer las fotos
 const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
