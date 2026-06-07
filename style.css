@@ -540,3 +540,47 @@ header {
         margin-bottom: 10px;
     }
 }
+
+/* =======================================================
+   OPTIMIZACIÓN DEL MURO PINTEREST (2 COLUMNAS EN MÓVIL)
+   ======================================================== */
+@media (max-width: 800px) {  
+    .grid-pinterest { 
+        column-count: 2;        /* 2 columnas perfectas en el celular */
+        column-gap: 12px;       /* 🌟 Separación elegante hacia los lados */
+        padding: 0 15px;        /* Reducimos el colchón de 60px a 15px para ganar pantalla */
+        margin-top: 15px;
+    } 
+
+    .tarjeta-foto-pinterest {
+        margin-bottom: 12px;    /* 🌟 Separación uniforme hacia abajo */
+        
+        /* 🌟 Ajustamos el limitador para que se calcule en base a 2 columnas y no a 6 */
+        max-width: calc((100vw - 30px) / 2); 
+    }
+
+    /* --------------------------------------------------------
+       AJUSTES EXTRA: Lightbox/Modal de Fotos en móvil 
+       -------------------------------------------------------- */
+    .lightbox-contenido { 
+        flex-direction: column; 
+        max-height: 90vh; 
+        width: 92%;
+    }
+    .lightbox-col-izquierda { 
+        max-height: 45vh; /* La foto ocupa la mitad superior del modal */
+        width: 100%;
+    }
+    .lightbox-col-derecha { 
+        padding: 25px 20px; /* Reducimos el acolchado del texto */
+    }
+    .lightbox-col-derecha h2 {
+        font-size: 1.5rem; /* Título del proyecto/foto más compacto */
+    }
+    .cerrar-btn { 
+        top: 15px; 
+        right: 20px; 
+        color: #fff; /* X en blanco para que resalte sobre la imagen */
+        font-size: 40px;
+    }
+}
