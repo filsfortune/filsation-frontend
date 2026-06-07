@@ -13,7 +13,7 @@ const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query
 
 // Tu Query para extraer los mapas cartográficos
 const queryMapas = encodeURIComponent('*[_type == "mapaTematico"]{ titulo, descripcion, "urlImagen": imagen.asset->url }');
-const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryMapas}`;
+const queryMapas = encodeURIComponent('*[_type == "mapa"]{ titulo, "urlImagen": imagen.asset->url }');
 
 // 🗺️ Tu Backend en Render para los datos GIS de La Habana
 const API_URL_BACKEND = 'https://filsation-api.onrender.com/api'; 
@@ -230,7 +230,7 @@ async function cargarMapasDesdeSanity() {
 
             tarjeta.innerHTML = `
                 <h4>${mapa.titulo || 'Mapa Temático'}</h4>
-                <p>${mapa.descripcion || 'Sin descripción.'}</p>
+                <p>Plano cartográfico técnico.</p>
             `;
 
             // Al hacer clic, cambiamos la foto reflejada en la parte izquierda
