@@ -352,10 +352,11 @@ header {
    6. Seccion de MAPAS (Vista de Ordenador)
    ========================================== */
 
-/* Contenedor Padre: Fuerza la distribución a los lados (Fila) */
+/* CONTENEDOR PADRE: Fuerza la distribución horizontal estricta */
 .seccion-mapas {
-    display: flex;
-    flex-direction: row; /* Asegura Visor a la izquierda, Lista a la derecha */
+    display: flex !important;
+    flex-direction: row !important; /* ← Fuerza el visor a la izquierda y la lista a la derecha */
+    flex-wrap: nowrap !important;   /* ← Evita que los bloques se vayan abajo si la pantalla es pequeña */
     width: 100%;
     height: 80vh; 
     gap: 20px;
@@ -363,41 +364,42 @@ header {
     box-sizing: border-box;
 }
 
-/* LADO IZQUIERDO: Ocupa el 75% del espacio disponible */
+/* LADO IZQUIERDO: El Visor (Toma las 3/4 partes) */
 .visor-mapa {
-    flex: 3;
+    flex: 3 !important;
+    min-width: 0; /* Evita que elementos internos desborden el flex */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #1e1e1e; /* Fondo oscuro elegante */
+    background-color: #1e1e1e;
     border-radius: 8px;
     padding: 20px;
     border: 1px solid #333;
     box-sizing: border-box;
 }
 
-/* Imagen del mapa dinámico de Sanity */
+/* La imagen del mapa */
 #foto-mapa-grande {
     max-width: 100%;
-    max-height: 80%; /* Deja un 20% libre para el texto inferior */
-    object-fit: contain; /* Evita que la cartografía se deforme */
+    max-height: 85%;
+    object-fit: contain;
     border-radius: 4px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-/* Título dinámico del mapa controlado por tu JavaScript */
+/* Título inferior en el visor */
 #titulo-mapa-grande {
     margin-top: 15px;
     color: #ffffff;
-    font-size: 1.3rem;
-    font-weight: 500;
+    font-size: 1.2rem;
     text-align: center;
 }
 
-/* LADO DERECHO: Barra lateral que toma el 25% */
+/* LADO DERECHO: La barra lateral (Toma 1/4 parte) */
 .lista-mapas {
-    flex: 1;
+    flex: 1 !important;
+    min-width: 250px; /* ← Le da un ancho mínimo asegurado para que no se aplaste */
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -408,52 +410,23 @@ header {
     box-sizing: border-box;
 }
 
+/* El título interno de la barra lateral */
 .lista-mapas h3 {
     color: #888;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 5px;
+    margin-top: 0;
 }
 
-/* Contenedor INTERNO donde tu JS inyecta los botones con appendChild() */
+/* Contenedor donde tu JS inyecta verticalmente los botones */
 #contenedor-botones-mapas {
     display: flex;
-    flex-direction: column; /* Apila los botones verticalmente hacia abajo */
+    flex-direction: column; /* Botones apilados hacia abajo */
     gap: 10px;
-    overflow-y: auto;       /* Si metes muchos mapas en Sanity, crea scroll interno aquí */
-    height: 100%;           /* Aprovecha todo el alto de la barra lateral */
-    padding-right: 5px;     /* Espacio para que la barra de scroll no pise los botones */
-}
-
-/* Estilo individual de los botones inyectados (.map-item) */
-.map-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 12px 15px;
-    background-color: #222;
-    border: 1px solid #444;
-    border-radius: 6px;
-    color: #fff;
-    text-align: left;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* Efecto Hover al pasar el mouse */
-.map-item:hover {
-    background-color: #333;
-    border-color: #555;
-}
-
-/* Botón Activo (El seleccionado por el script de Sanity) */
-.map-item.active {
-    background-color: #007acc; /* Azul de énfasis */
-    border-color: #0098ff;
-    font-weight: bold;
+    overflow-y: auto;       /* Scroll vertical si se acumulan muchos mapas */
+    height: 100%;
 }
     /* --------------------------------------------------------
        7. PESTAÑA: MAPS (Visor Cartográfico de Sanity)
