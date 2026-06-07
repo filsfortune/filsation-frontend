@@ -528,47 +528,6 @@ header {
 }
 
 
-/* ============================================================
-   ESTILOS RESPONSIVOS GLOBALES PARA MÓVILES (MÁXIMO 768px)
-   ============================================================ */
-@media (max-width: 768px) {
-    
-    /* --------------------------------------------------------
-       1. REGLAS GENERALES Y MENÚ DE NAVEGACIÓN
-       -------------------------------------------------------- */
-    body {
-        font-size: 14px; /* Ajuste de lectura general en pantallas chicas */
-    }
-
-    /* Si tu menú es una barra lateral, la pasamos a la parte superior o inferior */
-    nav, .sidebar-menu {
-        width: 100% !important;
-        height: auto !important;
-        position: fixed;
-        bottom: 0; /* Estilo app móvil: menú abajo para el pulgar */
-        left: 0;
-        z-index: 9999;
-        display: flex;
-        justify-content: space-around;
-        background: #000000;
-        border-top: 1px solid #222;
-        padding: 10px 0;
-    }
-
-    /* Ajustamos el contenedor principal para que no lo tape el menú inferior */
-    main, .main-content {
-        margin-left: 0 !important;
-        margin-bottom: 60px; /* Espacio de seguridad para el menú */
-        padding: 15px;
-        width: 100% !important;
-    }
-
-    .tab-content {
-        padding: 10px 5px;
-    }
-
-    
-
     /* --------------------------------------------------------
        3. PESTAÑA: MAPS (Visor Cartográfico de Sanity)
        -------------------------------------------------------- */
