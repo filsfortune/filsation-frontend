@@ -584,3 +584,71 @@ header {
         font-size: 40px;
     }
 }
+
+/* =======================================================
+   REESTRUCTURACIÓN DE MAPS EN MÓVIL: SIDEBAR ARRIBA (HORIZONTAL) + VISOR ABAJO
+   ======================================================== */
+@media (max-width: 800px) {
+    /* 1. Volteamos el orden: Sidebar arriba, Pantalla Mapa abajo */
+    .visor-dashboard {
+        flex-direction: column-reverse; 
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* 2. Ajustamos el visor de mapas para que se quede en la parte inferior */
+    .pantalla-mapa {
+        width: 100%;
+        height: 55vh; /* Le damos el 55% del alto de la pantalla del celular */
+        padding: 15px;
+    }
+
+    /* 3. El panel lateral pasa a ocupar la parte superior */
+    .sidebar-lista {
+        width: 100%;
+        height: 45vh; /* Ocupa el resto del espacio disponible */
+        border-left: none;
+        border-bottom: 1px solid #eef0f2; /* Separador ahora abajo */
+    }
+
+    /* Compactamos un poco la información de la cabecera del sidebar */
+    .sidebar-info {
+        padding: 12px 20px;
+        border-bottom: 1px solid #f0f2f5;
+    }
+    
+    .sidebar-info h3 { font-size: 15px; }
+    .sidebar-info p { font-size: 11px; }
+
+    /* 4. ¡EL TRUCO MAESTRO!: Convertimos la lista en un carrusel horizontal */
+    .lista-cartas {
+        padding: 15px 20px;
+        flex-direction: row;      /* 👈 Alinea las tarjetas una al lado de la otra */
+        overflow-x: auto;         /* 👈 Activa el scroll horizontal */
+        overflow-y: hidden;       /* Bloquea por completo el scroll vertical */
+        flex-grow: 1;
+        gap: 12px;
+        
+        /* Suaviza el deslizamiento táctil en iPhones y Android */
+        -webkit-overflow-scrolling: touch; 
+        
+        /* Opcional: Alinea los elementos en el centro vertical del contenedor */
+        align-items: center; 
+    }
+
+    /* 5. Forzamos a las tarjetas a mantener su ancho sin encogerse */
+    .carta-mapa-item {
+        padding: 14px;
+        min-width: 240px;        /* 👈 Crucial: evita que el navegador aplaste las tarjetas */
+        max-width: 280px;
+        height: auto;
+        flex-shrink: 0;          /* 👈 Obliga a la tarjeta a respetar su 'min-width' en la fila */
+    }
+
+    .carta-mapa-item h4 {
+        font-size: 14px;
+        white-space: nowrap;     /* Evita que el título se rompa en dos líneas si es largo */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Si el título no cabe, añade tres puntitos "..." */
+    }
+}
