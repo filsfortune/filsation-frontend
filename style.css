@@ -348,3 +348,89 @@ header {
         object-fit: contain;
     }
 
+
+    /* Contenedor general que divide la pantalla en 2 */
+.visor-dashboard {
+    display: flex;
+    height: 100%; /* Ocupa exactamente el alto de la pestaña */
+    width: 100%;
+}
+
+/* ==========================================
+   COLUMNA IZQUIERDA (PANTALLA DE LA FOTO)
+   ========================================== */
+.pantalla-mapa {
+    width: 70%; /* Relación de aspecto 70/30 */
+    height: 100%;
+    background-color: #111111; /* Fondo oscuro para resaltar planos técnicos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* El truco maestro para que la foto NUNCA deforme la pestaña */
+.pantalla-mapa img {
+    max-width: 100%;  /* No se estira más allá del ancho de su columna */
+    max-height: 100%; /* No se estira más allá del alto de la pantalla */
+    object-fit: contain; /* Mantiene su proporción original (no se aplasta) */
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: opacity 0.2s ease; /* Transición suave al cambiar de mapa */
+}
+
+/* ==========================================
+   COLUMNA DERECHA (EL PANEL LATERAL)
+   ========================================== */
+.sidebar-lista {
+    width: 30%;
+    height: 100%;
+    background-color: #ffffff;
+    border-left: 1px solid #eef0f2;
+    display: flex;
+    flex-direction: column; /* Organiza la cabecera arriba y la lista abajo */
+    box-sizing: border-box;
+}
+
+.sidebar-info {
+    padding: 25px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+/* La lista con scroll independiente */
+.lista-cartas {
+    padding: 20px;
+    overflow-y: auto; /* IMPORTANTE: Si hay 50 mapas, el scroll se queda SOLO aquí dentro */
+    flex-grow: 1;    /* Absorbe todo el espacio vertical disponible */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Tarjetas generadas por JavaScript */
+.carta-mapa-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.carta-mapa-item:hover {
+    background-color: #f1f3f5;
+    border-color: #ced4da;
+}
+
+/* Tarjeta actualmente activa */
+.carta-mapa-item.seleccionada {
+    background-color: #ffffff;
+    border-color: #111111;
+    border-width: 2px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.carta-mapa-item h4 { margin: 0 0 6px 0; font-size: 15px; font-weight: 600; }
+.carta-mapa-item p { margin: 0; font-size: 12px; color: #626d77; line-height: 1.5; }
+.cargando-estado { text-align: center; color: #999; font-size: 14px; margin-top: 20px; }
