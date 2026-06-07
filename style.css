@@ -463,6 +463,13 @@ header {
         background: #000;
     }
 
+    #titulo-mapa-grande {
+        font-size: 1.1rem;
+        color: #ffffff;
+        margin-top: 10px;
+        text-align: center;
+    }
+
     .lista-mapas {
         width: 100% !important;
         padding: 5px 0;
