@@ -216,9 +216,9 @@ async function cargarMapasDesdeSanity() {
         }
 
         // Proyectamos el primer mapa de Sanity de manera automática al abrir la sección
-        if (visorImagen && !visorImagen.src) {
+        if (visorImagen) {
             visorImagen.src = listaDeMapas[0].urlImagen;
-            visorImagen.alt = listaDeMapas[0].titulo;
+           visorImagen.alt = listaDeMapas[0].titulo || 'Mapa de la Ciudad';
         }
 
         // Creamos los botones laterales para cada mapa
@@ -229,7 +229,7 @@ async function cargarMapasDesdeSanity() {
             if (index === 0) tarjeta.classList.add('seleccionada');
 
             tarjeta.innerHTML = `
-                <h4>${mapa.titulo || 'Mapa Temático'}</h4>
+                <h4>${mapa.titulo || 'Sin título'}</h4>
                 <p>Plano cartográfico técnico.</p>
             `;
 
@@ -242,7 +242,7 @@ async function cargarMapasDesdeSanity() {
                     visorImagen.style.opacity = '0.3';
                     setTimeout(() => {
                         visorImagen.src = mapa.urlImagen;
-                        visorImagen.alt = mapa.titulo;
+                        visorImagen.alt = mapa.titulo || 'Mapa Seleccionado';
                         visorImagen.style.opacity = '1';
                     }, 150);
                 }
