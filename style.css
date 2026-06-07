@@ -485,3 +485,58 @@ header {
         padding: 0 20px; /* Colchón lateral más estrecho para ganar pantalla */
     }
 }
+
+/* =======================================================
+   REORGANIZACIÓN VERTICAL DE LA PESTAÑA HOME EN MÓVIL
+   ======================================================== */
+@media (max-width: 800px) {
+    /* 1. Pasamos el contenedor de 2 columnas a 1 sola columna vertical */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Reducimos el espacio entre bloques para pantallas pequeñas */
+        overflow-y: auto; /* Permite scroll si el contenido es más alto que la pantalla */
+        height: 100%;
+        padding-bottom: 20px;
+    }
+
+    /* 2. Convertimos el contenedor de información en un flujo flex */
+    .info-contenedor {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0; /* Quitamos el margen izquierdo para que se centre bien */
+    }
+
+    /* 3. Forzamos el orden visual con la propiedad 'order' */
+    #panel-titulo {
+        order: 1; /* 1° Arriba del todo */
+        font-size: 38px; /* Reducimos el tamaño (65px es gigante para un celular) */
+        letter-spacing: -1px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        text-align: center; /* Opcional: centra el título en el móvil */
+    }
+
+    #mapa-contenedor {
+        order: 2; /* 2° En el medio */
+        width: 100%;
+        height: 40vh; /* Fijamos una altura cómoda para interactuar con el mapa táctil */
+        min-height: 280px;
+    }
+
+    #panel-cuerpo {
+        order: 3; /* 3° Abajo del mapa */
+        max-width: 100%; /* Que ocupe todo el ancho disponible del celular */
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        text-align: justify; /* Hace que el texto editorial se vea más limpio */
+    }
+
+    .footer-link {
+        order: 4; /* 4° Al final del todo */
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
