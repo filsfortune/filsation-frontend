@@ -2,8 +2,8 @@
 // 1. CONFIGURACIÓN GENERAL Y CREDENCIALES
 // ===================================================
 // API de Sanity para las fotos
-const PROJECT_ID = 'pemupq7jbwxxm5nuvl7ahqw0'; 
-const DATASET = 'default';
+const PROJECT_ID = 'hhdji3nw'; 
+const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
 // Tu Query para extraer las fotos
