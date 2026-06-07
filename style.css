@@ -438,3 +438,50 @@ header {
 .carta-mapa-item h4 { margin: 0 0 6px 0; font-size: 15px; font-weight: 600; }
 .carta-mapa-item p { margin: 0; font-size: 12px; color: #626d77; line-height: 1.5; }
 .cargando-estado { text-align: center; color: #999; font-size: 14px; margin-top: 20px; }
+
+/* =======================================================
+   REORGANIZACIÓN DEL HEADER Y MENÚ EN MÓVIL
+   ======================================================== */
+@media (max-width: 800px) {
+    /* El header cambia de distribución horizontal a vertical */
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centramos todo el contenido visualmente */
+        padding: 25px 20px 15px 20px; /* Reducimos el colchón superior */
+        gap: 15px; /* Separación fija entre el logo y los botones */
+    }
+
+    /* Centramos el logotipo y el subtítulo */
+    .brand-container {
+        text-align: center;
+    }
+
+    .brand {
+        font-size: 20px; /* Reducimos ligeramente el tamaño de la tipografía */
+        letter-spacing: 3px;
+    }
+
+    .subtitle {
+        font-size: 11px;
+    }
+
+    /* El menú de pestañas se expande a lo ancho y se centra */
+    .tabs-menu {
+        width: 100%;
+        justify-content: center; /* Centra los botones en la pantalla del celular */
+        gap: 20px; /* Espaciado cómodo para no pulsar el botón equivocado */
+    }
+
+    .tab-btn {
+        font-size: 15px; /* Tamaño ideal para lectura en pantallas táctiles */
+        padding-bottom: 8px;
+        letter-spacing: 1px;
+    }
+
+    /* Ajustamos el contenedor global de las pestañas para que tome el nuevo alto */
+    .tab-content {
+        height: calc(100vh - 140px); /* Recalcula el espacio libre restando el nuevo header */
+        padding: 0 20px; /* Colchón lateral más estrecho para ganar pantalla */
+    }
+}
