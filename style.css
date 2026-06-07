@@ -347,7 +347,9 @@ header {
         max-height: 80vh;
         object-fit: contain;
     }
-
+/* ==========================================
+   CSS GENERAL DE MAPS TAB
+   ========================================== */
 
     /* Contenedor general que divide la pantalla en 2 */
 .visor-dashboard {
