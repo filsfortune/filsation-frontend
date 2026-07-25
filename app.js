@@ -69,7 +69,7 @@ async function inicializarMapaProvincia() {
 
     try {
         // 1. Crear el objeto mapa centrado en La Habana, Cuba
-        mapaLaHabana = L.map('map').setView([23.045, -82.355], 11);
+        mapaLaHabana = L.map('map').setView([40.416775, -3.703790], 12);
 
         // 2. Cargar la capa base de mapa (OpenStreetMap con diseño claro)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
