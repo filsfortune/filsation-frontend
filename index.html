@@ -25,20 +25,37 @@
     </header>
 
     <main>
-        <section id="home" class="tab-content active">
-            <div class="dashboard-container">
-                <div id="mapa-contenedor">
-                    <div id="map"></div>
-                </div>
-                <div class="info-contenedor">
-                    <h1 id="panel-titulo">Madrid Municipio</h1>
-                    <div id="panel-cuerpo">
-                        <p class="loading">Cargando datos de la provincia...</p>
-                    </div>
-                    <div class="footer-link"></div>
-                </div>
+      <section id="home" class="tab-content active">
+    <div class="dashboard-container">
+        
+        <!-- CONTENEDOR CARRUSEL MULTIMEDIA -->
+        <div id="carrusel-contenedor" class="carrusel-wrapper">
+            <div class="carrusel-track" id="carruselTrack">
+                <!-- Se deja vacío para que JavaScript inyecte el contenido desde Sanity -->
             </div>
-        </section>
+
+            <!-- Botones de Navegación -->
+            <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">&#10094;</button>
+            <button class="carrusel-btn next" onclick="moverCarrusel(1)">&#10095;</button>
+
+            <!-- Indicadores (Puntos) -->
+            <div class="carrusel-dots" id="carruselDots"></div>
+        </div>
+
+        <!-- PANEL DE INFORMACIÓN -->
+        <div class="info-contenedor">
+            <h1 id="panel-titulo">Madrid Municipio</h1>
+            <div id="panel-cuerpo">
+                <p class="loading">Cargando datos de la provincia...</p>
+            </div>
+            <div class="footer-link"></div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Añade esta línea justo antes de la etiqueta de cierre </body> -->
+<script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.1.0/dist/sanityClient.browser.mjs" type="module"></script>
 
         <section id="maps" class="tab-content">
     <div class="visor-dashboard">

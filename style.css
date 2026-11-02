@@ -81,24 +81,163 @@ header {
 /* ==========================================
    2. Estructura Dashboard 50/50 para el HOME 
    ========================================== */
+/* ========================================================
+   LAYOUT 50/50: CARRUSEL IZQUIERDA Y PANEL DERECHA
+   ======================================================== */
+
+/* Contenedor general en el Dashboard */
 .dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Mitad y mitad */
-    gap: 40px;
-    height: 100%;
-    padding-bottom: 40px;
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 120px); /* Ajusta según la altura de tu navbar/header */
+    gap: 1.5rem;
 }
 
-#mapa-contenedor {
-    width: 100%;
+/* 1. Carrusel Multimedia (Exactamente el 50% en el lado izquierdo) */
+.carrusel-wrapper {
+    position: relative;
+    flex: 0 0 50%; /* Ocupa exactamente el 50% del contenedor */
+    width: 50%;
     height: 100%;
-    border: 1px solid #000; /* Borde negro fino como los recuadros de tus fotos */
-    background-color: #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #0f172a;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-#map {
+/* 2. Panel de Información (El 50% restante en el lado derecho) */
+.info-contenedor {
+    flex: 0 0 calc(50% - 1.5rem); /* Ocupa el 50% restante restando el gap */
+    width: calc(50% - 1.5rem);
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Pista deslizante del carrusel */
+.carrusel-track {
+    display: flex;
     width: 100%;
     height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.carrusel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Cada Diapositiva */
+.slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    position: relative;
+}
+
+/* Ajuste perfecto de la foto/vídeo al marco del 50% */
+.slide-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Etiqueta superior flotante */
+.slide-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    background: rgba(15, 23, 42, 0.75);
+    color: #ffffff;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(6px);
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Mensaje de Carga */
+.slide-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+/* ========================================================
+   FLECHAS NAVEGADORAS Y PUNTITOS (SOBRE LA FOTO IZQUIERDA)
+   ======================================================== */
+.carrusel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(15, 23, 42, 0.6);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    backdrop-filter: blur(4px);
+    z-index: 20;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.carrusel-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    transform: translateY(-50%) scale(1.08);
+}
+
+.carrusel-btn.prev { left: 1rem; }
+.carrusel-btn.next { right: 1rem; }
+
+.carrusel-dots {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+    z-index: 20;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.dot.active {
+    background: #ffffff;
+    width: 20px;
+    border-radius: 10px;
 }
 
 /* Panel de Información derecho */
@@ -486,58 +625,70 @@ header {
     }
 }
 
-/* =======================================================
-   REORGANIZACIÓN VERTICAL DE LA PESTAÑA HOME EN MÓVIL
+/* ========================================================
+   ADAPTACIÓN PARA DISPOSITIVOS MÓVILES (PANTALLAS < 768px) HOME
    ======================================================== */
-@media (max-width: 800px) {
-    /* 1. Pasamos el contenedor de 2 columnas a 1 sola columna vertical */
+/* ========================================================
+   ADAPTACIÓN MÓVIL CON FORMATO FOTO 1080x1440 (ASPECT RATIO 3:4)
+   ======================================================== */
+@media (max-width: 768px) {
+
+    /* 1. Contenedor principal en columna apilada */
     .dashboard-container {
-        display: flex;
         flex-direction: column;
-        gap: 20px; /* Reducimos el espacio entre bloques para pantallas pequeñas */
-        overflow-y: auto; /* Permite scroll si el contenido es más alto que la pantalla */
-        height: 100%;
-        padding-bottom: 20px;
+        height: auto;
+        gap: 2rem;
+        padding: 1rem 0; /* Un poco de margen vertical */
     }
 
-    /* 2. Convertimos el contenedor de información en un flujo flex */
-    .info-contenedor {
-        display: flex;
-        flex-direction: column;
-        padding-left: 0; /* Quitamos el margen izquierdo para que se centre bien */
-    }
-
-    /* 3. Forzamos el orden visual con la propiedad 'order' */
-    #panel-titulo {
-        order: 1; /* 1° Arriba del todo */
-        font-size: 38px; /* Reducimos el tamaño (65px es gigante para un celular) */
-        letter-spacing: -1px;
-        margin-top: 10px;
-        margin-bottom: 15px;
-        text-align: center; /* Opcional: centra el título en el móvil */
-    }
-
-    #mapa-contenedor {
-        order: 2; /* 2° En el medio */
+    /* 2. Carrusel con proporción exacta 1080x1440 (3:4) */
+    .carrusel-wrapper {
+        flex: 0 0 100%;
         width: 100%;
-        height: 40vh; /* Fijamos una altura cómoda para interactuar con el mapa táctil */
-        min-height: 280px;
+        max-width: 420px;       /* Limita el ancho en móviles grandes para no agigantar la foto */
+        margin: 0 auto;         /* Centra el carrusel horizontalmente en la pantalla */
+        aspect-ratio: 3 / 4;    /* Mantiene exactamente la proporción 1080x1440 */
+        height: auto;           /* La altura se calcula sola automáticamente */
+        min-height: unset;
+        border-radius: 16px;    /* Bordes redondeados más elegantes para móvil */
     }
 
-    #panel-cuerpo {
-        order: 3; /* 3° Abajo del mapa */
-        max-width: 100%; /* Que ocupe todo el ancho disponible del celular */
-        margin-top: 15px;
-        margin-bottom: 15px;
-        font-size: 14px;
-        text-align: justify; /* Hace que el texto editorial se vea más limpio */
+    /* 3. Ajuste de las fotos y vídeos dentro del marco 3:4 */
+    .slide-media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;      /* Rellena todo el espacio sin deformar la imagen */
     }
 
-    .footer-link {
-        order: 4; /* 4° Al final del todo */
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 10px;
+    /* 4. Panel de información bien separado abajo */
+    .info-contenedor {
+        flex: 0 0 100%;
+        width: 100%;
+        height: auto;
+        overflow-y: visible;
+        padding: 0 0.5rem;
+    }
+
+    /* 5. Ajuste de tipografía para evitar que el texto se corte */
+    #panel-titulo {
+        font-size: 1.75rem;
+        line-height: 1.25;
+        word-break: break-word;
+        margin-bottom: 0.75rem;
+    }
+
+    /* 6. Botones de navegación reposicionados */
+    .carrusel-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
+    }
+
+    .carrusel-btn.prev { left: 0.75rem; }
+    .carrusel-btn.next { right: 0.75rem; }
+
+    .carrusel-dots {
+        bottom: 1rem;
     }
 }
 

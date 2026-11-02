@@ -1,26 +1,24 @@
 // ===================================================
-// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES
+// 1. CONFIGURACIÓN GENERAL Y CREDENCIALES (SANITY)
 // ===================================================
-// API de Sanity para las fotos
 const PROJECT_ID = 'hhdji3nw'; 
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
-// Tu Query para extraer las fotos
+// Query para extraer las fotos de la galería (Pestaña Photos)
 const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
-
-// Tu Query para extraer los mapas cartográficos
+// Query para extraer los mapas cartográficos (Pestaña Maps)
 const queryMapas = encodeURIComponent('*[_type == "mapa"]{ titulo, "urlImagen": imagen.asset->url }');
 const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryMapas}`;
 
-// 🗺️ Tu Backend en Render para los datos GIS de La Habana
-const API_URL_BACKEND = 'https://filsation-api.onrender.com/api'; 
+// Query para extraer la multimedia del carrusel (Pestaña Home)
+const queryHome = encodeURIComponent('*[_type == "multimediaHome"] | order(orden asc){ _id, tipo, "imagenUrl": imagen.asset->url, "videoUrl": videoFile.asset->url }');
+const urlSanityHome = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryHome}`;
 
-// Variable global para controlar el mapa de Leaflet
-let mapaLaHabana;
-let capaMunicipios;
+// Variable global para controlar el carrusel de la Home
+let indiceSlideActual = 0;
 
 // ==========================================
 // 2. CONTROL DE NAVEGACIÓN (TABS) - GLOBAL
@@ -40,9 +38,9 @@ function cambiarPestaña(idPestaña) {
 
     console.log(`Navegando a: ${idPestaña}`);
 
-    // Si vuelves al Home, obligamos a Leaflet a recalcular el tamaño para que no se vea gris
-    if (idPestaña === 'home' && mapaLaHabana) {
-        setTimeout(() => { mapaLaHabana.invalidateSize(); }, 200);
+    // Si entras al Home, cargamos el carrusel multimedia
+    if (idPestaña === 'home' || idPestaña === 'HOME') {
+        cargarMultimediaHomeSanity();
     }
     
     // Si entras a Fotos, las cargamos en ese instante
@@ -50,87 +48,108 @@ function cambiarPestaña(idPestaña) {
         obtenerFotosDeSanity();
     }
 
-    // DISPARADOR INTELIGENTE: Si el usuario pulsa 'MAPS', se activa la conexión a Sanity
-    if (idPestaña === 'maps') {
+    // Si entras a Maps, cargamos el catálogo cartográfico de Sanity
+    if (idPestaña === 'maps' || idPestaña === 'MAPS') {
         cargarMapasDesdeSanity();
     }
 }
-// Lo exponemos al HTML obligatoriamente
 window.cambiarPestaña = cambiarPestaña;
 
 // ==========================================
-// 3. LÓGICA DEL MAPA INTERACTIVO (LEAFLET)
+// 3. CARRUSEL MULTIMEDIA EN HOME (SANITY)
 // ==========================================
-async function inicializarMapaProvincia() {
-    const mapaElemento = document.getElementById('map');
-    if (!mapaElemento) return; // Si no estamos en la vista del mapa, salimos pacíficamente
-
-    console.log("Inicializando mapa base de la Provincia de La Habana...");
+async function cargarMultimediaHomeSanity() {
+    const track = document.getElementById('carruselTrack');
+    if (!track) return;
+    
+    // Evitamos peticiones repetidas si las diapositivas ya están montadas
+    if (track.querySelectorAll('.slide').length > 0) return;
 
     try {
-        // 1. Crear el objeto mapa centrado en La Habana, Cuba
-        mapaLaHabana = L.map('map').setView([40.416775, -3.703790], 12);
+        const respuesta = await fetch(urlSanityHome);
+        if (!respuesta.ok) throw new Error("Fallo al conectar con Sanity Home");
+        
+        const datos = await respuesta.json();
+        const items = datos.result;
 
-        // 2. Cargar la capa base de mapa (OpenStreetMap con diseño claro)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap | © CARTO',
-            maxZoom: 19
-        }).addTo(mapaLaHabana);
+        if (!items || items.length === 0) {
+            track.innerHTML = '<div class="slide-loading">No hay contenido publicado en la Home.</div>';
+            return;
+        }
 
-        // 3. Crear un grupo de capas para meter los municipios adentro
-        capaMunicipios = L.layerGroup().addTo(mapaLaHabana);
-
-        // 4. Cambiar el texto de "Cargando..." por uno listo
-        const panelCuerpo = document.getElementById('panel-cuerpo');
-        if (panelCuerpo) panelCuerpo.innerHTML = "Selecciona un municipio en el mapa interactivo para analizar sus datos urbanos.";
-
-        // 5. HACER FETCH A TU BACKEND PARA TRAER LOS MUNICIPIOS (POSTGIS)
-        const respuesta = await fetch(`${API_URL_BACKEND}/municipios`);
-
-        // 🌟 AGREGA ESTA COMPROBACIÓN AQUÍ ABAJO:
-if (!respuesta.ok) {
-    throw new Error(`Error en el servidor: ${respuesta.status}`);
-}
-        const datosGeoJSON = await respuesta.json();
-
-        console.log("Datos geográficos recibidos:", datosGeoJSON);
-
-        // Dibujamos los polígonos de los municipios en el mapa
-        L.geoJSON(datosGeoJSON, {
-            style: {
-                color: "#000000",   
-                weight: 1,
-                fillColor: "#333333",
-                fillOpacity: 0.1
-            },
-            onEachFeature: (feature, layer) => {
-                // Interactividad: Al pasar el mouse por encima del municipio
-                layer.on('mouseover', () => {
-                    layer.setStyle({ fillOpacity: 0.3 });
-                });
-                layer.on('mouseout', () => {
-                    layer.setStyle({ fillOpacity: 0.1 });
-                });
-                // Al hacer clic, actualiza el panel derecho con la información del municipio
-                layer.on('click', () => {
-                    const tituloPanel = document.getElementById('panel-titulo');
-                    const cuerpoPanel = document.getElementById('panel-cuerpo');
-                    
-                    if (tituloPanel) tituloPanel.textContent = feature.properties.nombre || feature.properties.name || "Municipio";
-                    if (cuerpoPanel) cuerpoPanel.textContent = feature.properties.descripcion || "Información de infraestructura de la Smart City en desarrollo.";
-                });
+        // Construcción dinámica de slides (fotos o vídeos)
+        track.innerHTML = items.map(item => {
+            if (item.tipo === 'foto' && item.imagenUrl) {
+                return `
+                    <div class="slide">
+                        <img src="${item.imagenUrl}?auto=format&q=80" alt="Fotografía" class="slide-media">
+                        <span class="slide-badge">Fotografía</span>
+                    </div>
+                `;
+            } else if (item.tipo === 'video' && item.videoUrl) {
+                return `
+                    <div class="slide">
+                        <video class="slide-media" autoplay loop muted playsinline>
+                            <source src="${item.videoUrl}" type="video/mp4">
+                        </video>
+                        <span class="slide-badge">Vídeo Clip</span>
+                    </div>
+                `;
             }
-        }).addTo(capaMunicipios);
+            return '';
+        }).join('');
+
+        inicializarDotsCarrusel(items.length);
 
     } catch (error) {
-        console.error("Error al montar el mapa o cargar los datos GeoJSON:", error);
-        const panelCuerpo = document.getElementById('panel-cuerpo');
-        if (panelCuerpo) panelCuerpo.innerHTML = "<span style='color:red;'>Error al conectar con la infraestructura de datos espaciales.</span>";
+        console.error("Error cargando carrusel Home desde Sanity:", error);
+        track.innerHTML = '<div class="slide-loading">Error al sincronizar multimedia.</div>';
     }
 }
 
+function inicializarDotsCarrusel(totalSlides) {
+    const contenedorDots = document.getElementById('carruselDots');
+    if (!contenedorDots) return;
+    
+    contenedorDots.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.classList.add('dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => irASlide(i));
+        contenedorDots.appendChild(dot);
+    }
+}
+
+function irASlide(index) {
+    const track = document.getElementById('carruselTrack');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (slides.length === 0) return;
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+
+    indiceSlideActual = index;
+    const anchoSlide = slides[0].clientWidth;
+    
+    track.scrollTo({
+        left: anchoSlide * index,
+        behavior: 'smooth'
+    });
+
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+}
+
+function moverCarrusel(direccion) {
+    irASlide(indiceSlideActual + direccion);
+}
+window.moverCarrusel = moverCarrusel;
+
 // ==========================================
-// 4. LÓGICA DE LA GALERÍA FOTOS DE SANITY
+// 4. GALERÍA DE FOTOS PINTEREST (PESTAÑA PHOTOS)
 // ==========================================
 async function obtenerFotosDeSanity() {
     const contenedor = document.getElementById('contenedor-galeria');
@@ -146,7 +165,7 @@ async function obtenerFotosDeSanity() {
             contenedor.innerHTML = '<p>No hay fotos publicadas en este momento.</p>';
         }
     } catch (error) {
-        console.error("Error en Sanity:", error);
+        console.error("Error en Sanity Fotos:", error);
     }
 }
 
@@ -159,7 +178,6 @@ function renderizarGaleriaEstiloPinterest(fotos, contenedor) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-foto-pinterest';
         
-        // Estructura optimizada: Solo el título h4 para la capa hover centrado
         tarjeta.innerHTML = `
             <img src="${foto.urlImagen}" alt="${foto.titulo || 'Fotografía'}">
             <div class="capa-hover">
@@ -191,13 +209,12 @@ function abrirLightboxZoom(foto) {
 }
 
 // ==========================================
-// 2. FUNCIÓN DE CARGA DESDE SANITY PARA MAPS
+// 5. VISOR DE MAPAS CARTOGRÁFICOS (PESTAÑA MAPS)
 // ==========================================
 async function cargarMapasDesdeSanity() {
     const contenedorLista = document.getElementById('ancla-lista-mapas');
     const visorImagen = document.getElementById('foto-visor-principal');
     
-    // Si ya hay tarjetas dibujadas, no volvemos a hacer la petición
     if (contenedorLista && contenedorLista.querySelectorAll('.carta-mapa-item').length > 0) return;
 
     try {
@@ -208,20 +225,18 @@ async function cargarMapasDesdeSanity() {
         const listaDeMapas = datos.result;
 
         if (!contenedorLista) return;
-        contenedorLista.innerHTML = ''; // Limpiamos el texto "Conectando..."
+        contenedorLista.innerHTML = ''; 
 
         if (listaDeMapas.length === 0) {
             contenedorLista.innerHTML = '<div class="cargando-estado">No hay mapas cargados en Sanity.</div>';
             return;
         }
 
-        // Proyectamos el primer mapa de Sanity de manera automática al abrir la sección
         if (visorImagen) {
             visorImagen.src = listaDeMapas[0].urlImagen;
-           visorImagen.alt = listaDeMapas[0].titulo || 'Mapa de la Ciudad';
+            visorImagen.alt = listaDeMapas[0].titulo || 'Mapa de la Ciudad';
         }
 
-        // Creamos los botones laterales para cada mapa
         listaDeMapas.forEach((mapa, index) => {
             const tarjeta = document.createElement('div');
             tarjeta.className = 'carta-mapa-item';
@@ -233,7 +248,6 @@ async function cargarMapasDesdeSanity() {
                 <p>Plano cartográfico técnico.</p>
             `;
 
-            // Al hacer clic, cambiamos la foto reflejada en la parte izquierda
             tarjeta.addEventListener('click', () => {
                 document.querySelectorAll('.carta-mapa-item').forEach(c => c.classList.remove('seleccionada'));
                 tarjeta.classList.add('seleccionada');
@@ -252,7 +266,7 @@ async function cargarMapasDesdeSanity() {
         });
 
     } catch (error) {
-        console.error("Error conectando a la API de Sanity:", error);
+        console.error("Error conectando a la API de Sanity Mapas:", error);
         if (contenedorLista) {
             contenedorLista.innerHTML = '<div class="cargando-estado" style="color: red;">Error al sincronizar datos de mapas.</div>';
         }
@@ -260,13 +274,13 @@ async function cargarMapasDesdeSanity() {
 }
 
 // ==========================================
-// 5. INICIALIZADOR AL CARGAR EL DOM
+// 6. INICIALIZADOR Y EVENTOS AL CARGAR EL DOM
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargamos el mapa base de La Habana
-    inicializarMapaProvincia();
+    // 1. Cargar contenido por defecto para la Home
+    cargarMultimediaHomeSanity();
 
-    // 2. Configuración de cierres del Lightbox de fotos (Sincronizado con clase 'activo')
+    // 2. Controladores de cierre del Lightbox de Fotos
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
@@ -288,9 +302,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
-
-
-
-
