@@ -309,7 +309,7 @@ function renderizarGridBlog(articulos, contenedor) {
 
     contenedor.innerHTML = articulos.map((art, index) => {
         const fecha = art.fechaPublicacion 
-            ? new Date(art.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+            ? new Date(art.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })
             : '';
 
         const catClase = art.categoria || 'fotografia';
@@ -319,14 +319,14 @@ function renderizarGridBlog(articulos, contenedor) {
             <article class="tarjeta-blog">
                 <div class="tarjeta-blog-header">
                     <span class="badge-categoria ${catClase}">${catNombre}</span>
-                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
+                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=800&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
                 </div>
                 <div class="tarjeta-blog-body">
-                    <span class="tarjeta-blog-fecha">${fecha}</span>
                     <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
                     <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
+                    <span class="tarjeta-blog-fecha">${fecha}</span>
                     <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">
-                        Leer más <span>→</span>
+                        Read More
                     </button>
                 </div>
             </article>
