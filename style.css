@@ -1064,4 +1064,27 @@ header {
     font-size: 1.65rem;
   }
 }
+
+/* 1. Asegurar scroll vertical en la pestaña activa */
+.tab-content {
+  display: none; /* Se oculta por defecto */
+}
+
+.tab-content.active {
+  display: block !important;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: visible !important; /* Habilita el desplazamiento vertical */
+}
+
+/* 2. Habilitar scroll en la sección del Blog y en el body */
+#blog {
+  overflow-y: auto !important;
+  padding-bottom: 5rem; /* Espacio extra al final para scroll cómodo */
+}
+
+body, html {
+  overflow-y: auto !important; /* Permite scroll general en la ventana */
+}
 }
