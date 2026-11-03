@@ -85,9 +85,33 @@
         </section>
 
         <section id="blog" class="tab-content">
-            
-        </section>
+  <div class="blog-grid" id="contenedor-blog">
+    <!-- Las tarjetas se inyectarán dinámicamente desde Sanity -->
+  </div>
+</section>
     </main>
+
+    <!-- MODAL FLOTANTE DE LECTURA (OVERLAY) -->
+<div id="modal-lector" class="modal-lector-overlay">
+  <div class="modal-lector-contenido" id="modal-lector-scroll">
+    <button id="btn-cerrar-lector" class="btn-cerrar-modal" aria-label="Cerrar">✕</button>
+    
+    <header class="lector-header">
+      <span id="lector-fecha" class="lector-fecha"></span>
+      <h1 id="lector-titulo" class="lector-titulo"></h1>
+      <div class="lector-portada-wrapper">
+        <img id="lector-imagen" src="" alt="" class="lector-imagen">
+      </div>
+    </header>
+
+    <article id="lector-cuerpo" class="lector-cuerpo">
+      <!-- El texto enriquecido del artículo se renderiza aquí -->
+    </article>
+
+    <!-- Botón flotante para volver arriba -->
+    <button id="btn-top-lector" class="btn-top-modal" aria-label="Volver arriba">↑</button>
+  </div>
+</div>
 
     <div id="lightbox-zoom" class="lightbox">
         <span id="lightbox-cerrar" class="cerrar-btn">&times;</span>
