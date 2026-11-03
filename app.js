@@ -5,25 +5,21 @@ const PROJECT_ID = 'hhdji3nw';
 const DATASET = 'production';
 const API_VERSION = 'v2021-10-21';
 
-// Query para extraer las fotos de la galería (Pestaña Photos)
+// Querys GROQ Sanity
 const querySanity = encodeURIComponent('*[_type == "fotografia"]{ titulo, municipioAsociado, descripcion, "urlImagen": imagen.asset->url }');
 const urlSanity = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${querySanity}`;
 
-// Query para extraer los mapas cartográficos (Pestaña Maps)
 const queryMapas = encodeURIComponent('*[_type == "mapa"]{ titulo, "urlImagen": imagen.asset->url }');
 const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryMapas}`;
 
-// Query para extraer la multimedia del carrusel (Pestaña Home)
 const queryHome = encodeURIComponent('*[_type == "multimediaHome"] | order(orden asc){ _id, tipo, "imagenUrl": imagen.asset->url, "videoUrl": videoFile.asset->url }');
 const urlSanityHome = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryHome}`;
 
-// Variable global para controlar el carrusel de la Home
-let indiceSlideActual = 0;
-
-// Query para extraer los artículos del blog desde Sanity
 const queryBlog = encodeURIComponent('*[_type == "articuloBlog"] | order(fechaPublicacion desc){ _id, titulo, resumen, categoria, fechaPublicacion, "imagenUrl": imagenPortada.asset->url, contenido }');
 const urlSanityBlog = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryBlog}`;
 
+// Variables globales
+let indiceSlideActual = 0;
 let articulosBlogCache = [];
 
 // ==========================================
@@ -44,19 +40,20 @@ function cambiarPestaña(idPestaña) {
 
     console.log(`Navegando a: ${idPestaña}`);
 
-    // Si entras al Home, cargamos el carrusel multimedia
     if (idPestaña === 'home' || idPestaña === 'HOME') {
         cargarMultimediaHomeSanity();
     }
     
-    // Si entras a Fotos, las cargamos en ese instante
     if (idPestaña === 'photos' || idPestaña === 'PHOTOS') {
         obtenerFotosDeSanity();
     }
 
-    // Si entras a Maps, cargamos el catálogo cartográfico de Sanity
     if (idPestaña === 'maps' || idPestaña === 'MAPS') {
         cargarMapasDesdeSanity();
+    }
+
+    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
+        cargarBlogDesdeSanity();
     }
 }
 window.cambiarPestaña = cambiarPestaña;
@@ -68,7 +65,6 @@ async function cargarMultimediaHomeSanity() {
     const track = document.getElementById('carruselTrack');
     if (!track) return;
     
-    // Evitamos peticiones repetidas si las diapositivas ya están montadas
     if (track.querySelectorAll('.slide').length > 0) return;
 
     try {
@@ -83,7 +79,6 @@ async function cargarMultimediaHomeSanity() {
             return;
         }
 
-        // Construcción dinámica de slides (fotos o vídeos)
         track.innerHTML = items.map(item => {
             if (item.tipo === 'foto' && item.imagenUrl) {
                 return `
@@ -155,7 +150,7 @@ function moverCarrusel(direccion) {
 window.moverCarrusel = moverCarrusel;
 
 // ==========================================
-// 4. GALERÍA DE FOTOS PINTEREST (PESTAÑA PHOTOS)
+// 4. GALERÍA DE FOTOS PINTEREST (PHOTOS)
 // ==========================================
 async function obtenerFotosDeSanity() {
     const contenedor = document.getElementById('contenedor-galeria');
@@ -215,7 +210,7 @@ function abrirLightboxZoom(foto) {
 }
 
 // ==========================================
-// 5. VISOR DE MAPAS CARTOGRÁFICOS (PESTAÑA MAPS)
+// 5. VISOR DE MAPAS CARTOGRÁFICOS (MAPS)
 // ==========================================
 async function cargarMapasDesdeSanity() {
     const contenedorLista = document.getElementById('ancla-lista-mapas');
@@ -280,168 +275,159 @@ async function cargarMapasDesdeSanity() {
 }
 
 // ==========================================
-// 6. INICIALIZADOR Y EVENTOS AL CARGAR EL DOM
+// 6. MÓDULO DEL BLOG (MOSAICO Y LECTOR)
+// ==========================================
+async function cargarBlogDesdeSanity() {
+    const contenedor = document.getElementById('contenedor-blog');
+    if (!contenedor) return;
+
+    if (articulosBlogCache.length > 0) return;
+
+    try {
+        const respuesta = await fetch(urlSanityBlog);
+        const datos = await respuesta.json();
+        articulosBlogCache = datos.result || [];
+
+        if (articulosBlogCache.length === 0) {
+            contenedor.innerHTML = '<p>No hay artículos publicados en el blog por el momento.</p>';
+            return;
+        }
+
+        renderizarGridBlog(articulosBlogCache, contenedor);
+    } catch (error) {
+        console.error("Error al cargar artículos del blog:", error);
+        contenedor.innerHTML = '<p>Error al conectar con Sanity Blog.</p>';
+    }
+}
+
+function renderizarGridBlog(articulos, contenedor) {
+    const etiquetasTexto = {
+        fotografia: 'Fotografía',
+        videografia: 'Videografía',
+        cartografia: 'Cartografía'
+    };
+
+    contenedor.innerHTML = articulos.map((art, index) => {
+        const fecha = art.fechaPublicacion 
+            ? new Date(art.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '';
+
+        const catClase = art.categoria || 'fotografia';
+        const catNombre = etiquetasTexto[catClase] || 'Fotografía';
+
+        return `
+            <article class="tarjeta-blog">
+                <div class="tarjeta-blog-header">
+                    <span class="badge-categoria ${catClase}">${catNombre}</span>
+                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
+                </div>
+                <div class="tarjeta-blog-body">
+                    <span class="tarjeta-blog-fecha">${fecha}</span>
+                    <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
+                    <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
+                    <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">
+                        Leer más <span>→</span>
+                    </button>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function abrirLectorArticulo(index) {
+    const articulo = articulosBlogCache[index];
+    if (!articulo) return;
+
+    const modal = document.getElementById('modal-lector');
+    const tituloEl = document.getElementById('lector-titulo');
+    const fechaEl = document.getElementById('lector-fecha');
+    const imagenEl = document.getElementById('lector-imagen');
+    const cuerpoEl = document.getElementById('lector-cuerpo');
+
+    if (tituloEl) tituloEl.textContent = articulo.titulo;
+    if (fechaEl) fechaEl.textContent = articulo.fechaPublicacion 
+        ? new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+        : '';
+
+    if (imagenEl) {
+        if (articulo.imagenUrl) {
+            imagenEl.src = articulo.imagenUrl;
+            imagenEl.style.display = 'block';
+        } else {
+            imagenEl.style.display = 'none';
+        }
+    }
+
+    if (cuerpoEl) {
+        if (Array.isArray(articulo.contenido)) {
+            cuerpoEl.innerHTML = articulo.contenido
+                .filter(block => block._type === 'block' && block.children)
+                .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
+                .join('');
+        } else {
+            cuerpoEl.innerHTML = `<p>${articulo.resumen || ''}</p>`;
+        }
+    }
+
+    if (modal) {
+        modal.classList.add('activo');
+        document.body.style.overflow = 'hidden';
+    }
+}
+window.abrirLectorArticulo = abrirLectorArticulo;
+
+function cerrarModalLector() {
+    const modal = document.getElementById('modal-lector');
+    if (modal) {
+        modal.classList.remove('activo');
+        document.body.style.overflow = '';
+    }
+}
+window.cerrarModalLector = cerrarModalLector;
+
+// ==========================================
+// 7. INICIALIZADOR Y EVENTOS DE CARGA (DOM)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargar contenido por defecto para la Home
+    // 1. Cargar Home al iniciar
     cargarMultimediaHomeSanity();
 
-    // 2. Controladores de cierre del Lightbox de Fotos
+    // 2. Lightbox de Fotos
     const lightbox = document.getElementById('lightbox-zoom');
     const botonCerrar = document.getElementById('lightbox-cerrar');
 
     if (lightbox && botonCerrar) {
-        botonCerrar.addEventListener('click', () => {
-            lightbox.classList.remove('activo');
-        });
-        
+        botonCerrar.addEventListener('click', () => lightbox.classList.remove('activo'));
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('activo');
-            }
+            if (e.target === lightbox) lightbox.classList.remove('activo');
         });
-        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.classList.contains('activo')) {
                 lightbox.classList.remove('activo');
             }
         });
     }
-    //===========================================
-    // Función para cargar los artículos del blog
-    //============================================
 
-async function cargarBlogDesdeSanity() {
-  const contenedor = document.getElementById('contenedor-blog');
-  if (!contenedor) return;
+    // 3. Modal Lector del Blog
+    const btnCerrarLector = document.getElementById('btn-cerrar-lector');
+    const btnTop = document.getElementById('btn-top-lector');
+    const scrollContainer = document.getElementById('modal-lector-scroll');
 
-  if (articulosBlogCache.length > 0) return; // Evita peticiones innecesarias
-
-  try {
-    const respuesta = await fetch(urlSanityBlog);
-    const datos = await respuesta.json();
-    articulosBlogCache = datos.result || [];
-
-    if (articulosBlogCache.length === 0) {
-      contenedor.innerHTML = '<p>No hay artículos publicados en el blog por el momento.</p>';
-      return;
+    if (btnCerrarLector) {
+        btnCerrarLector.addEventListener('click', cerrarModalLector);
     }
 
-    renderizarGridBlog(articulosBlogCache, contenedor);
-  } catch (error) {
-    console.error("Error al cargar artículos del blog:", error);
-    contenedor.innerHTML = '<p>Error al conectar con Sanity Blog.</p>';
-  }
-}
+    if (scrollContainer && btnTop) {
+        scrollContainer.addEventListener('scroll', () => {
+            if (scrollContainer.scrollTop > 300) {
+                btnTop.classList.add('visible');
+            } else {
+                btnTop.classList.remove('visible');
+            }
+        });
 
-function renderizarGridBlog(articulos, contenedor) {
-  const etiquetasTexto = {
-    fotografia: 'Fotografía',
-    videografia: 'Videografía',
-    cartografia: 'Cartografía'
-  };
-
-  contenedor.innerHTML = articulos.map((art, index) => {
-    const fecha = art.fechaPublicacion 
-      ? new Date(art.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
-      : '';
-
-    const catClase = art.categoria || 'fotografia';
-    const catNombre = etiquetasTexto[catClase] || 'Fotografía';
-
-    return `
-      <article class="tarjeta-blog">
-        <div class="tarjeta-blog-header">
-          <span class="badge-categoria ${catClase}">${catNombre}</span>
-          ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
-        </div>
-        <div class="tarjeta-blog-body">
-          <span class="tarjeta-blog-fecha">${fecha}</span>
-          <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
-          <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
-          <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">
-            Leer más <span>→</span>
-          </button>
-        </div>
-      </article>
-    `;
-  }).join('');
-}
-
-// Abrir el modal de lectura flotante
-function abrirLectorArticulo(index) {
-  const articulo = articulosBlogCache[index];
-  if (!articulo) return;
-
-  const modal = document.getElementById('modal-lector');
-  const tituloEl = document.getElementById('lector-titulo');
-  const fechaEl = document.getElementById('lector-fecha');
-  const imagenEl = document.getElementById('lector-imagen');
-  const cuerpoEl = document.getElementById('lector-cuerpo');
-
-  tituloEl.textContent = articulo.titulo;
-  fechaEl.textContent = articulo.fechaPublicacion 
-    ? new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
-    : '';
-
-  if (articulo.imagenUrl) {
-    imagenEl.src = articulo.imagenUrl;
-    imagenEl.style.display = 'block';
-  } else {
-    imagenEl.style.display = 'none';
-  }
-
-  // Renderizar párrafos simples del contenido de Sanity (Portable Text simplificado)
-  if (Array.isArray(articulo.contenido)) {
-    cuerpoEl.innerHTML = articulo.contenido
-      .filter(block => block._type === 'block' && block.children)
-      .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
-      .join('');
-  } else {
-    cuerpoEl.innerHTML = `<p>${articulo.resumen || ''}</p>`;
-  }
-
-  modal.classList.add('activo');
-  document.body.style.overflow = 'hidden'; // Bloquea el scroll de fondo
-}
-
-// Configurar los controles del modal flotante al cargar la página
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('modal-lector');
-  const btnCerrar = document.getElementById('btn-cerrar-lector');
-  const btnTop = document.getElementById('btn-top-lector');
-  const scrollContainer = document.getElementById('modal-lector-scroll');
-
-  // Cerrar el modal
-  if (btnCerrar) {
-    btnCerrar.addEventListener('click', cerrarModalLector);
-  }
-
-  // Botón para volver al inicio del artículo (Top)
-  if (scrollContainer && btnTop) {
-    scrollContainer.addEventListener('scroll', () => {
-      if (scrollContainer.scrollTop > 300) {
-        btnTop.classList.add('visible');
-      } else {
-        btnTop.classList.remove('visible');
-      }
-    });
-
-    btnTop.addEventListener('click', () => {
-      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-});
-
-function cerrarModalLector() {
-  const modal = document.getElementById('modal-lector');
-  if (modal) {
-    modal.classList.remove('activo');
-    document.body.style.overflow = ''; // Restaura el scroll principal
-  }
-}
-
-if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-    cargarBlogDesdeSanity();
-}
+        btnTop.addEventListener('click', () => {
+            scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 });
