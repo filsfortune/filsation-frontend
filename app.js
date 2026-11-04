@@ -344,46 +344,30 @@ function abrirLectorArticulo(index) {
     const imagenEl = document.getElementById('lector-imagen');
     const cuerpoEl = document.getElementById('lector-cuerpo');
 
-    if (tituloEl) tituloEl.textContent = articulo.titulo;
-    if (fechaEl) fechaEl.textContent = articulo.fechaPublicacion 
-        ? new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
-        : '';
+    tituloEl.textContent = articulo.titulo;
+    fechaEl.textContent = new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES');
+    imagenEl.src = articulo.imagenUrl;
 
-    if (imagenEl) {
-        if (articulo.imagenUrl) {
-            imagenEl.src = articulo.imagenUrl;
-            imagenEl.style.display = 'block';
-        } else {
-            imagenEl.style.display = 'none';
-        }
+    // Procesa el texto enriquecido (Portable Text) de Sanity en párrafos HTML
+    if (Array.isArray(articulo.contenido)) {
+        cuerpoEl.innerHTML = articulo.contenido
+            .filter(block => block._type === 'block' && block.children)
+            .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
+            .join('');
     }
 
-    if (cuerpoEl) {
-        if (Array.isArray(articulo.contenido)) {
-            cuerpoEl.innerHTML = articulo.contenido
-                .filter(block => block._type === 'block' && block.children)
-                .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
-                .join('');
-        } else {
-            cuerpoEl.innerHTML = `<p>${articulo.resumen || ''}</p>`;
-        }
-    }
-
-    if (modal) {
-        modal.classList.add('activo');
-        document.body.style.overflow = 'hidden';
-    }
+    modal.classList.add('activo');
+    document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo mientras se lee
 }
-window.abrirLectorArticulo = abrirLectorArticulo;
 
 function cerrarModalLector() {
     const modal = document.getElementById('modal-lector');
     if (modal) {
         modal.classList.remove('activo');
-        document.body.style.overflow = '';
+        document.body.style.overflow = ''; // Restaura el scroll de la web
     }
 }
-window.cerrarModalLector = cerrarModalLector;
+
 
 // ==========================================
 // 7. INICIALIZADOR Y EVENTOS DE CARGA (DOM)

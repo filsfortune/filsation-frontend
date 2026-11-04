@@ -11,6 +11,7 @@
 </head>
 <body>
 
+    <!-- CABECERA Y MENÚ DE NAVEGACIÓN -->
     <header>
         <div class="logo">
             <p class="brand">Filsation</p>
@@ -24,98 +25,93 @@
         </nav>
     </header>
 
+    <!-- CONTENIDO PRINCIPAL DE PESTAÑAS -->
     <main>
-      <section id="home" class="tab-content active">
-    <div class="dashboard-container">
-        
-        <!-- CONTENEDOR CARRUSEL MULTIMEDIA -->
-        <div id="carrusel-contenedor" class="carrusel-wrapper">
-            <div class="carrusel-track" id="carruselTrack">
-                <!-- Se deja vacío para que JavaScript inyecte el contenido desde Sanity -->
+        <!-- 1. PESTAÑA HOME -->
+        <section id="home" class="tab-content active">
+            <div class="dashboard-container">
+                <!-- CARRUSEL MULTIMEDIA -->
+                <div id="carrusel-contenedor" class="carrusel-wrapper">
+                    <div class="carrusel-track" id="carruselTrack">
+                        <!-- Inyectado desde Sanity vía app.js -->
+                    </div>
+
+                    <!-- Botones de Navegación -->
+                    <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">&#10094;</button>
+                    <button class="carrusel-btn next" onclick="moverCarrusel(1)">&#10095;</button>
+
+                    <!-- Indicadores (Puntos) -->
+                    <div class="carrusel-dots" id="carruselDots"></div>
+                </div>
+
+                <!-- PANEL DE INFORMACIÓN -->
+                <div class="info-contenedor">
+                    <h1 id="panel-titulo">Madrid Municipio</h1>
+                    <div id="panel-cuerpo">
+                        <p class="loading">Cargando datos de la provincia...</p>
+                    </div>
+                    <div class="footer-link"></div>
+                </div>
             </div>
-
-            <!-- Botones de Navegación -->
-            <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">&#10094;</button>
-            <button class="carrusel-btn next" onclick="moverCarrusel(1)">&#10095;</button>
-
-            <!-- Indicadores (Puntos) -->
-            <div class="carrusel-dots" id="carruselDots"></div>
-        </div>
-
-        <!-- PANEL DE INFORMACIÓN -->
-        <div class="info-contenedor">
-            <h1 id="panel-titulo">Madrid Municipio</h1>
-            <div id="panel-cuerpo">
-                <p class="loading">Cargando datos de la provincia...</p>
-            </div>
-            <div class="footer-link"></div>
-        </div>
-
-    </div>
-</section>
-
-<!-- Añade esta línea justo antes de la etiqueta de cierre </body> -->
-<script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.1.0/dist/sanityClient.browser.mjs" type="module"></script>
-
-        <section id="maps" class="tab-content">
-    <div class="visor-dashboard">
-        
-        <div class="pantalla-mapa">
-            <img id="foto-visor-principal" src="" alt="Selecciona un mapa del panel derecho">
-        </div>
-        
-        <div class="sidebar-lista">
-            <div class="sidebar-info">
-                <h3>Cartografía Urbana</h3>
-                <p>Selecciona una capa analítica de La Habana para proyectar su plano técnico.</p>
-            </div>
-            
-            <div class="lista-cartas" id="ancla-lista-mapas">
-                <div class="cargando-estado">Conectando con Sanity...</div>
-            </div>
-        </div>
-
-    </div>
-</div>
-       
         </section>
 
+        <!-- 2. PESTAÑA MAPS -->
+        <section id="maps" class="tab-content">
+            <div class="visor-dashboard">
+                <div class="pantalla-mapa">
+                    <img id="foto-visor-principal" src="" alt="Selecciona un mapa del panel derecho">
+                </div>
+                
+                <div class="sidebar-lista">
+                    <div class="sidebar-info">
+                        <h3>Cartografía Urbana</h3>
+                        <p>Selecciona una capa analítica para proyectar su plano técnico.</p>
+                    </div>
+                    
+                    <div class="lista-cartas" id="ancla-lista-mapas">
+                        <div class="cargando-estado">Conectando con Sanity...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PESTAÑA PHOTOS -->
         <section id="photos" class="tab-content">
             <div id="contenedor-galeria" class="grid-pinterest"></div>
         </section>
 
-        <!-- PESTAÑA BLOG -->
-<section id="blog" class="tab-content">
-  <div class="blog-container">
-    <div class="blog-grid" id="contenedor-blog">
-      <!-- Las tarjetas se inyectarán desde Sanity -->
-    </div>
-  </div>
-</section>
+        <!-- 4. PESTAÑA BLOG -->
+        <section id="blog" class="tab-content">
+            <div class="blog-container">
+                <div class="blog-grid" id="contenedor-blog">
+                    <!-- Tarjetas inyectadas desde Sanity vía app.js -->
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- MODAL FLOTANTE DE LECTURA (OVERLAY) -->
-<div id="modal-lector" class="modal-lector-overlay">
-  <div class="modal-lector-contenido" id="modal-lector-scroll">
-    <button id="btn-cerrar-lector" class="btn-cerrar-modal" aria-label="Cerrar">✕</button>
-    
-    <header class="lector-header">
-      <span id="lector-fecha" class="lector-fecha"></span>
-      <h1 id="lector-titulo" class="lector-titulo"></h1>
-      <div class="lector-portada-wrapper">
-        <img id="lector-imagen" src="" alt="" class="lector-imagen">
-      </div>
-    </header>
+    <!-- MODAL FLOTANTE DE LECTURA DE BLOG (OVERLAY) -->
+    <div id="modal-lector" class="modal-lector-overlay">
+        <div class="modal-lector-contenido" id="modal-lector-scroll">
+            <button id="btn-cerrar-lector" class="btn-cerrar-modal" aria-label="Cerrar">✕</button>
+            
+            <header class="lector-header">
+                <span id="lector-fecha" class="lector-fecha"></span>
+                <h1 id="lector-titulo" class="lector-titulo"></h1>
+                <div class="lector-portada-wrapper">
+                    <img id="lector-imagen" src="" alt="" class="lector-imagen">
+                </div>
+            </header>
 
-    <article id="lector-cuerpo" class="lector-cuerpo">
-      <!-- El texto enriquecido del artículo se renderiza aquí -->
-    </article>
+            <article id="lector-cuerpo" class="lector-cuerpo">
+                <!-- Texto del artículo renderizado dinámicamente -->
+            </article>
 
-    <!-- Botón flotante para volver arriba -->
-    <button id="btn-top-lector" class="btn-top-modal" aria-label="Volver arriba">↑</button>
-  </div>
-</div>
+            <button id="btn-top-lector" class="btn-top-modal" aria-label="Volver arriba">↑</button>
+        </div>
+    </div>
 
+    <!-- LIGHTBOX PARA FOTOGRAFÍAS -->
     <div id="lightbox-zoom" class="lightbox">
         <span id="lightbox-cerrar" class="cerrar-btn">&times;</span>
         
@@ -132,7 +128,9 @@
         </div>
     </div>
 
+    <!-- SCRIPTS Y LIBRERÍAS EXTERNAS AL FINAL DE BODY -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.1.0/dist/sanityClient.browser.mjs" type="module"></script>
     <script src="app.js"></script>
 </body>
 </html>
