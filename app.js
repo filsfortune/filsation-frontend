@@ -316,7 +316,7 @@ function renderizarGridBlog(articulos, contenedor) {
         const catNombre = etiquetasTexto[catClase] || 'Fotografía';
 
         return `
-            <article class="tarjeta-blog">
+            <div class="tarjeta-blog">
                 <div class="tarjeta-blog-header">
                     <span class="badge-categoria ${catClase}">${catNombre}</span>
                     ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
@@ -329,7 +329,7 @@ function renderizarGridBlog(articulos, contenedor) {
                         Read More
                     </button>
                 </div>
-            </article>
+            </div>
         `;
     }).join('');
 }
