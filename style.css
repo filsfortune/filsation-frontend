@@ -807,117 +807,109 @@ header {
    1. GRID Y TARJETAS DEL BLOG (RESPONSIVE LAPTOP / MÓVIL)
    ======================================================== */
 /* ========================================================
-   CORRECCIÓN DEL MOSAICO PARA LAPTOP / ESCRITORIO
-   ======================================================== */
-/* ========================================================
-   CONTENEDOR Y GRID DEL BLOG (FORZADO RESPONSIVE)
+   CORRECCIÓN DEFINITIVA DE TARJETAS Y CUADRÍCULA DE BLOG
    ======================================================== */
 #blog {
-  width: 100%;
-  padding: 2rem 1rem;
-}
-
-.blog-container {
-  max-width: 1140px;
-  margin: 0 auto;
-  width: 100%;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
 }
 
 .blog-grid {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(280px, 340px)) !important;
-  justify-content: center;
-  gap: 2rem;
-  width: 100%;
+  justify-content: center !important;
+  gap: 2.5rem !important;
+  width: 100% !important;
 }
 
-/* TARJETA */
+/* Tarjeta contenedora */
 .tarjeta-blog {
-  background-color: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-bottom: 1.5rem;
-  width: 100%;
-  max-width: 340px; /* Impide que la tarjeta crezca sin control */
-  margin: 0 auto;
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding-bottom: 1.5rem !important;
+  width: 100% !important;
+  max-width: 340px !important;
 }
 
-/* FOTO DE LA TARJETA */
+/* Imagen fija de 320px de alto */
 .tarjeta-blog-header {
-  position: relative;
-  width: 100%;
-  height: 300px !important; /* Forza la altura vertical fija */
-  max-height: 300px;
-  overflow: hidden;
+  position: relative !important;
+  width: 100% !important;
+  height: 320px !important;
+  max-height: 320px !important;
+  overflow: hidden !important;
 }
 
 .tarjeta-blog-img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  display: block;
+  display: block !important;
 }
 
-/* ETIQUETA SOBRE LA FOTO */
+/* Etiqueta arriba a la izquierda */
 .badge-categoria {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #ffffff;
-  z-index: 5;
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  z-index: 10 !important;
 }
 
-.badge-categoria.fotografia { background-color: #2563eb; }
-.badge-categoria.videografia { background-color: #dc2626; }
-.badge-categoria.cartografia { background-color: #059669; }
+.badge-categoria.fotografia { background-color: #2563eb !important; }
+.badge-categoria.videografia { background-color: #dc2626 !important; }
+.badge-categoria.cartografia { background-color: #059669 !important; }
 
-/* CONTENIDO DE TEXTO Y BOTÓN */
+/* Cuerpo de texto centrado */
 .tarjeta-blog-body {
-  padding: 1.25rem 1rem 0 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  padding: 1.5rem 1.25rem 0 1.25rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
 }
 
 .tarjeta-blog-titulo {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #0f172a;
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.75rem !important;
+  color: #0f172a !important;
 }
 
 .tarjeta-blog-resumen {
-  font-size: 0.9rem;
-  color: #475569;
-  margin-bottom: 0.75rem;
+  font-size: 0.9rem !important;
+  color: #475569 !important;
+  margin-bottom: 0.75rem !important;
 }
 
 .tarjeta-blog-fecha {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin-bottom: 1.25rem;
+  font-size: 0.8rem !important;
+  color: #94a3b8 !important;
+  margin-bottom: 1.25rem !important;
 }
 
 .btn-read-more {
-  background-color: #0f172a;
-  color: #ffffff;
-  border: none;
-  padding: 0.6rem 1.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 4px;
-  cursor: pointer;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.65rem 1.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
 }
 
 /* ========================================================
