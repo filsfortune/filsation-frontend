@@ -300,28 +300,7 @@ async function cargarBlogDesdeSanity() {
     }
 }
 
-function renderizarGridBlog(articulos, contenedor) {
-    contenedor.innerHTML = articulos.map((art, index) => {
-        const fecha = art.fechaPublicacion 
-            ? new Date(art.fechaPublicacion).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : '';
 
-        return `
-            <article class="tarjeta-blog" onclick="abrirLectorArticulo(${index})">
-                <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
-                
-                <div class="tarjeta-blog-header">
-                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
-                </div>
-                
-                <div class="tarjeta-blog-body">
-                    <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
-                    <span class="tarjeta-blog-fecha">${fecha}</span>
-                </div>
-            </article>
-        `;
-    }).join('');
-}
 
 function abrirLectorArticulo(index) {
     const articulo = articulosBlogCache[index];
