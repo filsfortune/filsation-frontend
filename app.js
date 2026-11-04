@@ -277,28 +277,7 @@ async function cargarMapasDesdeSanity() {
 // ==========================================
 // 6. MÓDULO DEL BLOG (MOSAICO Y LECTOR)
 // ==========================================
-async function cargarBlogDesdeSanity() {
-    const contenedor = document.getElementById('contenedor-blog');
-    if (!contenedor) return;
 
-    if (articulosBlogCache.length > 0) return;
-
-    try {
-        const respuesta = await fetch(urlSanityBlog);
-        const datos = await respuesta.json();
-        articulosBlogCache = datos.result || [];
-
-        if (articulosBlogCache.length === 0) {
-            contenedor.innerHTML = '<p>No hay artículos publicados en el blog por el momento.</p>';
-            return;
-        }
-
-        renderizarGridBlog(articulosBlogCache, contenedor);
-    } catch (error) {
-        console.error("Error al cargar artículos del blog:", error);
-        contenedor.innerHTML = '<p>Error al conectar con Sanity Blog.</p>';
-    }
-}
 
 
 
