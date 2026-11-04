@@ -817,14 +817,25 @@ header {
   box-sizing: border-box !important;
 }
 
-#contenedor-blog.blog-grid {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  gap: 2.5rem !important;
+.blog-container {
+  width: 100% !important;
+  max-width: 1150px !important; /* Ancho idóneo para alojar 3 tarjetas + separaciones */
+  margin: 0 auto !important;     /* Centra todo el contenedor en la pantalla */
+  padding: 0 1rem !important;
+  box-sizing: border-box !important;
+}
+
+.blog-grid {
+  display: grid !important;
+  /* Fuerza exactamente 3 columnas iguales de mínimo 280px y máximo 340px */
+  grid-template-columns: repeat(3, minmax(280px, 340px)) !important;
+  justify-content: center !important; /* Centra las tarjetas si hay menos de 3 */
+  gap: 2rem !important;                /* Espacio entre cada tarjeta */
   width: 100% !important;
   box-sizing: border-box !important;
 }
+
+
 
 /* LA TARJETA Y LA IMAGEN ENCAJADA */
 .tarjeta-blog {
