@@ -809,61 +809,61 @@ header {
 /* ========================================================
    La Cuadrícula (Mosaico Responsive) BLOG
    ======================================================== */
-#blog {
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  padding: 3rem 1.5rem !important;
-  box-sizing: border-box !important;
-}
-
 .blog-container {
   width: 100% !important;
-  max-width: 1150px !important; /* Ancho idóneo para alojar 3 tarjetas + separaciones */
-  margin: 0 auto !important;     /* Centra todo el contenedor en la pantalla */
-  padding: 0 1rem !important;
+  max-width: 1140px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
   box-sizing: border-box !important;
 }
 
 .blog-grid {
   display: grid !important;
-  /* Fuerza exactamente 3 columnas iguales de mínimo 280px y máximo 340px */
-  grid-template-columns: repeat(3, minmax(280px, 340px)) !important;
-  justify-content: center !important; /* Centra las tarjetas si hay menos de 3 */
-  gap: 2rem !important;                /* Espacio entre cada tarjeta */
+  grid-template-columns: repeat(3, 1fr) !important; /* 3 columnas iguales en laptop */
+  gap: 2.5rem 2rem !important;                       /* Espaciado entre filas y columnas */
   width: 100% !important;
   box-sizing: border-box !important;
 }
 
-
-
-/* LA TARJETA Y LA IMAGEN ENCAJADA */
+/* Tarjeta limpia e interactiva */
 .tarjeta-blog {
-  background-color: #ffffff !important;
-  width: 320px !important;
-  max-width: 320px !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
-  overflow: hidden !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
-  box-sizing: border-box !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  padding: 0 !important;
   margin: 0 !important;
+  width: 100% !important;
+  transition: opacity 0.2s ease !important;
 }
 
 .tarjeta-blog:hover {
-  transform: translateY(-5px) !important;
+  opacity: 0.85 !important;
 }
 
-/* Encabezado e Imagen fija */
+/* 1. Título arriba */
+.tarjeta-blog-titulo {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin: 0 0 1rem 0 !important;
+  line-height: 1.25 !important;
+}
+
+/* 2. Imagen horizontal (Ratio 16:9) */
 .tarjeta-blog-header {
   position: relative !important;
   width: 100% !important;
-  height: 280px !important;
-  max-height: 280px !important;
+  height: 180px !important; /* Altura recortada horizontal como el mockup */
+  max-height: 180px !important;
   overflow: hidden !important;
+  border-radius: 4px !important;
+  margin-bottom: 1rem !important;
 }
 
 .tarjeta-blog-img {
@@ -873,72 +873,25 @@ header {
   display: block !important;
 }
 
-/* LA ETIQUETA DE CATEGORIA SOBRE LA FOTO */
-.badge-categoria {
-  position: absolute !important;
-  top: 12px !important;
-  left: 12px !important;
-  padding: 5px 12px !important;
-  border-radius: 6px !important;
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  color: #ffffff !important;
-  z-index: 10 !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
-}
-
-.badge-categoria.fotografia { background-color: #2563eb !important; }
-.badge-categoria.videografia { background-color: #dc2626 !important; }
-.badge-categoria.cartografia { background-color: #059669 !important; } /* Verde */
-
-/* Cuerpo de texto centrado */
+/* 3. Resumen y fecha debajo */
 .tarjeta-blog-body {
-  padding: 1.5rem 1.25rem !important;
+  padding: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  text-align: center !important;
+  align-items: flex-start !important;
   width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.tarjeta-blog-titulo {
-  font-size: 1.3rem !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
-  margin: 0 0 0.5rem 0 !important;
-  line-height: 1.3 !important;
 }
 
 .tarjeta-blog-resumen {
   font-size: 0.9rem !important;
-  color: #475569 !important;
+  color: #555555 !important;
+  line-height: 1.45 !important;
   margin: 0 0 0.75rem 0 !important;
-  line-height: 1.5 !important;
 }
 
 .tarjeta-blog-fecha {
   font-size: 0.8rem !important;
-  color: #999999 !important;
-  margin-bottom: 1.25rem !important;
-}
-
-.btn-read-more {
-  background-color: #0f172a !important;
-  color: #ffffff !important;
-  border: none !important;
-  padding: 0.65rem 1.75rem !important;
-  font-size: 0.875rem !important;
-  font-weight: 600 !important;
-  border-radius: 6px !important;
-  cursor: pointer !important;
-  transition: opacity 0.2s ease !important;
-}
-
-.btn-read-more:hover {
-  opacity: 0.9 !important;
+  color: #a0a0a0 !important;
 }
 
 /* ========================================================

@@ -301,35 +301,24 @@ async function cargarBlogDesdeSanity() {
 }
 
 function renderizarGridBlog(articulos, contenedor) {
-    const etiquetasTexto = {
-        fotografia: 'Fotografía',
-        videografia: 'Videografía',
-        cartografia: 'Cartografía'
-    };
-
     contenedor.innerHTML = articulos.map((art, index) => {
         const fecha = art.fechaPublicacion 
-            ? new Date(art.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })
+            ? new Date(art.fechaPublicacion).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
             : '';
 
-        const catClase = art.categoria || 'fotografia';
-        const catNombre = etiquetasTexto[catClase] || 'Fotografía';
-
         return `
-            <div class="tarjeta-blog">
+            <article class="tarjeta-blog" onclick="abrirLectorArticulo(${index})">
+                <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
+                
                 <div class="tarjeta-blog-header">
-                    <span class="badge-categoria ${catClase}">${catNombre}</span>
                     ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
                 </div>
+                
                 <div class="tarjeta-blog-body">
-                    <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
                     <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
                     <span class="tarjeta-blog-fecha">${fecha}</span>
-                    <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">
-                        Read More
-                    </button>
                 </div>
-            </div>
+            </article>
         `;
     }).join('');
 }
