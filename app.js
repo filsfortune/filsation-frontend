@@ -53,7 +53,7 @@ function cambiarPestaña(idPestaña) {
     }
 
    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-        // cargarBlogDesdeSanity();  <-- Coméntalo poniéndole // al principio
+        cargarBlogDesdeSanity(); // <-- Debe estar activo (sin las // al inicio)
     }
 }
 window.cambiarPestaña = cambiarPestaña;
