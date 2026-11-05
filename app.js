@@ -15,8 +15,6 @@ const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/
 const queryHome = encodeURIComponent('*[_type == "multimediaHome"] | order(orden asc){ _id, tipo, "imagenUrl": imagen.asset->url, "videoUrl": videoFile.asset->url }');
 const urlSanityHome = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryHome}`;
 
-const queryBlog = encodeURIComponent('*[_type == "articuloBlog"] | order(fechaPublicacion desc){ _id, titulo, resumen, categoria, fechaPublicacion, "imagenUrl": imagenPortada.asset->url, contenido }');
-const urlSanityBlog = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryBlog}`;
 
 // Variables globales
 let indiceSlideActual = 0;
@@ -52,8 +50,8 @@ function cambiarPestaña(idPestaña) {
         cargarMapasDesdeSanity();
     }
 
-    if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-        cargarBlogDesdeSanity();
+   if (idPestaña === 'blog' || idPestaña === 'BLOG') {
+        // cargarBlogDesdeSanity();  <-- Coméntalo poniéndole // al principio
     }
 }
 window.cambiarPestaña = cambiarPestaña;
@@ -277,10 +275,54 @@ async function cargarMapasDesdeSanity() {
 // ==========================================
 // 6. MÓDULO DEL BLOG (MOSAICO Y LECTOR)
 // ==========================================
+// Carga del Blog desde Sanity.io
+async function cargarBlogDesdeSanity() {
+    const contenedor = document.getElementById('contenedor-blog');
+    if (!contenedor) return;
 
+    if (articulosBlogCache.length > 0) return;
 
+    try {
+        const respuesta = await fetch(urlSanityBlog);
+        const datos = await respuesta.json();
+        articulosBlogCache = datos.result || [];
 
+        if (articulosBlogCache.length === 0) {
+            contenedor.innerHTML = '<p>No hay artículos publicados en el blog por el momento.</p>';
+            return;
+        }
 
+        renderizarGridBlog(articulosBlogCache, contenedor);
+    } catch (error) {
+        console.error("Error al cargar artículos del blog:", error);
+        contenedor.innerHTML = '<p>Error al conectar con Sanity Blog.</p>';
+    }
+}
+
+// Renderizado de las tarjetas estáticas dinámicas
+function renderizarGridBlog(articulos, contenedor) {
+    contenedor.innerHTML = articulos.map((art, index) => {
+        const fecha = art.fechaPublicacion 
+            ? new Date(art.fechaPublicacion).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : '';
+
+        return `
+            <article class="tarjeta-blog">
+                <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
+                <div class="tarjeta-blog-header">
+                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
+                </div>
+                <div class="tarjeta-blog-body">
+                    <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
+                    <span class="tarjeta-blog-fecha">${fecha}</span>
+                    <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">Read More</button>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+// Apertura del modal flotante al pulsar Read More
 function abrirLectorArticulo(index) {
     const articulo = articulosBlogCache[index];
     if (!articulo) return;
@@ -291,29 +333,45 @@ function abrirLectorArticulo(index) {
     const imagenEl = document.getElementById('lector-imagen');
     const cuerpoEl = document.getElementById('lector-cuerpo');
 
-    tituloEl.textContent = articulo.titulo;
-    fechaEl.textContent = new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES');
-    imagenEl.src = articulo.imagenUrl;
-
-    // Procesa el texto enriquecido (Portable Text) de Sanity en párrafos HTML
-    if (Array.isArray(articulo.contenido)) {
-        cuerpoEl.innerHTML = articulo.contenido
-            .filter(block => block._type === 'block' && block.children)
-            .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
-            .join('');
+    if (tituloEl) tituloEl.textContent = articulo.titulo;
+    if (fechaEl) fechaEl.textContent = new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    if (imagenEl) {
+        if (articulo.imagenUrl) {
+            imagenEl.src = articulo.imagenUrl;
+            imagenEl.style.display = 'block';
+        } else {
+            imagenEl.style.display = 'none';
+        }
     }
 
-    modal.classList.add('activo');
-    document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo mientras se lee
+    // Procesa bloques de texto enriquecido (Portable Text) de Sanity a párrafos HTML
+    if (cuerpoEl) {
+        if (Array.isArray(articulo.contenido)) {
+            cuerpoEl.innerHTML = articulo.contenido
+                .filter(block => block._type === 'block' && block.children)
+                .map(block => `<p>${block.children.map(child => child.text).join('')}</p>`)
+                .join('');
+        } else {
+            cuerpoEl.innerHTML = `<p>${articulo.resumen || ''}</p>`;
+        }
+    }
+
+    if (modal) {
+        modal.classList.add('activo');
+        document.body.style.overflow = 'hidden'; // Evita el scroll del fondo durante la lectura
+    }
 }
+window.abrirLectorArticulo = abrirLectorArticulo;
 
 function cerrarModalLector() {
     const modal = document.getElementById('modal-lector');
     if (modal) {
         modal.classList.remove('activo');
-        document.body.style.overflow = ''; // Restaura el scroll de la web
+        document.body.style.overflow = '';
     }
 }
+window.cerrarModalLector = cerrarModalLector;
 
 
 // ==========================================
