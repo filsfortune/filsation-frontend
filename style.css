@@ -702,26 +702,148 @@ header {
    ESTILOS DEL PANEL INFORMATIVO DERECHO (HOME)
    ======================================================== */
 
-
 /* ========================================================
-   ADAPTACIÓN RESPONSIVE PARA MÓVILES (< 768px)
+   REPOSICIONAMIENTO COMPACTO Y ENCAJADO: PANEL DERECHO (HOME)
    ======================================================== */
+.info-contenedor {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  max-height: 480px !important; /* Mismas dimensiones verticales que el carrusel */
+  width: 100% !important;
+  max-width: 480px !important;
+  padding: 0.25rem 0.5rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* 1. Header (Badge, Título, Subtítulo) */
+.panel-header {
+  margin-bottom: 0.5rem !important;
+}
+
+.badge-proyecto {
+  display: inline-block !important;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  margin-bottom: 0.4rem !important;
+}
+
+#panel-titulo {
+  font-size: 1.6rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 0.15rem 0 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.panel-subtitulo {
+  font-size: 0.72rem !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+/* 2. Resumen */
+.panel-resumen p {
+  font-size: 0.85rem !important;
+  line-height: 1.45 !important;
+  color: #334155 !important;
+  margin: 0.4rem 0 !important;
+}
+
+.panel-resumen strong {
+  color: #0f172a !important;
+}
+
+/* 3. Ubicación / Coordenadas */
+.panel-localizacion {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 0.45rem 0.75rem !important;
+  border-radius: 5px !important;
+  margin: 0.4rem 0 !important;
+}
+
+.icon-geo {
+  font-size: 0.95rem !important;
+}
+
+.localizacion-datos {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.localizacion-lugar {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+}
+
+.localizacion-coords {
+  font-size: 0.7rem !important;
+  color: #64748b !important;
+  font-family: monospace, monospace !important;
+}
+
+/* 4. Contacto y Botón */
+.panel-contacto {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.4rem !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding-top: 0.5rem !important;
+}
+
+.contacto-orientado {
+  font-size: 0.73rem !important;
+  color: #64748b !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  font-style: italic !important;
+}
+
+.btn-contacto {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 0.9rem !important;
+  border-radius: 5px !important;
+  width: fit-content !important;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.1) !important;
+}
+
+.btn-contacto:hover {
+  background-color: #1e293b !important;
+}
+
+/* Adaptación Responsive para Móvil */
 @media (max-width: 768px) {
   .info-contenedor {
-    max-width: 100% !important;
-    padding: 1.5rem 0.5rem !important;
+    max-height: none !important;
+    padding: 1rem 0 !important;
+    gap: 0.8rem !important;
   }
-
-  #panel-titulo {
-    font-size: 1.6rem !important;
-  }
-
-  .panel-subtitulo {
-    font-size: 0.75rem !important;
-  }
-
   .btn-contacto {
-    width: 100% !important; /* En móvil el botón ocupa todo el ancho */
+    width: 100% !important;
     text-align: center !important;
   }
 }

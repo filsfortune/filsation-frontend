@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filsation - Map Design & Photography</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
     <link rel="apple-touch-icon" href="favicon.png">
     <link rel="icon" type="image/png" href="favicon.png">
 </head>
@@ -44,45 +44,36 @@
                     <div class="carrusel-dots" id="carruselDots"></div>
                 </div>
 
-                <!-- PANEL DE INFORMACIÓN -->
                 <!-- PANEL DE INFORMACIÓN DERECHO (HOME) -->
 <div class="info-contenedor">
-    <!-- 1. BADGE -->
-    <span class="badge-proyecto">Serie Cartográfica & Arquitectura</span>
-
-    <!-- 2. TÍTULO -->
+  <div class="panel-header">
+    <span class="badge-proyecto">Serie Cartográfica & Architecture</span>
     <h1 id="panel-titulo">Ciudad Universitaria</h1>
-
-    <!-- 3. SUBTÍTULO -->
     <p class="panel-subtitulo">Madrid / Rutas Artísticas & Análisis Espacial</p>
+  </div>
 
-    <!-- 4. RESUMEN -->
-    <div class="panel-resumen">
-        <p>
-            Una exploración visual y analítica sobre el campus de la <strong>Ciudad Universitaria de Madrid</strong>. El proyecto integra <strong>diseño cartográfico de autor</strong> con rutas temáticas, fotografía de arquitectura (racionalista y brutalista) y clips cinemáticos para documentar la historia y evolución de sus facultades.
-        </p>
+  <div class="panel-resumen">
+    <p>
+      Una exploración visual y analítica sobre el campus de la <strong>Ciudad Universitaria de Madrid</strong>. El proyecto integra <strong>diseño cartográfico de autor</strong> con rutas temáticas, fotografía de arquitectura (racionalista y brutalista) y clips cinemáticos para documentar la historia y evolución de sus facultades.
+    </p>
+  </div>
+
+  <div class="panel-localizacion">
+    <span class="icon-geo">📍</span>
+    <div class="localizacion-datos">
+      <span class="localizacion-lugar">Moncloa-Aravaca, Madrid</span>
+      <span class="localizacion-coords">40.4442° N, 3.7256° W</span>
     </div>
+  </div>
 
-    <!-- 5. COORDENADAS Y LOCALIZACIÓN -->
-    <div class="panel-localizacion">
-        <span class="icon-geo">📍</span>
-        <div class="localizacion-datos">
-            <strong>Moncloa-Aravaca, Madrid</strong>
-            <small>40.4442° N, 3.7256° W</small>
-        </div>
-    </div>
-
-    <hr class="panel-divisor">
-
-    <!-- 6. CONTACTO Y ORIENTADO A -->
-    <div class="panel-contacto">
-        <p class="contacto-orientado">
-            Orientado a investigación urbana, exposiciones visuales, licencias de imagen y análisis SIG.
-        </p>
-        <a href="mailto:filsation@gmail.com" class="btn-contacto">
-            ✉️ Contactar para colaboraciones
-        </a>
-    </div>
+  <div class="panel-contacto">
+    <p class="contacto-orientado">
+      Orientado a investigación urbana, exposiciones visuales, licencias de imagen y análisis SIG.
+    </p>
+    <a href="mailto:filsation@gmail.com" class="btn-contacto">
+      ✉️ Contactar para colaboraciones
+    </a>
+  </div>
 </div>
         </section>
 
