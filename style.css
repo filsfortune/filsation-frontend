@@ -626,6 +626,42 @@ header {
 }
 
 /* ========================================================
+   SCROLL INTERNO EXCLUSIVO PARA LA PESTAÑA HOME
+   ======================================================== */
+#home.tab-content {
+  /* Resta la altura del header fijo (90px) */
+  height: calc(100vh - 90px) !important;
+  max-height: calc(100vh - 90px) !important;
+  
+  /* Habilita el scroll vertical independiente */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-bottom: 2.5rem !important;
+}
+
+/* Personalización elegante de la barra de scroll para HOME */
+#home::-webkit-scrollbar {
+  width: 8px;
+}
+
+#home::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+#home::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.25);
+  border-radius: 4px;
+}
+
+#home::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.55);
+}
+
+/* ========================================================
    ADAPTACIÓN PARA DISPOSITIVOS MÓVILES (PANTALLAS < 768px) HOME
    ======================================================== */
 /* ========================================================
