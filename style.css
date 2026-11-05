@@ -173,6 +173,8 @@ header {
     font-size: 0.95rem;
 }
 
+
+
 /* ========================================================
    FLECHAS NAVEGADORAS Y PUNTITOS (SOBRE LA FOTO IZQUIERDA)
    ======================================================== */
@@ -829,6 +831,15 @@ header {
 .btn-contacto:hover {
   background-color: #1e293b !important;
   opacity: 0.95 !important;
+}
+
+/* Adaptación suave para pantallas de portátil más pequeñas */
+@media (max-width: 1024px) {
+  .info-contenedor {
+    flex: 1 1 380px !important;
+    max-width: 420px !important;
+    padding: 0.5rem !important;
+  }
 }
 
 
