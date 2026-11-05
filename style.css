@@ -812,6 +812,39 @@ header {
   box-sizing: border-box !important;
 }
 
+#blog.tab-content {
+  /* Calcula la altura disponible restando el header fijo */
+  height: calc(100vh - 90px) !important;
+  max-height: calc(100vh - 90px) !important;
+  
+  /* Habilita el scroll vertical solo dentro de esta sección */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-bottom: 3rem !important;
+}
+
+/* Personalización elegante de la barra de scroll */
+#blog::-webkit-scrollbar {
+  width: 8px;
+}
+
+#blog::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+#blog::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 4px;
+}
+
+#blog::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.6);
+}
+
 .blog-container {
   width: 100% !important;
   max-width: 1140px !important; /* Limita el ancho máximo del blog */
@@ -885,7 +918,7 @@ header {
   align-items: flex-start !important;
   width: 100% !important;
   position: relative !important;
-  z-index: 5 !important; /* Coloca el contenedor de texto y botón por encima de la imagen */
+  z-index: 5 !important; /* Coloca el contenedor de texto por encima de la foto */
   pointer-events: auto !important;
 }
 
@@ -902,57 +935,7 @@ header {
 }
 
 /* ========================================================
-   4. ADAPTACIÓN PARA PANTALLAS MÓVILES (1 COLUMNA)
-   ======================================================== */
-@media (max-width: 820px) {
-  .blog-grid {
-    grid-template-columns: 1fr !important; /* 1 columna en móvil */
-    gap: 2rem !important;
-  }
-
-  .tarjeta-blog-header {
-    height: 220px !important;
-    max-height: 220px !important;
-  }
-
-  /* ========================================================
-   SCROLL INTERNO EXCLUSIVO PARA LA SECCIÓN BLOG
-   ======================================================== */
-#blog.tab-content {
-  /* Calcula la altura disponible restando el header fijo (ajusta 80px según el alto de tu header) */
-  height: calc(100vh - 90px) !important;
-  max-height: calc(100vh - 90px) !important;
-  
-  /* Habilita el scroll vertical a la derecha solo dentro de esta sección */
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  
-  width: 100% !important;
-  box-sizing: border-box !important;
-  padding-bottom: 3rem !important; /* Espacio extra al final para scroll cómodo */
-}
-
-/* Personalización elegante de la barra de scroll (opcional para Chrome/Edge/Safari) */
-#blog::-webkit-scrollbar {
-  width: 8px; /* Ancho de la barra de scroll */
-}
-
-#blog::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05); /* Color de fondo del carril */
-  border-radius: 4px;
-}
-
-#blog::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.3); /* Color del indicador de scroll */
-  border-radius: 4px;
-}
-
-#blog::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 23, 42, 0.6);
-}
-
-/* ========================================================
-   BOTÓN READ MORE EN TARJETAS DE BLOG
+   4. BOTÓN READ MORE EN TARJETAS DE BLOG
    ======================================================== */
 .btn-read-more {
   background-color: #1a1a1a !important;
@@ -963,7 +946,6 @@ header {
   font-weight: 600 !important;
   letter-spacing: 0.03em !important;
   border-radius: 4px !important;
-  cursor: pointer !important;
   margin-top: 1rem !important;
   transition: background-color 0.2s ease, opacity 0.2s ease !important;
   position: relative !important;
@@ -976,6 +958,21 @@ header {
 .btn-read-more:hover {
   background-color: #333333 !important;
   opacity: 0.9 !important;
+}
+
+/* ========================================================
+   5. ADAPTACIÓN PARA PANTALLAS MÓVILES (1 COLUMNA)
+   ======================================================== */
+@media (max-width: 820px) {
+  .blog-grid {
+    grid-template-columns: 1fr !important; /* 1 columna en móvil */
+    gap: 2rem !important;
+  }
+
+  .tarjeta-blog-header {
+    height: 220px !important;
+    max-height: 220px !important;
+  }
 }
 
 /* ========================================================
@@ -1126,4 +1123,3 @@ header {
   }
 }
 
- }
