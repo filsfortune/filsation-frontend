@@ -317,7 +317,9 @@ function renderizarGridBlog(articulos, contenedor) {
                 <div class="tarjeta-blog-body">
                     <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
                     <span class="tarjeta-blog-fecha">${fecha}</span>
-                    <button class="btn-read-more" onclick="abrirLectorArticulo(${index})">Read More</button>
+                    <button class="btn-read-more" type="button" onclick="abrirLectorArticulo(${index}); event.stopPropagation();">
+                        Read More
+                    </button>
                 </div>
             </article>
         `;

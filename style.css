@@ -845,6 +845,8 @@ header {
   margin: 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 /* A. Título arriba */
@@ -865,6 +867,7 @@ header {
   overflow: hidden !important;
   border-radius: 4px !important;
   margin-bottom: 0.85rem !important;
+  cursor: pointer !important;
 }
 
 .tarjeta-blog-img {
@@ -881,6 +884,9 @@ header {
   flex-direction: column !important;
   align-items: flex-start !important;
   width: 100% !important;
+  position: relative !important;
+  z-index: 5 !important; /* Coloca el contenedor de texto y botón por encima de la imagen */
+  pointer-events: auto !important;
 }
 
 .tarjeta-blog-resumen {
@@ -960,6 +966,11 @@ header {
   cursor: pointer !important;
   margin-top: 1rem !important;
   transition: background-color 0.2s ease, opacity 0.2s ease !important;
+  position: relative !important;
+  z-index: 10 !important; /* Eleva el botón a la capa superior */
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  display: inline-block !important;
 }
 
 .btn-read-more:hover {
