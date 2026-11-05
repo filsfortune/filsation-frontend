@@ -701,114 +701,85 @@ header {
   /* ========================================================
    ESTILOS DEL PANEL INFORMATIVO DERECHO (HOME)
    ======================================================== */
+
+/* ========================================================
+   DISEÑO EDITORIAL DEL PANEL DERECHO (DESKTOP & MOBILE)
+   ======================================================== */
+/* ========================================================
+   PANEL DERECHO COMPACTO (HOME - SIN SCROLL EN LAPTOP)
+   ======================================================== */
 .info-contenedor {
-  padding: 2rem 1.75rem !important;
+  padding: 0.5rem 0.75rem !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
   text-align: left !important;
   box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  overflow: hidden !important; /* Desactiva cualquier barra de scroll */
 }
 
-/* 1. BADGE */
+/* 1. Badge superior */
 .badge-proyecto {
   display: inline-block !important;
   background-color: #0f172a !important;
   color: #ffffff !important;
-  font-size: 0.7rem !important;
+  font-size: 0.65rem !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
-  padding: 4px 10px !important;
+  padding: 3px 9px !important;
   border-radius: 4px !important;
-  margin-bottom: 0.85rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
-/* 2. TÍTULO */
+/* 2. Título equilibrado */
 #panel-titulo {
-  font-size: 2.2rem !important;
+  font-size: 1.55rem !important;
   font-weight: 700 !important;
   color: #0f172a !important;
-  margin: 0 0 0.35rem 0 !important;
+  margin: 0 0 0.2rem 0 !important;
   letter-spacing: -0.02em !important;
   line-height: 1.15 !important;
 }
 
-/* 3. SUBTÍTULO */
 .panel-subtitulo {
-  font-size: 0.85rem !important;
+  font-size: 0.72rem !important;
   color: #64748b !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.05em !important;
   font-weight: 600 !important;
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
-/* 4. RESUMEN */
+/* 3. Texto del resumen compacto */
 .panel-resumen p {
-  font-size: 0.95rem !important;
-  line-height: 1.6 !important;
+  font-size: 0.85rem !important;
+  line-height: 1.45 !important;
   color: #334155 !important;
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 0.85rem 0 !important;
 }
 
 .panel-resumen strong {
   color: #0f172a !important;
+  font-weight: 600 !important;
 }
 
-/* 5. COORDENADAS Y LOCALIZACIÓN */
-.panel-localizacion {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.6rem !important;
-  background-color: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  padding: 0.65rem 0.9rem !important;
-  border-radius: 6px !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  margin-bottom: 1.25rem !important;
-}
-
-.icon-geo {
-  font-size: 1.1rem !important;
-}
-
-.localizacion-datos {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.localizacion-datos strong {
-  font-size: 0.85rem !important;
-  color: #0f172a !important;
-}
-
-.localizacion-datos small {
-  font-size: 0.75rem !important;
-  color: #64748b !important;
-  font-family: monospace !important; /* Fuente monoespaciada para toque cartográfico */
-}
-
-.panel-divisor {
-  width: 100% !important;
-  border: none !important;
-  border-top: 1px solid #e2e8f0 !important;
-  margin: 0.5rem 0 1.25rem 0 !important;
-}
-
-/* 6. CONTACTO Y ORIENTADO A */
+/* 4. Bloque de contacto */
 .panel-contacto {
   width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 0.85rem !important;
+  gap: 0.5rem !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding-top: 0.75rem !important;
 }
 
 .contacto-orientado {
-  font-size: 0.825rem !important;
+  font-size: 0.75rem !important;
   color: #64748b !important;
-  line-height: 1.45 !important;
+  line-height: 1.35 !important;
   margin: 0 !important;
   font-style: italic !important;
 }
@@ -820,25 +791,40 @@ header {
   background-color: #0f172a !important;
   color: #ffffff !important;
   text-decoration: none !important;
-  font-size: 0.825rem !important;
+  font-size: 0.78rem !important;
   font-weight: 600 !important;
-  padding: 0.65rem 1.1rem !important;
-  border-radius: 6px !important;
+  padding: 0.55rem 1rem !important;
+  border-radius: 5px !important;
   transition: background-color 0.2s ease, opacity 0.2s ease !important;
   width: fit-content !important;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12) !important;
 }
 
 .btn-contacto:hover {
   background-color: #1e293b !important;
+  color: #ffffff !important;
   opacity: 0.95 !important;
 }
-
-/* Adaptación suave para pantallas de portátil más pequeñas */
-@media (max-width: 1024px) {
+/* ========================================================
+   ADAPTACIÓN RESPONSIVE PARA MÓVILES (< 768px)
+   ======================================================== */
+@media (max-width: 768px) {
   .info-contenedor {
-    flex: 1 1 380px !important;
-    max-width: 420px !important;
-    padding: 0.5rem !important;
+    max-width: 100% !important;
+    padding: 1.5rem 0.5rem !important;
+  }
+
+  #panel-titulo {
+    font-size: 1.6rem !important;
+  }
+
+  .panel-subtitulo {
+    font-size: 0.75rem !important;
+  }
+
+  .btn-contacto {
+    width: 100% !important; /* En móvil el botón ocupa todo el ancho */
+    text-align: center !important;
   }
 }
 
