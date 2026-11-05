@@ -15,6 +15,8 @@ const urlSanityMapas = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/
 const queryHome = encodeURIComponent('*[_type == "multimediaHome"] | order(orden asc){ _id, tipo, "imagenUrl": imagen.asset->url, "videoUrl": videoFile.asset->url }');
 const urlSanityHome = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryHome}`;
 
+const queryBlog = encodeURIComponent('*[_type == "articuloBlog"] | order(fechaPublicacion desc){ _id, titulo, resumen, categoria, fechaPublicacion, "imagenUrl": imagenPortada.asset->url, contenido }');
+const urlSanityBlog = `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${queryBlog}`;
 
 // Variables globales
 let indiceSlideActual = 0;
