@@ -25,41 +25,46 @@ let articulosBlogCache = [];
 // ==========================================
 // 2. CONTROL DE NAVEGACIÓN (TABS) - GLOBAL
 // ==========================================
-// CONTROL DE NAVEGACIÓN ENTRE SECCIONES
+// CONTROL DE NAVEGACIÓN ENTRE SECCIONES (HOME, MAPS, PHOTOS, BLOG)
 function cambiarPestaña(idPestaña) {
     const targetId = idPestaña.toLowerCase();
 
-    // 1. Ocultar de forma absoluta TODAS las secciones
-    const contenidos = document.querySelectorAll('.tab-content, section');
-    contenidos.forEach(contenido => {
-        contenido.classList.remove('active');
-        contenido.style.display = 'none'; // Fuerza la ocultación en línea cancelando cualquier flex/inline
+    // 1. Ocultar de forma absoluta TODAS las secciones del DOM
+    const secciones = document.querySelectorAll('section, .tab-content');
+    secciones.forEach(sec => {
+        sec.classList.remove('active');
+        sec.classList.add('hidden');
+        sec.style.setProperty('display', 'none', 'important'); // Cancela cualquier flex inline
     });
 
-    // 2. Desactivar todos los botones de la navegación
+    // 2. Desactivar los botones del menú superior
     const botones = document.querySelectorAll('.tab-btn');
-    botones.forEach(boton => boton.classList.remove('active'));
+    botones.forEach(btn => btn.classList.remove('active'));
 
     // 3. Mostrar únicamente la sección seleccionada
-    const pestañaActiva = document.getElementById(targetId);
-    if (pestañaActiva) {
-        pestañaActiva.classList.add('active');
-        // Si es Home se muestra como flex (carrusel + panel); si es blog u otra como block
-        pestañaActiva.style.display = (targetId === 'home') ? 'flex' : 'block';
+    const seccionActiva = document.getElementById(targetId);
+    if (seccionActiva) {
+        seccionActiva.classList.remove('hidden');
+        seccionActiva.classList.add('active');
+
+        if (targetId === 'home') {
+            seccionActiva.style.setProperty('display', 'block', 'important');
+        } else {
+            seccionActiva.style.setProperty('display', 'block', 'important');
+        }
     }
 
-    // 4. Activar el botón correspondiente
+    // 4. Marcar botón activo
     const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
     if (botonActivo) botonActivo.classList.add('active');
 
-    // Carga diferida según pestaña
+    // Carga diferida según la pestaña seleccionada
     if (targetId === 'home') cargarMultimediaHomeSanity();
     if (targetId === 'photos') obtenerFotosDeSanity();
     if (targetId === 'maps') cargarMapasDesdeSanity();
     if (targetId === 'blog') cargarBlogDesdeSanity();
 }
 window.cambiarPestaña = cambiarPestaña;
-
 // ==========================================
 // 3. CARRUSEL MULTIMEDIA EN HOME (SANITY)
 // ==========================================

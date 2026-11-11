@@ -1147,19 +1147,15 @@ header {
 /* ========================================================
    REGULAR OCULTACIÓN DE SECCIONES INACTIVAS Y AISLAMIENTO
    ======================================================== */
+section:not(.active),
 .tab-content:not(.active),
-section:not(.active) {
+section:not(.active) .dashboard-container {
   display: none !important;
 }
 
-.tab-content:not(.active) *,
-section:not(.active) * {
-  display: none !important;
-}
-
-/* Forzar que la sección BLOG activa se muestre correctamente */
 #blog.active {
   display: block !important;
   width: 100% !important;
+  clear: both !important;
 }
 }
