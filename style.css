@@ -868,79 +868,69 @@ header {
 
 .blog-container {
   width: 100% !important;
-  max-width: 1140px !important; /* Limita el ancho máximo del blog */
-  margin: 0 auto !important;     /* Centra el blog horizontalmente */
+  max-width: 1140px !important;
+  margin: 0 auto !important;
   padding: 2rem 1rem !important;
   box-sizing: border-box !important;
 }
 
-/* ========================================================
-   2. CUADRÍCULA (.blog-grid) -> 3 COLUMNAS EN LAPTOP
-   ======================================================== */
+/* 1. Cuadrícula de 3 columnas exactas */
 .blog-grid {
   display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important; /* 3 columnas iguales */
-  gap: 2.5rem 2rem !important;                       /* Espacio horizontal y vertical */
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 2.5rem 2rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
 }
 
-/* ========================================================
-   3. TARJETA INDIVIDUAL Y SUS ELEMENTOS
-   ======================================================== */
+/* 2. Tarjeta individual del artículo */
 .tarjeta-blog {
-  background: transparent !important;
-  border: none !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: flex-start !important;
-  text-align: left !important;
-  padding: 0 !important;
-  margin: 0 !important;
   width: 100% !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
-  position: relative !important;
-  z-index: 1 !important;
+  overflow: hidden !important;
 }
 
-/* A. Título arriba */
+/* 3. Título del post */
 .tarjeta-blog-titulo {
-  font-size: 1.35rem !important;
+  font-size: 1.25rem !important;
   font-weight: 700 !important;
   color: #1a1a1a !important;
   margin: 0 0 0.85rem 0 !important;
   line-height: 1.25 !important;
 }
 
-/* B. Envoltorio y recorte de imagen horizontal (16:9) */
+/* 4. Contenedor de la foto (Fijo a 190px de alto como en el diseño) */
 .tarjeta-blog-header {
-  position: relative !important;
   width: 100% !important;
-  height: 190px !important; /* Controla la altura uniforme de las fotos */
+  height: 190px !important;
+  min-height: 190px !important;
   max-height: 190px !important;
   overflow: hidden !important;
   border-radius: 4px !important;
   margin-bottom: 0.85rem !important;
-  cursor: pointer !important;
+  position: relative !important;
 }
 
+/* 5. Imagen del post (Fuerza el recorte 16:9 sin salirse) */
 .tarjeta-blog-img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important; /* Recorta la imagen sin deformarla */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important; /* Recorta fotos verticales u horizontales de Sanity */
+  object-position: center !important;
   display: block !important;
 }
 
-/* C. Resumen y fecha abajo */
+/* 6. Texto y botón inferior */
 .tarjeta-blog-body {
-  padding: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
   width: 100% !important;
-  position: relative !important;
-  z-index: 5 !important; /* Coloca el contenedor de texto por encima de la foto */
-  pointer-events: auto !important;
 }
 
 .tarjeta-blog-resumen {
