@@ -25,36 +25,38 @@ let articulosBlogCache = [];
 // ==========================================
 // 2. CONTROL DE NAVEGACIÓN (TABS) - GLOBAL
 // ==========================================
+// CONTROL DE NAVEGACIÓN ENTRE SECCIONES
 function cambiarPestaña(idPestaña) {
-    const contenidos = document.querySelectorAll('.tab-content');
-    contenidos.forEach(contenido => contenido.classList.remove('active'));
+    const targetId = idPestaña.toLowerCase();
 
+    // 1. Ocultar de forma absoluta TODAS las secciones
+    const contenidos = document.querySelectorAll('.tab-content, section');
+    contenidos.forEach(contenido => {
+        contenido.classList.remove('active');
+        contenido.style.display = 'none'; // Fuerza la ocultación en línea cancelando cualquier flex/inline
+    });
+
+    // 2. Desactivar todos los botones de la navegación
     const botones = document.querySelectorAll('.tab-btn');
     botones.forEach(boton => boton.classList.remove('active'));
 
-    const pestañaActiva = document.getElementById(idPestaña);
-    if (pestañaActiva) pestañaActiva.classList.add('active');
+    // 3. Mostrar únicamente la sección seleccionada
+    const pestañaActiva = document.getElementById(targetId);
+    if (pestañaActiva) {
+        pestañaActiva.classList.add('active');
+        // Si es Home se muestra como flex (carrusel + panel); si es blog u otra como block
+        pestañaActiva.style.display = (targetId === 'home') ? 'flex' : 'block';
+    }
 
+    // 4. Activar el botón correspondiente
     const botonActivo = document.querySelector(`.tab-btn[onclick*="${idPestaña}"]`);
     if (botonActivo) botonActivo.classList.add('active');
 
-    console.log(`Navegando a: ${idPestaña}`);
-
-    if (idPestaña === 'home' || idPestaña === 'HOME') {
-        cargarMultimediaHomeSanity();
-    }
-    
-    if (idPestaña === 'photos' || idPestaña === 'PHOTOS') {
-        obtenerFotosDeSanity();
-    }
-
-    if (idPestaña === 'maps' || idPestaña === 'MAPS') {
-        cargarMapasDesdeSanity();
-    }
-
-   if (idPestaña === 'blog' || idPestaña === 'BLOG') {
-        cargarBlogDesdeSanity(); // <-- Debe estar activo (sin las // al inicio)
-    }
+    // Carga diferida según pestaña
+    if (targetId === 'home') cargarMultimediaHomeSanity();
+    if (targetId === 'photos') obtenerFotosDeSanity();
+    if (targetId === 'maps') cargarMapasDesdeSanity();
+    if (targetId === 'blog') cargarBlogDesdeSanity();
 }
 window.cambiarPestaña = cambiarPestaña;
 
