@@ -1144,10 +1144,9 @@ header {
   }
 }
 
-/* REGLA MAESTRA PARA OCULTAR PESTAÑAS INACTIVAS */
+/* REGULAR OCULTACIÓN DE SECCIONES INACTIVAS */
 .tab-content:not(.active),
-section:not(.active),
-section.hidden {
+section:not(.active) {
   display: none !important;
 }
 

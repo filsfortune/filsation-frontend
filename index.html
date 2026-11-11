@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filsation - Map Design & Photography</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <link rel="apple-touch-icon" href="favicon.png">
     <link rel="icon" type="image/png" href="favicon.png">
 </head>
@@ -45,55 +45,51 @@
                 </div>
 
                 <!-- PANEL DE INFORMACIÓN DERECHO (HOME) -->
-       <!-- PANEL DE INFORMACIÓN DERECHO (HOME - COMPLETO Y EXTENDIDO) -->
-<div class="info-contenedor" style="padding: 0.5rem 0 1rem 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; box-sizing: border-box; flex: 1; width: 100%;">
-    
-    <!-- 1. BADGE FLOTANTE OSCURO -->
-    <span class="badge-proyecto" style="display: inline-block !important; background-color: #0f172a !important; color: #ffffff !important; font-size: 0.68rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; padding: 5px 12px !important; border-radius: 4px !important; margin-bottom: 0.85rem !important; font-family: sans-serif !important;">
-        Serie Cartográfica & Architecture
-    </span>
+                <div class="info-contenedor" style="padding: 0.5rem 0 1rem 0 !important; display: flex !important; flex-direction: column !important; align-items: flex-start !important; text-align: left !important; box-sizing: border-box !important; flex: 1 !important; width: 100% !important;">
+                    
+                    <!-- 1. BADGE FLOTANTE OSCURO -->
+                    <span class="badge-proyecto" style="display: inline-block !important; background-color: #0f172a !important; color: #ffffff !important; font-size: 0.68rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; padding: 5px 12px !important; border-radius: 4px !important; margin-bottom: 0.85rem !important; font-family: sans-serif !important;">
+                        Serie Cartográfica & Architecture
+                    </span>
 
-    <!-- 2. TÍTULO PRINCIPAL -->
-    <h1 id="panel-titulo" style="font-size: 2.2rem !important; font-weight: 700 !important; color: #0f172a !important; margin: 0 0 0.35rem 0 !important; line-height: 1.15 !important; letter-spacing: -0.02em !important; font-family: sans-serif !important;">
-        Ciudad Universitaria / MONCLOA
-    </h1>
+                    <!-- 2. TÍTULO PRINCIPAL -->
+                    <h1 id="panel-titulo" style="font-size: 2.2rem !important; font-weight: 700 !important; color: #0f172a !important; margin: 0 0 0.35rem 0 !important; line-height: 1.15 !important; letter-spacing: -0.02em !important; font-family: sans-serif !important;">
+                        Ciudad Universitaria / MONCLOA
+                    </h1>
 
-    <!-- 3. SUBTÍTULO -->
-    <p class="panel-subtitulo" style="font-size: 0.8rem !important; color: #64748b !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: 600 !important; margin: 0 0 1.25rem 0 !important; font-family: sans-serif !important;">
-        Madrid / Rutas Artísticas & Análisis Espacial
-    </p>
+                    <!-- 3. SUBTÍTULO -->
+                    <p class="panel-subtitulo" style="font-size: 0.8rem !important; color: #64748b !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-weight: 600 !important; margin: 0 0 1.25rem 0 !important; font-family: sans-serif !important;">
+                        Madrid / Rutas Artísticas & Análisis Espacial
+                    </p>
 
-    <!-- 4. RESUMEN PROPORCIONADO -->
-    <div class="panel-resumen" style="margin-bottom: 1.25rem !important; width: 100% !important;">
-        <p style="font-size: 0.92rem !important; line-height: 1.6 !important; color: #334155 !important; margin: 0 !important; font-family: sans-serif !important;">
-            Una exploración visual y analítica sobre el campus de la <strong style="color: #0f172a !important; font-weight: 600 !important;">Ciudad Universitaria de Madrid</strong>. El proyecto integra <strong style="color: #0f172a !important; font-weight: 600 !important;">diseño cartográfico de autor</strong> con rutas temáticas, fotografía de arquitectura (racionalista y brutalista) y clips cinemáticos para documentar la historia y evolución de sus facultades.
-        </p>
-    </div>
+                    <!-- 4. RESUMEN PROPORCIONADO -->
+                    <div class="panel-resumen" style="margin-bottom: 1.25rem !important; width: 100% !important;">
+                        <p style="font-size: 0.92rem !important; line-height: 1.6 !important; color: #334155 !important; margin: 0 !important; font-family: sans-serif !important;">
+                            Una exploración visual y analítica sobre el campus de la <strong style="color: #0f172a !important; font-weight: 600 !important;">Ciudad Universitaria de Madrid</strong>. El proyecto integra <strong style="color: #0f172a !important; font-weight: 600 !important;">diseño cartográfico de autor</strong> con rutas temáticas, fotografía de arquitectura (racionalista y brutalista) y clips cinemáticos para documentar la historia y evolución de sus facultades.
+                        </p>
+                    </div>
 
-    <!-- 5. BLOQUE DE GEOLOCALIZACIÓN Y COORDENADAS -->
-    <div class="panel-localizacion" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important; padding: 0.65rem 0.9rem !important; border-radius: 6px !important; width: 100% !important; box-sizing: border-box !important; margin-bottom: 1.25rem !important;">
-        <span style="font-size: 1.1rem !important;">📍</span>
-        <div style="display: flex !important; flex-direction: column !important; gap: 0.1rem !important;">
-            <span style="font-size: 0.85rem !important; font-weight: 600 !important; color: #0f172a !important; font-family: sans-serif !important;">Moncloa-Aravaca, Madrid</span>
-            <span style="font-size: 0.75rem !important; color: #64748b !important; font-family: monospace !important;">40.4442° N, 3.7256° W</span>
-        </div>
-    </div>
+                    <!-- 5. BLOQUE DE GEOLOCALIZACIÓN Y COORDENADAS -->
+                    <div class="panel-localizacion" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important; padding: 0.65rem 0.9rem !important; border-radius: 6px !important; width: 100% !important; box-sizing: border-box !important; margin-bottom: 1.25rem !important;">
+                        <span style="font-size: 1.1rem !important;">📍</span>
+                        <div style="display: flex !important; flex-direction: column !important; gap: 0.1rem !important;">
+                            <span style="font-size: 0.85rem !important; font-weight: 600 !important; color: #0f172a !important; font-family: sans-serif !important;">Moncloa-Aravaca, Madrid</span>
+                            <span style="font-size: 0.75rem !important; color: #64748b !important; font-family: monospace !important;">40.4442° N, 3.7256° W</span>
+                        </div>
+                    </div>
 
-    <!-- 6. CONTACTO CON BOTÓN DESTACADO -->
-    <div class="panel-contacto" style="width: 100% !important; display: flex !important; flex-direction: column !important; gap: 0.85rem !important; border-top: 1px solid #e2e8f0 !important; padding-top: 1.15rem !important;">
-        <p class="contacto-orientado" style="font-size: 0.8rem !important; color: #64748b !important; line-height: 1.45 !important; margin: 0 !important; font-style: italic !important; font-family: sans-serif !important;">
-            Orientado a investigación urbana, exposiciones visuales, licencias de imagen y análisis SIG.
-        </p>
-        <a href="mailto:filsation@gmail.com" class="btn-contacto" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; background-color: #0f172a !important; color: #ffffff !important; text-decoration: none !important; font-size: 0.825rem !important; font-weight: 600 !important; padding: 0.7rem 1.25rem !important; border-radius: 6px !important; width: fit-content !important; font-family: sans-serif !important; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15) !important;">
-            ✉️ Contactar para colaboraciones
-        </a>
-    </div>
-
-</div>
-</div>
-
-
-        </section>
+                    <!-- 6. CONTACTO CON BOTÓN DESTACADO -->
+                    <div class="panel-contacto" style="width: 100% !important; display: flex !important; flex-direction: column !important; gap: 0.85rem !important; border-top: 1px solid #e2e8f0 !important; padding-top: 1.15rem !important;">
+                        <p class="contacto-orientado" style="font-size: 0.8rem !important; color: #64748b !important; line-height: 1.45 !important; margin: 0 !important; font-style: italic !important; font-family: sans-serif !important;">
+                            Orientado a investigación urbana, exposiciones visuales, licencias de imagen y análisis SIG.
+                        </p>
+                        <a href="mailto:filsation@gmail.com" class="btn-contacto" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; background-color: #0f172a !important; color: #ffffff !important; text-decoration: none !important; font-size: 0.825rem !important; font-weight: 600 !important; padding: 0.7rem 1.25rem !important; border-radius: 6px !important; width: fit-content !important; font-family: sans-serif !important; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15) !important;">
+                            ✉️ Contactar para colaboraciones
+                        </a>
+                    </div>
+                </div> <!-- Cierra info-contenedor -->
+            </div> <!-- Cierra dashboard-container -->
+        </section> <!-- Cierra la sección HOME -->
 
         <!-- 2. PESTAÑA MAPS -->
         <section id="maps" class="tab-content">
@@ -121,54 +117,13 @@
         </section>
 
         <!-- 4. PESTAÑA BLOG -->
-        <!-- 1. SECCIÓN PRINCIPAL DE LA PESTAÑA BLOG -->
-<!-- PESTAÑA BLOG (ESTÁTICA DE PRUEBA) -->
-<section id="blog" class="tab-content">
-  <div class="blog-container">
-    <div class="blog-grid" id="contenedor-blog">
-
-      <!-- TARJETA 1 -->
-      <article class="tarjeta-blog">
-        <h3 class="tarjeta-blog-titulo">Post 1 Headline</h3>
-        <div class="tarjeta-blog-header">
-          <img src="https://picsum.photos/600/350?random=1" alt="Post 1" class="tarjeta-blog-img">
-        </div>
-        <div class="tarjeta-blog-body">
-          <p class="tarjeta-blog-resumen">Sample small text. Lorem ipsum dolor sit amet.</p>
-          <span class="tarjeta-blog-fecha">Wed Jul 22 2026</span>
-          <button class="btn-read-more">Read More</button>
-        </div>
-      </article>
-
-      <!-- TARJETA 2 -->
-      <article class="tarjeta-blog">
-        <h3 class="tarjeta-blog-titulo">Post 2 Headline</h3>
-        <div class="tarjeta-blog-header">
-          <img src="https://picsum.photos/600/350?random=2" alt="Post 2" class="tarjeta-blog-img">
-        </div>
-        <div class="tarjeta-blog-body">
-          <p class="tarjeta-blog-resumen">Sample small text. Lorem ipsum dolor sit amet.</p>
-          <span class="tarjeta-blog-fecha">Wed Jul 22 2026</span>
-          <button class="btn-read-more">Read More</button>
-        </div>
-      </article>
-
-      <!-- TARJETA 3 -->
-      <article class="tarjeta-blog">
-        <h3 class="tarjeta-blog-titulo">Post 3 Headline</h3>
-        <div class="tarjeta-blog-header">
-          <img src="https://picsum.photos/600/350?random=3" alt="Post 3" class="tarjeta-blog-img">
-        </div>
-        <div class="tarjeta-blog-body">
-          <p class="tarjeta-blog-resumen">Sample small text. Lorem ipsum dolor sit amet.</p>
-          <span class="tarjeta-blog-fecha">Wed Jul 22 2026</span>
-          <button class="btn-read-more">Read More</button>
-        </div>
-      </article>
-
-    </div><!-- /.blog-grid -->
-  </div><!-- /.blog-container -->
-</section>
+        <section id="blog" class="tab-content">
+            <div class="blog-container">
+                <div class="blog-grid" id="contenedor-blog">
+                    <!-- Tarjetas inyectadas dinámicamente desde Sanity vía app.js -->
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- MODAL FLOTANTE DE LECTURA DE BLOG (OVERLAY) -->
@@ -209,7 +164,7 @@
         </div>
     </div>
 
-    <!-- SCRIPTS Y LIBRERÍAS EXTERNAS AL FINAL DE BODY -->
+    <!-- SCRIPTS Y LIBRERÍAS EXTERNAS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.1.0/dist/sanityClient.browser.mjs" type="module"></script>
     <script src="app.js"></script>
