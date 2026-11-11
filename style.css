@@ -1144,5 +1144,12 @@ header {
   }
 }
 
+/* REGLA MAESTRA PARA OCULTAR PESTAÑAS INACTIVAS */
+.tab-content:not(.active),
+section:not(.active),
+section.hidden {
+  display: none !important;
+}
+
 }
 
