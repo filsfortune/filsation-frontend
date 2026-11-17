@@ -105,13 +105,7 @@ header {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* 2. Panel de Información (El 50% restante en el lado derecho) */
-.info-contenedor {
-    flex: 0 0 calc(50% - 1.5rem); /* Ocupa el 50% restante restando el gap */
-    width: calc(50% - 1.5rem);
-    height: 100%;
-    overflow-y: auto;
-}
+
 
 /* Pista deslizante del carrusel */
 .carrusel-track {
@@ -242,13 +236,6 @@ header {
     border-radius: 10px;
 }
 
-/* Panel de Información derecho */
-.info-contenedor {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 20px;
-}
 
 #panel-titulo {
     font-size: 65px; /* Gran título de tu boceto */
@@ -698,9 +685,7 @@ header {
         object-fit: cover;      /* Rellena todo el espacio sin deformar la imagen */
     }
 
-  /* ========================================================
-   ESTILOS DEL PANEL INFORMATIVO DERECHO (HOME)
-   ======================================================== */
+
 
 /* ========================================================
    REPOSICIONAMIENTO COMPACTO Y ENCAJADO: PANEL DERECHO (HOME)
