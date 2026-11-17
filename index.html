@@ -75,9 +75,9 @@
         </section>
 
         <!-- 4. PESTAÑA BLOG -->
-        <section id="blog" class="tab-content">
-            <div class="blog-container">
-                <div class="blog-grid" id="contenedor-blog">
+        <section id="blog" class="tab-content" style="width: 100%; box-sizing: border-box;">
+            <div class="blog-container" style="max-width: 1140px; width: 100%; margin: 0 auto; padding: 3rem 1.5rem; box-sizing: border-box;">
+                <div class="blog-grid" id="contenedor-blog" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem 2.25rem; width: 100%; box-sizing: border-box;">
                     <!-- Tarjetas inyectadas dinámicamente desde Sanity vía app.js -->
                 </div>
             </div>
@@ -124,6 +124,6 @@
 
     <!-- SCRIPTS Y LIBRERÍAS EXTERNAS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=4.0"></script>
+    <script src="app.js?v=5.0"></script>
 </body>
 </html>

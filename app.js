@@ -312,21 +312,26 @@ async function cargarBlogDesdeSanity() {
 function renderizarGridBlog(articulos, contenedor) {
     contenedor.innerHTML = articulos.map((art, index) => {
         const fecha = art.fechaPublicacion 
-            ? new Date(art.fechaPublicacion).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            ? new Date(art.fechaPublicacion).toDateString() // Formato exacto: "Wed Jul 22 2026"
             : '';
 
         return `
-            <article class="tarjeta-blog">
-                <h3 class="tarjeta-blog-titulo">${art.titulo}</h3>
-                <div class="tarjeta-blog-header">
-                    ${art.imagenUrl ? `<img src="${art.imagenUrl}?w=600&auto=format" alt="${art.titulo}" class="tarjeta-blog-img">` : ''}
+            <article class="tarjeta-blog" onclick="abrirLectorArticulo(${index})" style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%; min-width: 0; cursor: pointer; box-sizing: border-box;">
+                <h3 class="tarjeta-blog-titulo" style="font-size: 1.35rem; font-weight: 700; color: #111111; margin: 0 0 1rem 0; line-height: 1.25; font-family: sans-serif;">
+                    ${art.titulo}
+                </h3>
+                <div class="tarjeta-blog-header" style="width: 100%; height: 175px; min-height: 175px; max-height: 175px; overflow: hidden; margin-bottom: 1rem; background-color: #e2e8f0;">
+                    ${art.imagenUrl 
+                        ? `<img src="${art.imagenUrl}?w=600&h=350&fit=crop&auto=format" alt="${art.titulo}" class="tarjeta-blog-img" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">` 
+                        : ''}
                 </div>
-                <div class="tarjeta-blog-body">
-                    <p class="tarjeta-blog-resumen">${art.resumen || ''}</p>
-                    <span class="tarjeta-blog-fecha">${fecha}</span>
-                    <button class="btn-read-more" type="button" onclick="abrirLectorArticulo(${index}); event.stopPropagation();">
-                        Read More
-                    </button>
+                <div class="tarjeta-blog-body" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%;">
+                    <p class="tarjeta-blog-resumen" style="font-size: 0.9rem; color: #333333; line-height: 1.5; margin: 0 0 0.85rem 0; font-family: sans-serif;">
+                        ${art.resumen || ''}
+                    </p>
+                    <span class="tarjeta-blog-fecha" style="font-size: 0.8rem; color: #888888; font-family: sans-serif;">
+                        ${fecha}
+                    </span>
                 </div>
             </article>
         `;
