@@ -310,6 +310,8 @@ async function cargarBlogDesdeSanity() {
 
 // Renderizado de las tarjetas estáticas dinámicas
 function renderizarGridBlog(articulos, contenedor) {
+    window.articulosBlogCache = articulos; // Asegura disponibilidad global para el clic
+
     contenedor.innerHTML = articulos.map((art, index) => {
         const fecha = art.fechaPublicacion 
             ? new Date(art.fechaPublicacion).toDateString()
@@ -345,20 +347,17 @@ function renderizarGridBlog(articulos, contenedor) {
     }).join('');
 }
 
-// Apertura del modal flotante al pulsar Read More
-// Apertura del modal flotante al pulsar Read More
 function abrirLectorArticulo(index) {
-    const articulo = articulosBlogCache[index];
-    if (!articulo) {
-        console.error("No se encontró el artículo en el índice:", index);
-        return;
-    }
+    const lista = window.articulosBlogCache || articulosBlogCache || [];
+    const articulo = lista[index];
+    if (!articulo) return;
 
     const modal = document.getElementById('modal-lector');
     const tituloEl = document.getElementById('lector-titulo');
     const fechaEl = document.getElementById('lector-fecha');
     const imagenEl = document.getElementById('lector-imagen');
     const cuerpoEl = document.getElementById('lector-cuerpo');
+    const scrollContenedor = document.getElementById('modal-lector-scroll');
 
     if (tituloEl) tituloEl.textContent = articulo.titulo || '';
     if (fechaEl) {
@@ -376,7 +375,6 @@ function abrirLectorArticulo(index) {
         }
     }
 
-    // Procesa bloques de texto enriquecido (Portable Text) de Sanity a párrafos HTML
     if (cuerpoEl) {
         if (Array.isArray(articulo.contenido)) {
             cuerpoEl.innerHTML = articulo.contenido
@@ -389,12 +387,29 @@ function abrirLectorArticulo(index) {
     }
 
     if (modal) {
+        // Mueve el modal a la raíz del body para evitar recortes de contenedores padre en laptop
+        document.body.appendChild(modal);
+        
         modal.classList.add('activo');
-        // Fuerza la visibilidad del overlay por encima de cualquier regla CSS
-        modal.style.setProperty('display', 'flex', 'important');
-        modal.style.setProperty('opacity', '1', 'important');
-        modal.style.setProperty('pointer-events', 'auto', 'important');
-        modal.style.setProperty('z-index', '99999', 'important');
+        modal.style.cssText = `
+            display: flex !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(6px) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            z-index: 2147483647 !important;
+        `;
+        if (scrollContenedor) scrollContenedor.scrollTop = 0;
         document.body.style.overflow = 'hidden';
     }
 }
@@ -404,13 +419,9 @@ function cerrarModalLector() {
     const modal = document.getElementById('modal-lector');
     if (modal) {
         modal.classList.remove('activo');
+        modal.style.setProperty('display', 'none', 'important');
         modal.style.setProperty('opacity', '0', 'important');
         modal.style.setProperty('pointer-events', 'none', 'important');
-        setTimeout(() => {
-            if (!modal.classList.contains('activo')) {
-                modal.style.setProperty('display', 'none', 'important');
-            }
-        }, 300);
         document.body.style.overflow = '';
     }
 }

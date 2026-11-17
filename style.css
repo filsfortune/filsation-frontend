@@ -811,7 +811,7 @@ header {
 }
 
 /* ========================================================
-   1. SCROLL Y ALTURA DE LA PESTAÑA BLOG
+   1. SCROLL Y CONTENEDOR DE PESTAÑA BLOG
    ======================================================== */
 #blog.tab-content {
   height: calc(100vh - 90px) !important;
@@ -842,15 +842,6 @@ header {
 /* ========================================================
    2. MODAL FLOTANTE DE LECTURA (OVERLAY RESPONSIVE)
    ======================================================== */
-
-.btn-read-more {
-  transition: background-color 0.25s ease, transform 0.15s ease !important;
-}
-
-.btn-read-more:hover {
-  background-color: #2563eb !important; /* Azul vibrante (puedes cambiarlo por #0284c7 o #1d4ed8) */
-}
-
 .modal-lector-overlay {
   position: fixed !important;
   top: 0 !important;
@@ -859,15 +850,16 @@ header {
   height: 100vh !important;
   background: rgba(15, 23, 42, 0.75) !important;
   backdrop-filter: blur(6px) !important;
-  z-index: 9999 !important;
-  display: flex !important;
+  z-index: 2147483647 !important;
+  display: none;
   justify-content: center !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease !important;
 }
 
 .modal-lector-overlay.activo {
+  display: flex !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
@@ -896,11 +888,15 @@ header {
   border: none !important;
   font-size: 1.2rem !important;
   cursor: pointer !important;
-  z-index: 10000 !important;
+  z-index: 2147483647 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+.btn-cerrar-modal:hover {
+  background: #2563eb !important;
 }
 
 .lector-header {
@@ -960,16 +956,15 @@ header {
   border: none !important;
   font-size: 1.2rem !important;
   cursor: pointer !important;
-  z-index: 10000 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transition: opacity 0.3s ease !important;
+  z-index: 2147483647 !important;
+  opacity: 0.85 !important;
+  transition: background-color 0.2s ease, opacity 0.3s ease !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
 }
 
-.btn-top-modal.visible {
+.btn-top-modal:hover {
+  background: #2563eb !important;
   opacity: 1 !important;
-  pointer-events: auto !important;
 }
 
 /* ========================================================
@@ -1017,31 +1012,6 @@ section:not(.active) .dashboard-container {
   display: block !important;
   width: 100% !important;
   clear: both !important;
-}
-
-/* ========================================================
-   FORZAR VISIBILIDAD DEL MODAL LECTOR EN LAPTOP / ESCRITORIO
-   ======================================================== */
-@media (min-width: 821px) {
-  #modal-lector.modal-lector-overlay.activo,
-  .modal-lector-overlay.activo {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 999999 !important;
-  }
-
-  #modal-lector.activo .modal-lector-contenido {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
 }
 
 }
