@@ -85,23 +85,30 @@
     </main>
 
     <!-- MODAL FLOTANTE DE LECTURA DE BLOG (OVERLAY) -->
-    <div id="modal-lector" class="modal-lector-overlay" onclick="if(event.target === this) cerrarModalLector();">
-        <div class="modal-lector-contenido" id="modal-lector-scroll">
-            <button id="btn-cerrar-lector" type="button" class="btn-cerrar-modal" onclick="cerrarModalLector()" aria-label="Cerrar">✕</button>
+    <!-- MODAL FLOTANTE DE LECTURA DE BLOG (OVERLAY) -->
+    <div id="modal-lector" class="modal-lector-overlay" onclick="if(event.target === this) cerrarModalLector();" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(6px); z-index: 2147483647; justify-content: center; overflow-y: auto; box-sizing: border-box;">
+        
+        <div class="modal-lector-contenido" id="modal-lector-scroll" style="background: #ffffff; width: 100%; max-width: 780px; min-height: 100vh; height: auto; padding: 4rem 3rem 5rem 3rem; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); box-sizing: border-box; margin: 0 auto; text-align: left;">
             
-            <header class="lector-header">
-                <span id="lector-fecha" class="lector-fecha"></span>
-                <h1 id="lector-titulo" class="lector-titulo"></h1>
-                <div class="lector-portada-wrapper">
-                    <img id="lector-imagen" src="" alt="" class="lector-imagen">
+            <!-- Botón Cerrar -->
+            <button id="btn-cerrar-lector" type="button" class="btn-cerrar-modal" onclick="cerrarModalLector()" aria-label="Cerrar" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#0f172a'" style="position: fixed; top: 1.5rem; right: 2rem; width: 42px; height: 42px; border-radius: 50%; background: #0f172a; color: #ffffff; border: none; font-size: 1.2rem; cursor: pointer; z-index: 2147483647; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: background-color 0.2s ease;">✕</button>
+            
+            <!-- Cabecera del artículo (usamos div en vez de header para no heredar estilos del menú superior) -->
+            <div class="lector-header" style="display: block; width: 100%; margin-bottom: 2rem; text-align: left; position: static; background: transparent; padding: 0; border: none;">
+                <span id="lector-fecha" class="lector-fecha" style="display: block; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-family: sans-serif; margin-bottom: 0.5rem;"></span>
+                <h1 id="lector-titulo" class="lector-titulo" style="font-size: 2.25rem; font-weight: 700; line-height: 1.25; color: #0f172a; margin: 0 0 1.5rem 0; font-family: sans-serif;"></h1>
+                <div class="lector-portada-wrapper" style="width: 100%; max-height: 440px; overflow: hidden; border-radius: 6px; margin-bottom: 2rem; background-color: #f1f5f9;">
+                    <img id="lector-imagen" src="" alt="" class="lector-imagen" style="width: 100%; max-width: 100%; max-height: 440px; object-fit: cover; object-position: center; display: block;">
                 </div>
-            </header>
+            </div>
 
-            <article id="lector-cuerpo" class="lector-cuerpo">
+            <!-- Cuerpo del texto -->
+            <article id="lector-cuerpo" class="lector-cuerpo" style="display: block; width: 100%; font-size: 1.05rem; line-height: 1.8; color: #334155; text-align: left; font-family: sans-serif;">
                 <!-- Texto del artículo renderizado dinámicamente -->
             </article>
 
-            <button id="btn-top-lector" type="button" class="btn-top-modal" onclick="document.getElementById('modal-lector-scroll').scrollTo({top: 0, behavior: 'smooth'})" aria-label="Volver arriba">↑</button>
+            <!-- Botón Subir -->
+            <button id="btn-top-lector" type="button" class="btn-top-modal" onclick="document.getElementById('modal-lector').scrollTo({top: 0, behavior: 'smooth'})" aria-label="Volver arriba" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#0f172a'" style="position: fixed; bottom: 1.5rem; right: 2rem; width: 42px; height: 42px; border-radius: 50%; background: #0f172a; color: #ffffff; border: none; font-size: 1.2rem; cursor: pointer; z-index: 2147483647; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: background-color 0.2s ease;">↑</button>
         </div>
     </div>
 

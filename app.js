@@ -398,19 +398,17 @@ function abrirLectorArticulo(index) {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: rgba(15, 23, 42, 0.75) !important;
+            overflow-y: auto !important;
+            background: rgba(15, 23, 42, 0.78) !important;
             backdrop-filter: blur(6px) !important;
             opacity: 1 !important;
             visibility: visible !important;
             pointer-events: auto !important;
             z-index: 2147483647 !important;
         `;
-        if (scrollContenedor) scrollContenedor.scrollTop = 0;
-        document.body.style.overflow = 'hidden';
+        modal.scrollTop = 0;
     }
 }
 window.abrirLectorArticulo = abrirLectorArticulo;
