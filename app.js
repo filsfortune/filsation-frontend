@@ -332,7 +332,11 @@ function renderizarGridBlog(articulos, contenedor) {
                     <span class="tarjeta-blog-fecha" style="font-size: 0.8rem; color: #888888; font-family: sans-serif; margin-bottom: 1rem;">
                         ${fecha}
                     </span>
-                    <button class="btn-read-more" type="button" onclick="abrirLectorArticulo(${index}); event.stopPropagation();" style="background-color: #0f172a; color: #ffffff; border: none; padding: 0.6rem 1.35rem; font-size: 0.825rem; font-weight: 600; letter-spacing: 0.03em; border-radius: 4px; cursor: pointer; font-family: sans-serif;">
+                    <button class="btn-read-more" type="button"
+                        onclick="abrirLectorArticulo(${index}); event.stopPropagation();"
+                        onmouseover="this.style.backgroundColor='#2563eb'"
+                        onmouseout="this.style.backgroundColor='#0f172a'"
+                        style="background-color: #0f172a; color: #ffffff; border: none; padding: 0.6rem 1.35rem; font-size: 0.825rem; font-weight: 600; letter-spacing: 0.03em; border-radius: 4px; cursor: pointer; font-family: sans-serif; transition: background-color 0.2s ease;">
                         Read More
                     </button>
                 </div>

@@ -842,6 +842,15 @@ header {
 /* ========================================================
    2. MODAL FLOTANTE DE LECTURA (OVERLAY RESPONSIVE)
    ======================================================== */
+
+.btn-read-more {
+  transition: background-color 0.25s ease, transform 0.15s ease !important;
+}
+
+.btn-read-more:hover {
+  background-color: #2563eb !important; /* Azul vibrante (puedes cambiarlo por #0284c7 o #1d4ed8) */
+}
+
 .modal-lector-overlay {
   position: fixed !important;
   top: 0 !important;
