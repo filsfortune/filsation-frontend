@@ -1019,4 +1019,29 @@ section:not(.active) .dashboard-container {
   clear: both !important;
 }
 
+/* ========================================================
+   FORZAR VISIBILIDAD DEL MODAL LECTOR EN LAPTOP / ESCRITORIO
+   ======================================================== */
+@media (min-width: 821px) {
+  #modal-lector.modal-lector-overlay.activo,
+  .modal-lector-overlay.activo {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+  }
+
+  #modal-lector.activo .modal-lector-contenido {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
 }
