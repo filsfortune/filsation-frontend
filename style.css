@@ -960,9 +960,8 @@ header {
    5. ADAPTACIÓN PARA PANTALLAS MÓVILES (1 COLUMNA)
    ======================================================== */
 @media (max-width: 820px) {
-  .blog-grid {
-    grid-template-columns: 1fr !important; /* 1 columna en móvil */
-    gap: 2rem !important;
+  #contenedor-blog.blog-grid {
+    grid-template-columns: 1fr !important;
   }
 
   .tarjeta-blog-header {
