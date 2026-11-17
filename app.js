@@ -342,9 +342,13 @@ function renderizarGridBlog(articulos, contenedor) {
 }
 
 // Apertura del modal flotante al pulsar Read More
+// Apertura del modal flotante al pulsar Read More
 function abrirLectorArticulo(index) {
     const articulo = articulosBlogCache[index];
-    if (!articulo) return;
+    if (!articulo) {
+        console.error("No se encontró el artículo en el índice:", index);
+        return;
+    }
 
     const modal = document.getElementById('modal-lector');
     const tituloEl = document.getElementById('lector-titulo');
@@ -352,8 +356,12 @@ function abrirLectorArticulo(index) {
     const imagenEl = document.getElementById('lector-imagen');
     const cuerpoEl = document.getElementById('lector-cuerpo');
 
-    if (tituloEl) tituloEl.textContent = articulo.titulo;
-    if (fechaEl) fechaEl.textContent = new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    if (tituloEl) tituloEl.textContent = articulo.titulo || '';
+    if (fechaEl) {
+        fechaEl.textContent = articulo.fechaPublicacion 
+            ? new Date(articulo.fechaPublicacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '';
+    }
     
     if (imagenEl) {
         if (articulo.imagenUrl) {
@@ -378,7 +386,12 @@ function abrirLectorArticulo(index) {
 
     if (modal) {
         modal.classList.add('activo');
-        document.body.style.overflow = 'hidden'; // Evita el scroll del fondo durante la lectura
+        // Fuerza la visibilidad del overlay por encima de cualquier regla CSS
+        modal.style.setProperty('display', 'flex', 'important');
+        modal.style.setProperty('opacity', '1', 'important');
+        modal.style.setProperty('pointer-events', 'auto', 'important');
+        modal.style.setProperty('z-index', '99999', 'important');
+        document.body.style.overflow = 'hidden';
     }
 }
 window.abrirLectorArticulo = abrirLectorArticulo;
@@ -387,11 +400,17 @@ function cerrarModalLector() {
     const modal = document.getElementById('modal-lector');
     if (modal) {
         modal.classList.remove('activo');
+        modal.style.setProperty('opacity', '0', 'important');
+        modal.style.setProperty('pointer-events', 'none', 'important');
+        setTimeout(() => {
+            if (!modal.classList.contains('activo')) {
+                modal.style.setProperty('display', 'none', 'important');
+            }
+        }, 300);
         document.body.style.overflow = '';
     }
 }
 window.cerrarModalLector = cerrarModalLector;
-
 
 // ==========================================
 // 7. INICIALIZADOR Y EVENTOS DE CARGA (DOM)
