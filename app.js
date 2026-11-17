@@ -312,7 +312,7 @@ async function cargarBlogDesdeSanity() {
 function renderizarGridBlog(articulos, contenedor) {
     contenedor.innerHTML = articulos.map((art, index) => {
         const fecha = art.fechaPublicacion 
-            ? new Date(art.fechaPublicacion).toDateString() // Formato exacto: "Wed Jul 22 2026"
+            ? new Date(art.fechaPublicacion).toDateString()
             : '';
 
         return `
@@ -329,9 +329,12 @@ function renderizarGridBlog(articulos, contenedor) {
                     <p class="tarjeta-blog-resumen" style="font-size: 0.9rem; color: #333333; line-height: 1.5; margin: 0 0 0.85rem 0; font-family: sans-serif;">
                         ${art.resumen || ''}
                     </p>
-                    <span class="tarjeta-blog-fecha" style="font-size: 0.8rem; color: #888888; font-family: sans-serif;">
+                    <span class="tarjeta-blog-fecha" style="font-size: 0.8rem; color: #888888; font-family: sans-serif; margin-bottom: 1rem;">
                         ${fecha}
                     </span>
+                    <button class="btn-read-more" type="button" onclick="abrirLectorArticulo(${index}); event.stopPropagation();" style="background-color: #0f172a; color: #ffffff; border: none; padding: 0.6rem 1.35rem; font-size: 0.825rem; font-weight: 600; letter-spacing: 0.03em; border-radius: 4px; cursor: pointer; font-family: sans-serif;">
+                        Read More
+                    </button>
                 </div>
             </article>
         `;
