@@ -85,9 +85,9 @@
     </main>
 
     <!-- MODAL FLOTANTE DE LECTURA DE BLOG (OVERLAY) -->
-    <div id="modal-lector" class="modal-lector-overlay">
+    <div id="modal-lector" class="modal-lector-overlay" onclick="if(event.target === this) cerrarModalLector();">
         <div class="modal-lector-contenido" id="modal-lector-scroll">
-            <button id="btn-cerrar-lector" class="btn-cerrar-modal" aria-label="Cerrar">✕</button>
+            <button id="btn-cerrar-lector" type="button" class="btn-cerrar-modal" onclick="cerrarModalLector()" aria-label="Cerrar">✕</button>
             
             <header class="lector-header">
                 <span id="lector-fecha" class="lector-fecha"></span>
@@ -101,7 +101,7 @@
                 <!-- Texto del artículo renderizado dinámicamente -->
             </article>
 
-            <button id="btn-top-lector" class="btn-top-modal" aria-label="Volver arriba">↑</button>
+            <button id="btn-top-lector" type="button" class="btn-top-modal" onclick="document.getElementById('modal-lector-scroll').scrollTo({top: 0, behavior: 'smooth'})" aria-label="Volver arriba">↑</button>
         </div>
     </div>
 
