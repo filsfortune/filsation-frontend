@@ -811,28 +811,16 @@ header {
 }
 
 /* ========================================================
-   1. CONTENEDOR PRINCIPAL (#blog y .blog-container)
+   1. SCROLL Y ALTURA DE LA PESTAÑA BLOG
    ======================================================== */
-#blog {
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
 #blog.tab-content {
-  /* Calcula la altura disponible restando el header fijo */
   height: calc(100vh - 90px) !important;
   max-height: calc(100vh - 90px) !important;
-  
-  /* Habilita el scroll vertical solo dentro de esta sección */
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  
-  width: 100% !important;
-  box-sizing: border-box !important;
   padding-bottom: 3rem !important;
 }
 
-/* Personalización elegante de la barra de scroll */
 #blog::-webkit-scrollbar {
   width: 8px;
 }
@@ -851,127 +839,8 @@ header {
   background: rgba(15, 23, 42, 0.6);
 }
 
-.blog-container {
-  width: 100% !important;
-  max-width: 1140px !important;
-  margin: 0 auto !important;
-  padding: 2rem 1rem !important;
-  box-sizing: border-box !important;
-}
-
-/* 1. Cuadrícula de 3 columnas exactas */
-.blog-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 2.5rem 2rem !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* 2. Tarjeta individual del artículo */
-.tarjeta-blog {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-}
-
-/* 3. Título del post */
-.tarjeta-blog-titulo {
-  font-size: 1.25rem !important;
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
-  margin: 0 0 0.85rem 0 !important;
-  line-height: 1.25 !important;
-}
-
-/* 4. Contenedor de la foto (Fijo a 190px de alto como en el diseño) */
-.tarjeta-blog-header {
-  width: 100% !important;
-  height: 190px !important;
-  min-height: 190px !important;
-  max-height: 190px !important;
-  overflow: hidden !important;
-  border-radius: 4px !important;
-  margin-bottom: 0.85rem !important;
-  position: relative !important;
-}
-
-/* 5. Imagen del post (Fuerza el recorte 16:9 sin salirse) */
-.tarjeta-blog-img {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: cover !important; /* Recorta fotos verticales u horizontales de Sanity */
-  object-position: center !important;
-  display: block !important;
-}
-
-/* 6. Texto y botón inferior */
-.tarjeta-blog-body {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  width: 100% !important;
-}
-
-.tarjeta-blog-resumen {
-  font-size: 0.9rem !important;
-  color: #555555 !important;
-  line-height: 1.45 !important;
-  margin: 0 0 0.65rem 0 !important;
-}
-
-.tarjeta-blog-fecha {
-  font-size: 0.8rem !important;
-  color: #a0a0a0 !important;
-}
-
 /* ========================================================
-   4. BOTÓN READ MORE EN TARJETAS DE BLOG
-   ======================================================== */
-.btn-read-more {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-  border: none !important;
-  padding: 0.6rem 1.4rem !important;
-  font-size: 0.825rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.03em !important;
-  border-radius: 4px !important;
-  margin-top: 1rem !important;
-  transition: background-color 0.2s ease, opacity 0.2s ease !important;
-  position: relative !important;
-  z-index: 10 !important; /* Eleva el botón a la capa superior */
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  display: inline-block !important;
-}
-
-.btn-read-more:hover {
-  background-color: #333333 !important;
-  opacity: 0.9 !important;
-}
-
-/* ========================================================
-   5. ADAPTACIÓN PARA PANTALLAS MÓVILES (1 COLUMNA)
-   ======================================================== */
-@media (max-width: 820px) {
-  #contenedor-blog.blog-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .tarjeta-blog-header {
-    height: 220px !important;
-    max-height: 220px !important;
-  }
-}
-
-/* ========================================================
-   MODAL FLOTANTE DE LECTURA (OVERLAY RESPONSIVE)
+   2. MODAL FLOTANTE DE LECTURA (OVERLAY RESPONSIVE)
    ======================================================== */
 .modal-lector-overlay {
   position: fixed !important;
@@ -994,7 +863,6 @@ header {
   pointer-events: auto !important;
 }
 
-/* Hoja del artículo en el centro */
 .modal-lector-contenido {
   background: #ffffff !important;
   width: 100% !important;
@@ -1007,7 +875,6 @@ header {
   box-sizing: border-box !important;
 }
 
-/* Botón flotante para cerrar */
 .btn-cerrar-modal {
   position: fixed !important;
   top: 1.5rem !important;
@@ -1072,7 +939,6 @@ header {
   margin-bottom: 1.5rem !important;
 }
 
-/* Botón flotante para regresar arriba */
 .btn-top-modal {
   position: fixed !important;
   bottom: 1.5rem !important;
@@ -1097,8 +963,19 @@ header {
   pointer-events: auto !important;
 }
 
-/* Adaptación para pantallas de móvil */
+/* ========================================================
+   3. ADAPTACIÓN RESPONSIVE (MÓVIL)
+   ======================================================== */
 @media (max-width: 820px) {
+  #contenedor-blog.blog-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tarjeta-blog-header {
+    height: 220px !important;
+    max-height: 220px !important;
+  }
+
   .modal-lector-contenido {
     padding: 4.5rem 1.5rem 5rem 1.5rem !important;
   }
@@ -1119,7 +996,7 @@ header {
 }
 
 /* ========================================================
-   REGULAR OCULTACIÓN DE SECCIONES INACTIVAS Y AISLAMIENTO
+   4. OCULTACIÓN DE SECCIONES INACTIVAS Y AISLAMIENTO
    ======================================================== */
 section:not(.active),
 .tab-content:not(.active),
@@ -1132,4 +1009,5 @@ section:not(.active) .dashboard-container {
   width: 100% !important;
   clear: both !important;
 }
+
 }
