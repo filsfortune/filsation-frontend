@@ -236,10 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Capa base oscura (estética pantalla negra)
   // 1. En app.js, sustituye capaOscura por esta:
-const capaOscura = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors',
-  maxZoom: 19,
-  className: 'mapa-modo-oscuro'
+const capaOscura = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap',
+  maxZoom: 16
 }).addTo(map);
 
   // Capa opcional: Ortofoto oficial de España (IGN PNOA)
