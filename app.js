@@ -218,7 +218,227 @@ function abrirLightboxZoom(foto) {
 // ==========================================
 // 5. VISOR DE MAPAS CARTOGRÁFICOS (MAPS)
 // ==========================================
+/* ==========================================================================
+   FILSATION - VISOR CARTOGRÁFICO CIUDAD UNIVERSITARIA (NEON: CU_UCM)
+   ========================================================================== */
 
+const API_URL = 'https://filsation-api.onrender.com';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const mapContainer = document.getElementById('ucm-map');
+  if (!mapContainer) return;
+
+  // 1. Inicializar Leaflet centrado en Ciudad Universitaria (Moncloa, Madrid)
+  const map = L.map('ucm-map', {
+    center: [40.4495, -3.7285],
+    zoom: 15
+  });
+
+  // Capa base oscura (estética pantalla negra)
+  const capaOscura = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 20
+  }).addTo(map);
+
+  // Capa opcional: Ortofoto oficial de España (IGN PNOA)
+  const capaOrtofoto = L.tileLayer.wms('https://www.ign.es/wms-inspire/pnoa-ma?', {
+    layers: 'OI.OrthoimageCoverage',
+    format: 'image/jpeg',
+    transparent: false,
+    attribution: '&copy; IGN España (PNOA)'
+  });
+
+  L.control.layers({
+    'Mapa Oscuro Moncloa': capaOscura,
+    'Ortofoto Satélite (PNOA)': capaOrtofoto
+  }).addTo(map);
+
+  // Estilos del polígono de Geografía e Historia (y futuras facultades)
+  const estiloNormal = {
+    color: '#2dd4bf',      // Borde turquesa neón
+    weight: 2.5,
+    fillColor: '#14b8a6',
+    fillOpacity: 0.35
+  };
+
+  const estiloActivo = {
+    color: '#fb923c',      // Borde naranja brillante al seleccionarlo
+    weight: 3.5,
+    fillColor: '#f97316',
+    fillOpacity: 0.55
+  };
+
+  let poligonoSeleccionado = null;
+  let capaGeoJSON = null;
+
+  // 2. Cargar polígonos desde Neon (tabla facultades_ucm vía Render)
+  async function cargarFacultadesUCM() {
+    const listaContainer = document.getElementById('ancla-lista-mapas');
+
+    try {
+      const response = await fetch(`${API_URL}/api/facultades-ucm`);
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+      const geojson = await response.json();
+
+      // Mensaje inicial en el panel derecho
+      listaContainer.innerHTML = `
+        <div style="padding: 16px; font-size: 13px; color: #475569; line-height: 1.6;">
+          <strong>Campus Moncloa · UCM</strong><br>
+          Recintos activos: <strong>${geojson.features.length}</strong>.<br><br>
+          Haz clic sobre el polígono de <strong>Facultad de Geografía e Historia</strong> en el visor oscuro para proyectar su ficha técnica y ver los mapas disponibles.
+        </div>
+      `;
+
+      capaGeoJSON = L.geoJSON(geojson, {
+        style: estiloNormal,
+        onEachFeature: (feature, layer) => {
+          const props = feature.properties || {};
+          const titulo = props.nombre || `Recinto #${feature.id}`;
+
+          // Etiqueta flotante al pasar el cursor por encima del polígono
+          layer.bindTooltip(titulo, { sticky: true });
+
+          layer.on('mouseover', () => {
+            if (poligonoSeleccionado !== layer) {
+              layer.setStyle({ fillOpacity: 0.55, weight: 3 });
+            }
+          });
+
+          layer.on('mouseout', () => {
+            if (poligonoSeleccionado !== layer) {
+              capaGeoJSON.resetStyle(layer);
+            }
+          });
+
+          // Al hacer CLICK en el polígono: centrar edificio y actualizar panel derecho
+          layer.on('click', () => {
+            if (poligonoSeleccionado) {
+              capaGeoJSON.resetStyle(poligonoSeleccionado);
+            }
+            poligonoSeleccionado = layer;
+            layer.setStyle(estiloActivo);
+
+            map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 18 });
+            cargarDetalleYTienda(feature.id, props);
+          });
+        }
+      }).addTo(map);
+
+    } catch (error) {
+      console.error('Error cargando facultades_ucm:', error);
+      listaContainer.innerHTML = `
+        <div class="cargando-estado" style="color: #dc2626; padding: 15px;">
+          Error al conectar con <code>/api/facultades-ucm</code>. Revisa que Render haya terminado el despliegue.
+        </div>
+      `;
+    }
+  }
+
+  // 3. Consultar la Ruta 2 (/api/facultades-ucm/:id) y pintar ficha + catálogo de mapas
+  async function cargarDetalleYTienda(id, propsBasicos) {
+    const cabecera = document.getElementById('sidebar-cabecera');
+    const listaContainer = document.getElementById('ancla-lista-mapas');
+
+    listaContainer.innerHTML = '<div class="cargando-estado">Calculando métricas espaciales...</div>';
+
+    try {
+      const res = await fetch(`${API_URL}/api/facultades-ucm/${id}`);
+      const datos = res.ok ? await res.json() : propsBasicos;
+
+      // Actualizar cabecera del panel derecho
+      if (cabecera) {
+        cabecera.innerHTML = `
+          <h3>${datos.nombre || 'Facultad UCM'}</h3>
+          <p>Código: <strong>${datos.codigo_edificio || 'N/D'}</strong> · Campus ${datos.campus || 'Moncloa'}</p>
+        `;
+      }
+
+      // Catálogo de mapas en venta para este recinto
+      const catalogoMapas = [
+        {
+          sku: `${datos.codigo_edificio || 'UCM'}-GIS`,
+          titulo: 'Pack Cartográfico Base (GIS & CAD)',
+          descripcion: 'Huella arquitectónica georreferenciada, parcelario, curvas de nivel y red viaria perimetral en ETRS89 UTM 30N.',
+          formatos: '.gpkg · .shp · .dxf · .geojson',
+          precio: '12.00 €'
+        },
+        {
+          sku: `${datos.codigo_edificio || 'UCM'}-MOV`,
+          titulo: 'Mapa de Movilidad Suave y Accesibilidad',
+          descripcion: 'Isócronas peatonales (5-10 min) desde Metro Ciudad Universitaria, paradas EMT, BiciMAD y pendientes de aceras.',
+          formatos: '.pdf (A3 Alta Res) · .geojson',
+          precio: '18.00 €'
+        },
+        {
+          sku: `${datos.codigo_edificio || 'UCM'}-3D`,
+          titulo: 'Gemelo Digital 3D Exterior (Fotogrametría)',
+          descripcion: 'Modelo tridimensional texturizado de alta resolución listo para Blender, QGIS y ArcGIS Pro.',
+          formatos: '.glb · .obj · .las',
+          precio: '45.00 €'
+        },
+        {
+          sku: `${datos.codigo_edificio || 'UCM'}-ART`,
+          titulo: 'Lámina Cartográfica Editorial (Print-Ready)',
+          descripcion: 'Plano arquitectónico minimalista del edificio y su entorno ajardinado listo para impresión en gran formato.',
+          formatos: '.pdf · .svg',
+          precio: '15.00 €'
+        }
+      ];
+
+      let html = `
+        <div style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; font-size: 12.5px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div><span style="color:#64748b;">Superficie GIS:</span><br><strong>${datos.superficie_m2 ? Number(datos.superficie_m2).toLocaleString('es-ES') + ' m²' : 'N/D'}</strong></div>
+            <div><span style="color:#64748b;">Categoría:</span><br><strong>${datos.categoria || 'Moncloa'}</strong></div>
+          </div>
+        </div>
+        <div style="padding: 14px 16px;">
+          <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #0f172a; margin-bottom: 12px;">
+            Diversidad de Mapas en Venta
+          </h4>
+      `;
+
+      catalogoMapas.forEach(item => {
+        html += `
+          <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 10px; background: #ffffff;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+              <strong style="font-size: 13.5px; color: #0f172a;">${item.titulo}</strong>
+              <span style="font-weight: 700; color: #0d9488; white-space: nowrap;">${item.precio}</span>
+            </div>
+            <p style="font-size: 12px; color: #475569; margin: 6px 0; line-height: 1.45;">${item.descripcion}</p>
+            <div style="font-size: 11px; font-family: monospace; color: #0f766e; margin-bottom: 10px;">
+              ${item.formatos}
+            </div>
+            <button onclick="alert('Has seleccionado: ${item.titulo} (${item.sku}) - ${item.precio}')" 
+                    style="width: 100%; padding: 8px; background: #0f172a; color: #ffffff; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">
+              Adquirir mapa (${item.precio})
+            </button>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      listaContainer.innerHTML = html;
+
+    } catch (error) {
+      console.error('Error al cargar detalle de la facultad:', error);
+    }
+  }
+
+  // 4. Recalcular tamaño del mapa cuando cambias de pestaña (HOME -> MAPS)
+  document.querySelectorAll('a, button, [data-tab]').forEach(el => {
+    el.addEventListener('click', () => {
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 150);
+    });
+  });
+
+  // Arrancar carga inicial
+  cargarFacultadesUCM();
+});
 
 // ==========================================
 // 6. MÓDULO DEL BLOG (MOSAICO Y LECTOR)
