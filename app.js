@@ -61,7 +61,6 @@ function cambiarPestaña(idPestaña) {
     // Carga diferida según la pestaña seleccionada
     if (targetId === 'home') cargarMultimediaHomeSanity();
     if (targetId === 'photos') obtenerFotosDeSanity();
-    if (targetId === 'maps') cargarMapasDesdeSanity();
     if (targetId === 'blog') cargarBlogDesdeSanity();
 }
 window.cambiarPestaña = cambiarPestaña;
@@ -219,67 +218,7 @@ function abrirLightboxZoom(foto) {
 // ==========================================
 // 5. VISOR DE MAPAS CARTOGRÁFICOS (MAPS)
 // ==========================================
-async function cargarMapasDesdeSanity() {
-    const contenedorLista = document.getElementById('ancla-lista-mapas');
-    const visorImagen = document.getElementById('foto-visor-principal');
-    
-    if (contenedorLista && contenedorLista.querySelectorAll('.carta-mapa-item').length > 0) return;
 
-    try {
-        const respuesta = await fetch(urlSanityMapas);
-        if (!respuesta.ok) throw new Error("Fallo en la respuesta del servidor");
-        
-        const datos = await respuesta.json();
-        const listaDeMapas = datos.result;
-
-        if (!contenedorLista) return;
-        contenedorLista.innerHTML = ''; 
-
-        if (listaDeMapas.length === 0) {
-            contenedorLista.innerHTML = '<div class="cargando-estado">No hay mapas cargados en Sanity.</div>';
-            return;
-        }
-
-        if (visorImagen) {
-            visorImagen.src = listaDeMapas[0].urlImagen;
-            visorImagen.alt = listaDeMapas[0].titulo || 'Mapa de la Ciudad';
-        }
-
-        listaDeMapas.forEach((mapa, index) => {
-            const tarjeta = document.createElement('div');
-            tarjeta.className = 'carta-mapa-item';
-            
-            if (index === 0) tarjeta.classList.add('seleccionada');
-
-            tarjeta.innerHTML = `
-                <h4>${mapa.titulo || 'Sin título'}</h4>
-                <p>Plano cartográfico técnico.</p>
-            `;
-
-            tarjeta.addEventListener('click', () => {
-                document.querySelectorAll('.carta-mapa-item').forEach(c => c.classList.remove('seleccionada'));
-                tarjeta.classList.add('seleccionada');
-
-                if (visorImagen) {
-                    visorImagen.style.opacity = '0.3';
-                    setTimeout(() => {
-                        visorImagen.src = mapa.urlImagen;
-                        visorImagen.alt = mapa.titulo || 'Mapa Seleccionado';
-                        visorImagen.style.opacity = '1';
-                    }, 150);
-                }
-            });
-
-            contenedorLista.appendChild(tarjeta);
-        });
-
-    } catch (error) {
-        console.error("Error conectando a la API de Sanity Mapas:", error);
-        if (contenedorLista) {
-            contenedorLista.innerHTML = '<div class="cargando-estado" style="color: red;">Error al sincronizar datos de mapas.</div>';
-        }
-    }
-}
 
 // ==========================================
 // 6. MÓDULO DEL BLOG (MOSAICO Y LECTOR)

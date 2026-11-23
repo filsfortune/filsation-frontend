@@ -99,23 +99,25 @@
 
         <!-- 2. PESTAÑA MAPS -->
         <section id="maps" class="tab-content">
-            <div class="visor-dashboard">
-                <div class="pantalla-mapa">
-                    <img id="foto-visor-principal" src="" alt="Selecciona un mapa del panel derecho">
-                </div>
-                
-                <div class="sidebar-lista">
-                    <div class="sidebar-info">
-                        <h3>Cartografía Urbana</h3>
-                        <p>Selecciona una capa analítica para proyectar su plano técnico.</p>
-                    </div>
-                    
-                    <div class="lista-cartas" id="ancla-lista-mapas">
-                        <div class="cargando-estado">Conectando con Sanity...</div>
-                    </div>
-                </div>
+    <div class="visor-dashboard">
+        <!-- IZQUIERDA: Mantiene tu clase .pantalla-mapa pero ahora aloja el mapa interactivo -->
+        <div class="pantalla-mapa" style="position: relative; padding: 0;">
+            <div id="ucm-map" style="width: 100%; height: 100%; z-index: 1;"></div>
+        </div>
+        
+        <!-- DERECHA: Mantiene tu barra lateral y se actualiza al hacer clic en una facultad -->
+        <div class="sidebar-lista">
+            <div class="sidebar-info" id="sidebar-cabecera">
+                <h3>Cartografía Urbana · UCM</h3>
+                <p>Selecciona un recinto en Ciudad Universitaria (Moncloa) para consultar sus indicadores y catálogo de mapas.</p>
             </div>
-        </section>
+            
+            <div class="lista-cartas" id="ancla-lista-mapas">
+                <div class="cargando-estado">Cargando polígonos de Ciudad Universitaria...</div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- 3. PESTAÑA PHOTOS -->
         <section id="photos" class="tab-content">
