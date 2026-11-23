@@ -235,11 +235,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Capa base oscura (estética pantalla negra)
-  const capaOscura = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
-    subdomains: 'abcd',
-    maxZoom: 20
-  }).addTo(map);
+  // 1. En app.js, sustituye capaOscura por esta:
+const capaOscura = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors',
+  maxZoom: 19,
+  className: 'mapa-modo-oscuro'
+}).addTo(map);
 
   // Capa opcional: Ortofoto oficial de España (IGN PNOA)
   const capaOrtofoto = L.tileLayer.wms('https://www.ign.es/wms-inspire/pnoa-ma?', {

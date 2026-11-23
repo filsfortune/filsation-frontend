@@ -486,6 +486,11 @@ header {
     width: 100%;
 }
 
+/* Convierte el mapa base en modo oscuro sin afectar al polígono turquesa */
+.mapa-modo-oscuro {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
 /* ==========================================
    COLUMNA IZQUIERDA (PANTALLA DE LA FOTO)
    ========================================== */
